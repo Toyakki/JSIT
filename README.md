@@ -1,11 +1,11 @@
 # JSIT
 
 Team Members:
-Isaac Clark     - theflickerman
+- Isaac Clark     - theflickerman
                 - theflickerman404
-Enze Yang       - yeddddy
-Tohya Tanemura  - toyakki
-Sark Asadourian - sark-adadourian
+- Enze Yang       - yeddddy
+- Tohya Tanemura  - toyakki
+- Sark Asadourian - sark-adadourian
 
 User stories:
 -	Sark is a student who creates an account by entering their Student ID and enters a strong password. (Team)
