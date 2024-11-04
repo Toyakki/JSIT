@@ -4,7 +4,7 @@ Team Members:
 - Isaac Clark     - theflickerman
                 - theflickerman404
 - Enze Yang       - yeddddy
-- Tohya Tanemura  - toyakki
+- Tohya Tanemura  - Toyakki
 - Sark Asadourian - sark-adadourian
 
 User stories:
