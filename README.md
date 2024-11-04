@@ -7,6 +7,7 @@ Enze Yang       - yeddddy
 Tohya Tanemura  - toyakki
 Sark Asadourian - sark-adadourian
 
+User stories:
 -	Sark is a student who creates an account by entering their Student ID and enters a strong password. (Team)
 -	Logining in
 -	As a ___, I want to ____ so that I can ___.
