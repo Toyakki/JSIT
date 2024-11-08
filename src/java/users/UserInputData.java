@@ -6,7 +6,7 @@ public class UserInputData {
     final private String password;
     final private String type;
 
-    public UserSignupInputData(String email, String password, String type) {
+    public UserInputData(String email, String password, String type) {
         this.email = email;
         this.type= type;
         this.password = password;
@@ -15,6 +15,7 @@ public class UserInputData {
     String getName() {
         return email;
     }
+
 
     String getPassword() {
         return password;
