@@ -1,4 +1,5 @@
 package users;
 
-public class LoginUseCaseInteractor {
+public class LoginUseCaseInteractor implements LoginUseCaseBoundary {
+
 }
