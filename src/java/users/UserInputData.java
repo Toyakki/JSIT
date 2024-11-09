@@ -12,10 +12,9 @@ public class UserInputData {
         this.password = password;
     }
 
-    String getName() {
+    String getEmail() {
         return email;
     }
-
 
     String getPassword() {
         return password;
@@ -24,4 +23,6 @@ public class UserInputData {
     public String getType() {
         return type;
     }
+
+
 }
