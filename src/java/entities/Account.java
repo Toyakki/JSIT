@@ -27,7 +27,6 @@ public class Account {
         return this.password.length() >= 16
                 && this.password.contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
                 && this.password.contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase())
-                && this.password.contains("1234567890")
-                && this.password.contains("!@#$%^&*0");
+                && this.password.contains("1234567890");
     }
 }
