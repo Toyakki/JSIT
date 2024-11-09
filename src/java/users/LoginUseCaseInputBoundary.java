@@ -1,5 +1,5 @@
 package users;
 
-public interface LoginUseCaseBoundary {
+public interface LoginUseCaseInputBoundary {
     void login(UserInputData userInputData);
 }

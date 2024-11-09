@@ -22,4 +22,12 @@ public class Account {
     public String getType() {
         return type;
     }
+
+    public boolean passwordIsValid() {
+        return this.password.length() >= 16
+                && this.password.contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+                && this.password.contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase())
+                && this.password.contains("1234567890")
+                && this.password.contains("!@#$%^&*0");
+    }
 }

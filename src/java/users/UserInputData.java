@@ -16,7 +16,6 @@ public class UserInputData {
         return email;
     }
 
-
     String getPassword() {
         return password;
     }
