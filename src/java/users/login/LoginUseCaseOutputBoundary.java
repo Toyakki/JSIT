@@ -1,4 +1,6 @@
-package users;
+package users.login;
+
+import users.UserOutputData;
 
 public interface LoginUseCaseOutputBoundary {
     void prepareFailView(String message);
