@@ -16,18 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main extends JFrame {
-//    private final JPanel cardPanel = new JPanel();
-//    private final CardLayout cardLayout = new CardLayout();
-//    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
-//    private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-//
-//    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-//
-//    private LoginView loginView;
-//    private LoginViewModel loginViewModel;
-//    private LoggedInViewModel loggedInViewModel;
-//    private TempLoggedInView loggedInView;
-//    private LoggedInViewModel loggedInViewModel;
 
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainPanel = new JPanel(cardLayout);
@@ -41,7 +29,6 @@ public class Main extends JFrame {
     private LoginUseCaseInputBoundary loginInteractor;
     private LoginController loginController;
     private LoginUseCaseOutputBoundary loginUseCaseOutputBoundary;
-
 
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager;
