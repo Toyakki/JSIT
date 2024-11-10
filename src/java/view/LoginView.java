@@ -4,6 +4,8 @@ import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginState;
 import interface_adapters.login.LoginViewModel;
+import interface_adapters.sign_up.SignUpController;
+import users.signup.SignupUseCaseBoundary;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -17,19 +19,22 @@ import java.beans.PropertyChangeListener;
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "log in";
     private final LoginViewModel loginViewModel;
+
     private LoginController loginController;
+    private SignUpController signUpController;
 
     private JTextArea email_textbox;
     private JTextArea password_textbox;
 
     private JPanel main_panel;
 
-    public LoginView(LoginViewModel loginViewModel, LoginController loginController) {
+    public LoginView(LoginViewModel loginViewModel, LoginController loginController, SignUpController signUpController) {
         // Assign backend components
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
         this.loginController = loginController;
+        this.signUpController = signUpController;
 
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
@@ -53,6 +58,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     if (e.getSource().equals(login_button)){
                         final LoginState currentState = loginViewModel.getState();
                         this.loginController.login(
+                                currentState.getEmail(),
+                                currentState.getPassword(),
+                                currentState.getType()
+                        );
+                    }
+                }
+        );
+
+        sign_up_button.addActionListener(
+                (e) -> {
+                    if (e.getSource().equals(sign_up_button)){
+                        final LoginState currentState = loginViewModel.getState();
+                        this.signUpController.createUser(
                                 currentState.getEmail(),
                                 currentState.getPassword(),
                                 currentState.getType()

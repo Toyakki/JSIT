@@ -1,13 +1,18 @@
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
+import entities.AccountFactory;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginPresenter;
 import interface_adapters.login.LoginViewModel;
+import interface_adapters.sign_up.SignUpController;
 import users.login.LoginUseCaseInputBoundary;
 import users.login.LoginUseCaseInteractor;
 import users.login.LoginUseCaseOutputBoundary;
+import users.signup.SignupOutputBoundary;
+import users.signup.SignupUseCaseBoundary;
+import users.signup.SignupUseCaseInteractor;
 import view.LoginView;
 import view.TempLoggedInView;
 import view.ViewManager;
@@ -25,6 +30,10 @@ public class Main extends JFrame {
 
     private final LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     private TempLoggedInView loggedInView;
+
+    private SignupUseCaseBoundary signUpInteractor;
+    private SignupOutputBoundary signUpUseCaseOutputBoundary;
+    private SignUpController signUpController;
 
     private LoginUseCaseInputBoundary loginInteractor;
     private LoginController loginController;
@@ -64,8 +73,17 @@ public class Main extends JFrame {
                 loginInteractor
         );
 
+        signUpInteractor = new SignupUseCaseInteractor(
+                demo,
+                loginUseCaseOutputBoundary
+        );
+
+        signUpController = new SignUpController(
+                signUpInteractor
+        );
+
         // add login view to app
-        loginView = new LoginView(loginViewModel, loginController);
+        loginView = new LoginView(loginViewModel, loginController, signUpController);
         mainPanel.add(loginView, loginView.getViewName());
 
         // placeholder logged in screen
