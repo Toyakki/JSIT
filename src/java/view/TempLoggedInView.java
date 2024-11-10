@@ -14,7 +14,7 @@ import java.beans.PropertyChangeListener;
 public class TempLoggedInView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "TempLoggedInView";
     private final LoggedInViewModel viewModel;
-    private LoggedInController loginController;
+    private LoggedInController loggedInController;
     private final JLabel label;
 
     public TempLoggedInView(LoggedInViewModel viewModel) {
@@ -31,8 +31,8 @@ public class TempLoggedInView extends JPanel implements ActionListener, Property
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        final LoggedInState state = (LoggedInState) evt.getSource();
-        setFields(state);
+//        final LoggedInState state = (LoggedInState) evt.getSource();
+//        setFields(state);
     }
 
     public void setFields(LoggedInState state) {
@@ -43,7 +43,7 @@ public class TempLoggedInView extends JPanel implements ActionListener, Property
         return viewName;
     }
 
-    public void setLoginController(LoggedInController loginController) {
-        this.loginController = loginController;
+    public void setLoginController(LoggedInController loggedInController) {
+        this.loggedInController = loggedInController;
     }
 }

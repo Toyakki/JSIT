@@ -4,7 +4,7 @@ import interface_adapters.ViewModel;
 
 public class LoggedInViewModel extends ViewModel<LoggedInState> {
     public LoggedInViewModel() {
-        super("logged in");
+        super("TempLoggedInView");
         setState(new LoggedInState());
     }
 }

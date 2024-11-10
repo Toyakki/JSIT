@@ -1,0 +1,28 @@
+package view;
+
+import interface_adapters.ViewManagerModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class ViewManager implements PropertyChangeListener {
+    private final CardLayout cardLayout;
+    private final Container views;
+    private final ViewManagerModel viewManagerModel;
+
+    public ViewManager(Container views, CardLayout cardLayout, ViewManagerModel viewManagerModel) {
+        this.views = views;
+        this.cardLayout = cardLayout;
+        this.viewManagerModel = viewManagerModel;
+        this.viewManagerModel.addPropertyChangeListener(this);
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("state")){
+            final String viewModelName = (String) evt.getNewValue();
+            cardLayout.show(views, viewModelName);
+        }
+    }
+}
