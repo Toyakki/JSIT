@@ -36,6 +36,10 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginController = loginController;
         this.signUpController = signUpController;
 
+        // creates error label
+        JLabel error_label = new JLabel(" ");
+        error_label.setForeground(Color.lightGray);
+
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
         email_textbox = new JTextArea();
@@ -121,6 +125,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
+        loginViewModel.addPropertyChangeListener(
+                (evt) -> {
+                    if (evt.getPropertyName().equals("error")) {
+                        error_label.setText(loginViewModel.getState().getLoginError());
+                    }
+                }
+        );
+
         // Creates Get Email Panel
         JPanel email_panel = new JPanel();
         email_panel.setLayout(new BoxLayout(email_panel, BoxLayout.Y_AXIS));
@@ -136,24 +148,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         password_panel.add(password_example_label);
 
         // Creates Main Panel
-//        main_panel = new JPanel();
-//        main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.Y_AXIS));
-//        main_panel.add(email_panel);
-//        main_panel.add(password_panel);
-//        main_panel.add(login_button);
-//        main_panel.add(sign_up_button);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(error_label);
         add(email_panel);
         add(password_panel);
         add(login_button);
         add(sign_up_button);
-
-        // Creates Frame (moved to Main.java)
-//        JFrame frame = new JFrame("Login");
-//        frame.setSize(400, 200);
-//        frame.setContentPane(main_panel);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e){
@@ -161,9 +161,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-//        final LoginState state = (LoginState) evt.getSource();
-//        setFields(state);
-        // eventually put error code here
+
     }
 
     public void setFields(LoginState state){
