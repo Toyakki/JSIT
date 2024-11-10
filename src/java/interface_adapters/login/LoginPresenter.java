@@ -33,5 +33,6 @@ public class LoginPresenter implements LoginUseCaseOutputBoundary {
         final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
         loginViewModel.firePropertyChanged();
+        loginViewModel.firePropertyChange("error");
     }
 }

@@ -91,7 +91,7 @@ public class Main extends JFrame {
         mainPanel.add(loggedInView, loggedInView.getViewName());
 
         add(mainPanel);
-        setSize(400, 200);
+        setSize(400, 250);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 
