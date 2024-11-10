@@ -24,10 +24,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     private JPanel main_panel;
 
-    public LoginView(LoginViewModel loginViewModel) {
+    public LoginView(LoginViewModel loginViewModel, LoginController loginController) {
         // Assign backend components
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
+
+        this.loginController = loginController;
 
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
@@ -47,16 +49,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         // Log-in button functionality
         login_button.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource().equals(login_button)){
-                            final LoginState currentState = loginViewModel.getState();
-                            loginController.login(
-                                    currentState.getEmail(),
-                                    currentState.getPassword(),
-                                    currentState.getType()
-                            );
-                        }
+                (e) -> {
+                    if (e.getSource().equals(login_button)){
+                        final LoginState currentState = loginViewModel.getState();
+                        this.loginController.login(
+                                currentState.getEmail(),
+                                currentState.getPassword(),
+                                currentState.getType()
+                        );
                     }
                 }
         );
@@ -118,12 +118,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         password_panel.add(password_example_label);
 
         // Creates Main Panel
-        main_panel = new JPanel();
-        main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.Y_AXIS));
-        main_panel.add(email_panel);
-        main_panel.add(password_panel);
-        main_panel.add(login_button);
-        main_panel.add(sign_up_button);
+//        main_panel = new JPanel();
+//        main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.Y_AXIS));
+//        main_panel.add(email_panel);
+//        main_panel.add(password_panel);
+//        main_panel.add(login_button);
+//        main_panel.add(sign_up_button);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(email_panel);
+        add(password_panel);
+        add(login_button);
+        add(sign_up_button);
 
         // Creates Frame (moved to Main.java)
 //        JFrame frame = new JFrame("Login");
@@ -156,7 +161,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginController = loginController;
     }
 
-    public Container getPane() {
-        return this.main_panel;
+    public JPanel getPane() {
+        return this;
     }
 }
