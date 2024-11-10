@@ -1,6 +1,8 @@
-package users;
+package users.login;
 
 import data_access.InMemoryUserDataAccessObject;
+import users.UserInputData;
+import users.UserOutputData;
 
 public class LoginUseCaseInteractor implements LoginUseCaseInputBoundary {
     private final InMemoryUserDataAccessObject userDsGateway;

@@ -3,7 +3,7 @@ package interface_adapters.login;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.logged_in.LoggedInState;
 import interface_adapters.logged_in.LoggedInViewModel;
-import users.LoginUseCaseOutputBoundary;
+import users.login.LoginUseCaseOutputBoundary;
 import users.UserOutputData;
 
 public class LoginPresenter implements LoginUseCaseOutputBoundary {

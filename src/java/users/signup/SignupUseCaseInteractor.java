@@ -1,9 +1,9 @@
-package users;
+package users.signup;
 
 import data_access.InMemoryUserDataAccessObject;
 import entities.AccountFactory;
 import entities.Account;
-import data_access.InMemoryUserDataAccessObject;
+import users.UserInputData;
 
 public class SignupUseCaseInteractor implements SignupUseCaseBoundary {
     final AccountFactory accountFactory;
@@ -22,12 +22,14 @@ public class SignupUseCaseInteractor implements SignupUseCaseBoundary {
         // signup logic
         if (userDsGateway.existsByEmail(userInputData.getEmail())) {
             userPresenter.prepareErrorView("User already exists.");
+            return;
         }
 
         Account account = AccountFactory.createAccount(userInputData.getEmail(), userInputData.getPassword(),
                 userInputData.getType());
         if (!account.passwordIsValid()) {
             userPresenter.prepareErrorView("Password is insufficient.");
+            return;
         }
 
 //        UserInputData user = new UserInputData(account.getEmail(), account.getPassword(), account.getType());

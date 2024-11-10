@@ -12,11 +12,11 @@ public class UserInputData {
         this.password = password;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 
