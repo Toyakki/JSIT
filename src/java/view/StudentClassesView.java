@@ -11,13 +11,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class TempLoggedInView extends JPanel implements ActionListener, PropertyChangeListener {
+public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "TempLoggedInView";
     private final LoggedInViewModel viewModel;
     private LoggedInController loggedInController;
     private final JLabel label;
 
-    public TempLoggedInView(LoggedInViewModel viewModel) {
+    public StudentClassesView(LoggedInViewModel viewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
 
@@ -30,20 +30,14 @@ public class TempLoggedInView extends JPanel implements ActionListener, Property
         System.out.println(e.getActionCommand());
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-//        final LoggedInState state = (LoggedInState) evt.getSource();
-//        setFields(state);
-    }
+    public void propertyChange(PropertyChangeEvent evt) {System.out.println(evt.getPropertyName());}
 
     public void setFields(LoggedInState state) {
-
+        this.viewModel.setState(state);
     }
 
     public String getViewName(){
         return viewName;
     }
 
-    public void setLoginController(LoggedInController loggedInController) {
-        this.loggedInController = loggedInController;
-    }
 }

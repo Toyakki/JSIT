@@ -15,7 +15,7 @@ import users.signup.SignupInputBoundary;
 import users.signup.SignupUseCaseInteractor;
 import view.IsTeacherSignupView;
 import view.LoginView;
-import view.TempLoggedInView;
+import view.StudentClassesView;
 import view.ViewManager;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class Main extends JFrame {
     private LoginView loginView;
 
     private final LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-    private TempLoggedInView loggedInView;
+    private StudentClassesView loggedInView;
 
     private SignupInputBoundary signUpInteractor;
     private SignupOutputBoundary signUpUseCaseOutputBoundary;
@@ -90,7 +90,7 @@ public class Main extends JFrame {
         mainPanel.add(loginView, loginView.getViewName());
 
         // placeholder logged in screen
-        loggedInView = new TempLoggedInView(loggedInViewModel);
+        loggedInView = new StudentClassesView(loggedInViewModel);
         mainPanel.add(loggedInView, loggedInView.getViewName());
 
         add(mainPanel);
