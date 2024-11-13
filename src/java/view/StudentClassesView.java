@@ -1,8 +1,7 @@
 package view;
 
-import interface_adapters.logged_in.LoggedInController;
-import interface_adapters.logged_in.LoggedInState;
-import interface_adapters.logged_in.LoggedInViewModel;
+import interface_adapters.student.StudentClassesState;
+import interface_adapters.student.StudentClassesViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,19 +11,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final String viewName = "student classes view";
-    private final LoggedInViewModel viewModel;
-    private LoggedInController loggedInController;
+    private final String viewName = "student classes";
+    private final StudentClassesViewModel classesViewModel;
     private final JLabel wip_label = new JLabel("work in progress");
     private final JLabel email_label = new JLabel("email: ");
-    private final JLabel type_label = new JLabel("type: ");
+    private final JLabel type_label = new JLabel("type: student");
 
-    public StudentClassesView(LoggedInViewModel viewModel) {
-        this.viewModel = viewModel;
+    public StudentClassesView(StudentClassesViewModel viewModel) {
+        this.classesViewModel = viewModel;
 
-        setFields(this.viewModel.getState());
+        setFields(this.classesViewModel.getState());
 
-        this.viewModel.addPropertyChangeListener(this);
+        this.classesViewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(wip_label);
@@ -36,14 +34,13 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
-            setFields(this.viewModel.getState());
+            setFields(this.classesViewModel.getState());
         }
     }
 
-    public void setFields(LoggedInState state) {
-        this.viewModel.setState(state);
+    public void setFields(StudentClassesState state) {
+        this.classesViewModel.setState(state);
         email_label.setText("email: " + state.getEmail());
-        type_label.setText("type: " + state.getType());
     }
 
     public String getViewName(){

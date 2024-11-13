@@ -84,7 +84,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     if (e.getSource().equals(teacher_sign_up_button)){
                         final LoginState currentState = loginViewModel.getState();
                         this.signUpController.createUser(
-                                currentState.getPassword(),
+                                currentState.getEmail(),
                                 currentState.getPassword(),
                                 "teacher"
                         );
