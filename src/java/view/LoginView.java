@@ -21,10 +21,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private LoginController loginController;
     private SignUpController signUpController;
 
-    private JTextArea email_textbox;
-    private JTextArea password_textbox;
-
-    private JPanel main_panel;
+    private JTextField email_textbox;
+    private JTextField password_textbox;
 
     public LoginView(LoginViewModel loginViewModel, LoginController loginController, SignUpController signUpController) {
         // Assign backend components
@@ -40,7 +38,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
-        email_textbox = new JTextArea();
+        email_textbox = new JTextField();
         JLabel email_example_label = new JLabel("eg: name@example.com");
         email_example_label.setForeground(Color.lightGray);
 
@@ -48,11 +46,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         JLabel password_label = new JLabel("Password");
         JLabel password_example_label = new JLabel("<html>16 characters, 1 upper case, 1 lower case, 1 number<br>and 1 special character (!@#$%^&*)</html>");
         password_example_label.setForeground(Color.lightGray);
-        password_textbox = new JTextArea();
+        password_textbox = new JTextField();
 
         // Creates Button Obj.
         JButton login_button = new JButton("Login");
-        JButton sign_up_button = new JButton("Sign Up");
+        JButton student_sign_up_button = new JButton("Sign Up as a Student");
+        JButton teacher_sign_up_button = new JButton("Sign Up as a Teacher");
 
         // Log-in button functionality
         login_button.addActionListener(
@@ -61,21 +60,33 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                         final LoginState currentState = loginViewModel.getState();
                         this.loginController.login(
                                 currentState.getEmail(),
-                                currentState.getPassword(),
-                                currentState.getType()
+                                currentState.getPassword()
                         );
                     }
                 }
         );
 
-        sign_up_button.addActionListener(
+        student_sign_up_button.addActionListener(
                 (e) -> {
-                    if (e.getSource().equals(sign_up_button)){
+                    if (e.getSource().equals(student_sign_up_button)){
                         final LoginState currentState = loginViewModel.getState();
                         this.signUpController.createUser(
                                 currentState.getEmail(),
                                 currentState.getPassword(),
-                                currentState.getType()
+                                "student"
+                        );
+                    }
+                }
+        );
+
+        teacher_sign_up_button.addActionListener(
+                (e) -> {
+                    if (e.getSource().equals(teacher_sign_up_button)){
+                        final LoginState currentState = loginViewModel.getState();
+                        this.signUpController.createUser(
+                                currentState.getEmail(),
+                                currentState.getPassword(),
+                                "teacher"
                         );
                     }
                 }
@@ -151,31 +162,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         add(email_panel);
         add(password_panel);
         add(login_button);
-        add(sign_up_button);
+        add(student_sign_up_button);
+        add(teacher_sign_up_button);
     }
 
     public void actionPerformed(ActionEvent e){
         System.out.println(e.getActionCommand());
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-
-    }
-
-    public void setFields(LoginState state){
-        email_textbox.setText(state.getEmail());
-        password_textbox.setText(state.getPassword());
-    }
+    public void propertyChange(PropertyChangeEvent evt) { }
 
     public String getViewName(){
         return viewName;
-    }
-
-    public void setLoginController(LoginController loginController){
-        this.loginController = loginController;
-    }
-
-    public JPanel getPane() {
-        return this;
     }
 }

@@ -7,15 +7,17 @@ import interface_adapters.login.LoginPresenter;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.sign_up.SignUpController;
 import interface_adapters.sign_up.SignUpPresenter;
+import interface_adapters.student.StudentClassesViewModel;
+import interface_adapters.teacher.TeacherClassesViewModel;
 import users.login.LoginUseCaseInputBoundary;
 import users.login.LoginUseCaseInteractor;
 import users.login.LoginUseCaseOutputBoundary;
 import users.signup.SignupOutputBoundary;
 import users.signup.SignupInputBoundary;
 import users.signup.SignupUseCaseInteractor;
-import view.IsTeacherSignupView;
 import view.LoginView;
 import view.StudentClassesView;
+import view.TeacherClassesView;
 import view.ViewManager;
 
 import javax.swing.*;
@@ -29,8 +31,11 @@ public class Main extends JFrame {
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private LoginView loginView;
 
-    private final LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-    private StudentClassesView loggedInView;
+    private final StudentClassesViewModel studentClassesViewModel = new StudentClassesViewModel();
+    private final TeacherClassesViewModel teacherClassesViewModel = new TeacherClassesViewModel();
+
+    private StudentClassesView studentClassesView;
+    private TeacherClassesView teacherClassesView;
 
     private SignupInputBoundary signUpInteractor;
     private SignupOutputBoundary signUpUseCaseOutputBoundary;
@@ -61,7 +66,8 @@ public class Main extends JFrame {
         // data access layer
         loginUseCaseOutputBoundary = new LoginPresenter(
                 loginViewModel,
-                loggedInViewModel,
+                studentClassesViewModel,
+                teacherClassesViewModel,
                 viewManagerModel
         );
 
@@ -74,7 +80,8 @@ public class Main extends JFrame {
                 loginInteractor
         );
 
-        SignupOutputBoundary signUpPresenter = new SignUpPresenter(loginViewModel, loggedInViewModel, viewManagerModel);
+        SignupOutputBoundary signUpPresenter = new SignUpPresenter(loginViewModel,
+                studentClassesViewModel, teacherClassesViewModel, viewManagerModel);
 
         signUpInteractor = new SignupUseCaseInteractor(
                 demo,
@@ -89,12 +96,16 @@ public class Main extends JFrame {
         loginView = new LoginView(loginViewModel, loginController, signUpController);
         mainPanel.add(loginView, loginView.getViewName());
 
-        // placeholder logged in screen
-        loggedInView = new StudentClassesView(loggedInViewModel);
-        mainPanel.add(loggedInView, loggedInView.getViewName());
+        // classes view for students
+        studentClassesView = new StudentClassesView(studentClassesViewModel);
+        mainPanel.add(studentClassesView, studentClassesView.getViewName());
+
+        // classes view for teachers
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel);
+        mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         add(mainPanel);
-        setSize(400, 250);
+        setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 

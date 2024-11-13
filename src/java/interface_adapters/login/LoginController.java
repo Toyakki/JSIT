@@ -10,8 +10,8 @@ public class LoginController {
         this.loginUseCaseInteractor = loginUseCaseInteractor;
     }
 
-    public void login(String email, String password, String type) {
-        final UserInputData loginInputData = new UserInputData(email, password, type);
+    public void login(String email, String password) {
+        final UserInputData loginInputData = new UserInputData(email, password);
         loginUseCaseInteractor.login(loginInputData);
     }
 }
