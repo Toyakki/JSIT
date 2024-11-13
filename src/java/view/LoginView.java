@@ -21,8 +21,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private LoginController loginController;
     private SignUpController signUpController;
 
-    private JTextArea email_textbox;
-    private JTextArea password_textbox;
+    private JTextField email_textbox;
+    private JTextField password_textbox;
 
     private JPanel main_panel;
 
@@ -40,7 +40,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
-        email_textbox = new JTextArea();
+        email_textbox = new JTextField();
         JLabel email_example_label = new JLabel("eg: name@example.com");
         email_example_label.setForeground(Color.lightGray);
 
@@ -48,7 +48,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         JLabel password_label = new JLabel("Password");
         JLabel password_example_label = new JLabel("<html>16 characters, 1 upper case, 1 lower case, 1 number<br>and 1 special character (!@#$%^&*)</html>");
         password_example_label.setForeground(Color.lightGray);
-        password_textbox = new JTextArea();
+        password_textbox = new JTextField();
 
         // Creates Button Obj.
         JButton login_button = new JButton("Login");

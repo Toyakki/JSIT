@@ -30,12 +30,12 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         add(email_label);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
-    }
+    public void actionPerformed(ActionEvent e) { }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        setFields(this.viewModel.getState());
+        if (evt.getPropertyName().equals("state")) {
+            setFields(this.viewModel.getState());
+        }
     }
 
     public void setFields(LoggedInState state) {
