@@ -13,6 +13,7 @@ import users.login.LoginUseCaseOutputBoundary;
 import users.signup.SignupOutputBoundary;
 import users.signup.SignupInputBoundary;
 import users.signup.SignupUseCaseInteractor;
+import view.IsTeacherSignupView;
 import view.LoginView;
 import view.TempLoggedInView;
 import view.ViewManager;
