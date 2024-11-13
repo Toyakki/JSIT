@@ -13,7 +13,6 @@ import users.login.LoginUseCaseOutputBoundary;
 import users.signup.SignupOutputBoundary;
 import users.signup.SignupInputBoundary;
 import users.signup.SignupUseCaseInteractor;
-import view.IsTeacherSignupView;
 import view.LoginView;
 import view.StudentClassesView;
 import view.ViewManager;
@@ -94,7 +93,7 @@ public class Main extends JFrame {
         mainPanel.add(loggedInView, loggedInView.getViewName());
 
         add(mainPanel);
-        setSize(400, 250);
+        setSize(400, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 

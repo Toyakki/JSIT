@@ -17,6 +17,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private LoggedInController loggedInController;
     private final JLabel wip_label = new JLabel("work in progress");
     private final JLabel email_label = new JLabel("email: ");
+    private final JLabel type_label = new JLabel("type: ");
 
     public StudentClassesView(LoggedInViewModel viewModel) {
         this.viewModel = viewModel;
@@ -28,6 +29,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(wip_label);
         add(email_label);
+        add(type_label);
     }
 
     public void actionPerformed(ActionEvent e) { }
@@ -41,6 +43,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     public void setFields(LoggedInState state) {
         this.viewModel.setState(state);
         email_label.setText("email: " + state.getEmail());
+        type_label.setText("type: " + state.getType());
     }
 
     public String getViewName(){
