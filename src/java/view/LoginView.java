@@ -75,7 +75,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                         this.signUpController.createUser(
                                 currentState.getEmail(),
                                 currentState.getPassword(),
-                                currentState.getType()
+                                "student"
                         );
                     }
                 }

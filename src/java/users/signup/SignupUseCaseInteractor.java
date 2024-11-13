@@ -6,7 +6,6 @@ import entities.AccountFactory;
 import entities.Account;
 import users.UserInputData;
 import users.UserOutputData;
-import users.login.LoginUseCaseOutputBoundary;
 
 public class SignupUseCaseInteractor implements SignupInputBoundary  {
     final SignupOutputBoundary userPresenter;
@@ -36,7 +35,7 @@ public class SignupUseCaseInteractor implements SignupInputBoundary  {
 
         userDsGateway.saveUser(account);
 
-        UserOutputData userOutputData = new UserOutputData(userInputData.getEmail(), userInputData.getPassword());
+        UserOutputData userOutputData = new UserOutputData(userInputData.getEmail(), userInputData.getType());
         userPresenter.prepareSuccessView(userOutputData);
     }
 }

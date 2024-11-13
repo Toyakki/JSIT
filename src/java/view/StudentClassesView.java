@@ -12,28 +12,35 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final String viewName = "TempLoggedInView";
+    private final String viewName = "student classes view";
     private final LoggedInViewModel viewModel;
     private LoggedInController loggedInController;
-    private final JLabel label;
+    private final JLabel wip_label = new JLabel("work in progress");
+    private final JLabel email_label = new JLabel("email: ");
 
     public StudentClassesView(LoggedInViewModel viewModel) {
         this.viewModel = viewModel;
+
+        setFields(this.viewModel.getState());
+
         this.viewModel.addPropertyChangeListener(this);
 
-        this.label = new JLabel("work in progress");
-        this.add(label);
-
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(wip_label);
+        add(email_label);
     }
 
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {System.out.println(evt.getPropertyName());}
+    public void propertyChange(PropertyChangeEvent evt) {
+        setFields(this.viewModel.getState());
+    }
 
     public void setFields(LoggedInState state) {
         this.viewModel.setState(state);
+        email_label.setText("email: " + state.getEmail());
     }
 
     public String getViewName(){

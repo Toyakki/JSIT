@@ -5,6 +5,7 @@ import interface_adapters.logged_in.LoggedInState;
 import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginState;
 import interface_adapters.login.LoginViewModel;
+import users.UserOutputData;
 import users.signup.SignupOutputBoundary;
 
 public class SignUpPresenter implements SignupOutputBoundary {
@@ -30,7 +31,7 @@ public class SignUpPresenter implements SignupOutputBoundary {
 
     public void prepareSuccessView(users.UserOutputData userOutputData) {
         final LoggedInState loggedInState = this.loggedInViewModel.getState();
-        loggedInState.setUser(userOutputData);
+        loggedInState.setUser(userOutputData); // modified this
         this.loggedInViewModel.setState(loggedInState);
         this.loggedInViewModel.firePropertyChanged();
 
