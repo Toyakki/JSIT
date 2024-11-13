@@ -1,17 +1,17 @@
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
-import entities.AccountFactory;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginPresenter;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.sign_up.SignUpController;
+import interface_adapters.sign_up.SignUpPresenter;
 import users.login.LoginUseCaseInputBoundary;
 import users.login.LoginUseCaseInteractor;
 import users.login.LoginUseCaseOutputBoundary;
 import users.signup.SignupOutputBoundary;
-import users.signup.SignupUseCaseBoundary;
+import users.signup.SignupInputBoundary;
 import users.signup.SignupUseCaseInteractor;
 import view.LoginView;
 import view.TempLoggedInView;
@@ -31,7 +31,7 @@ public class Main extends JFrame {
     private final LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     private TempLoggedInView loggedInView;
 
-    private SignupUseCaseBoundary signUpInteractor;
+    private SignupInputBoundary signUpInteractor;
     private SignupOutputBoundary signUpUseCaseOutputBoundary;
     private SignUpController signUpController;
 
@@ -51,11 +51,11 @@ public class Main extends JFrame {
         Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher");
         Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher");
         Account test = new Account("t", "t", "teacher");
-        demo.save(sark);
-        demo.save(tohya);
-        demo.save(isaac);
-        demo.save(jed);
-        demo.save(test);
+        demo.saveUser(sark);
+        demo.saveUser(tohya);
+        demo.saveUser(isaac);
+        demo.saveUser(jed);
+        demo.saveUser(test);
 
         // data access layer
         loginUseCaseOutputBoundary = new LoginPresenter(
@@ -73,9 +73,11 @@ public class Main extends JFrame {
                 loginInteractor
         );
 
+        SignupOutputBoundary signUpPresenter = new SignUpPresenter(loginViewModel, loggedInViewModel, viewManagerModel);
+
         signUpInteractor = new SignupUseCaseInteractor(
                 demo,
-                loginUseCaseOutputBoundary
+                signUpPresenter
         );
 
         signUpController = new SignUpController(

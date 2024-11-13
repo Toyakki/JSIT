@@ -1,12 +1,12 @@
 package interface_adapters.sign_up;
 
 import users.UserInputData;
-import users.signup.SignupUseCaseBoundary;
+import users.signup.SignupInputBoundary;
 
 public class SignUpController {
-    private final SignupUseCaseBoundary signUpUseCaseBoundary;
+    private final SignupInputBoundary signUpUseCaseBoundary;
 
-    public SignUpController(SignupUseCaseBoundary signUpUseCaseBoundary) {
+    public SignUpController(SignupInputBoundary signUpUseCaseBoundary) {
         this.signUpUseCaseBoundary = signUpUseCaseBoundary;
     }
 

@@ -1,5 +1,9 @@
 package interface_adapters.logged_in;
 
+import entities.Account;
+import users.UserInputData;
+import users.UserOutputData;
+
 public class LoggedInState {
     private String email = "";
     private String password = "";
@@ -29,5 +33,11 @@ public class LoggedInState {
 
     public void setType(String type){
         this.type = type;
+    }
+
+    public void setUser(UserOutputData account) {
+        this.email = account.getEmail();
+//        this.password = account.getPassword();
+        this.type = account.getType();
     }
 }

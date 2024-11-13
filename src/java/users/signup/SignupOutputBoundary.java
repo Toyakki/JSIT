@@ -1,8 +1,9 @@
 package users.signup;
 
-import users.UserInputData;
+import entities.Account;
+import users.UserOutputData;
 
 public interface SignupOutputBoundary {
-    void prepareSuccessView(UserInputData account);
+    void prepareSuccessView(UserOutputData account);
     void prepareErrorView(String error);
 }

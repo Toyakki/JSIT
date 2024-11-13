@@ -1,8 +1,10 @@
 package interface_adapters.login;
 
+import entities.Account;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.logged_in.LoggedInState;
 import interface_adapters.logged_in.LoggedInViewModel;
+import users.UserInputData;
 import users.login.LoginUseCaseOutputBoundary;
 import users.UserOutputData;
 
@@ -19,9 +21,9 @@ public class LoginPresenter implements LoginUseCaseOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
-    public void prepareSuccessView(UserOutputData response){
+    public void prepareSuccessView(UserOutputData userOutputData){
         final LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setEmail(response.getEmail());
+        loggedInState.setUser(userOutputData);
         this.loggedInViewModel.setState(loggedInState);
         this.loggedInViewModel.firePropertyChanged();
 

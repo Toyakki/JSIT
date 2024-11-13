@@ -15,11 +15,11 @@ public class LoginUseCaseInteractor implements LoginUseCaseInputBoundary {
     }
 
     public void login(UserInputData userInputData) {
-        if (!this.userDsGateway.existsByEmail(userInputData.getEmail())) {
+        if (!this.userDsGateway.userExistsByEmail(userInputData.getEmail())) {
             this.userPresenter.prepareFailView("User does not exist.");
             return;
         } else if (!this.userDsGateway
-                .getByEmail(userInputData.getEmail())
+                .getUserByEmail(userInputData.getEmail())
                 .getPassword().equals(userInputData.getPassword())) {
             this.userPresenter.prepareFailView("Incorrect email or password.");
             return;
