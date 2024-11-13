@@ -1,5 +1,6 @@
 package users.login;
 
+import users.UserInputData;
 import users.UserOutputData;
 
 public interface LoginUseCaseOutputBoundary {

@@ -24,6 +24,6 @@ public class Account {
     }
 
     public boolean passwordIsValid() {
-        return true;
+        return this.password.length() >= 6;
     }
 }

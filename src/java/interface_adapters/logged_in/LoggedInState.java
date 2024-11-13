@@ -1,33 +1,23 @@
 package interface_adapters.logged_in;
 
+import users.UserOutputData;
+
 public class LoggedInState {
     private String email = "";
-    private String password = "";
-    private String type;
+    private String type = "";
 
-    public LoggedInState(LoggedInState copy) {
-        this.email = copy.email;
-        this.password = copy.password;
-        this.type = copy.type;
+    public LoggedInState() { }
+
+    public void setUser(UserOutputData account) {
+        this.email = account.getEmail();
+        this.type = account.getType();
     }
 
-    public LoggedInState(){
-
+    public String getType() {
+        return this.type;
     }
 
     public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setType(String type){
-        this.type = type;
+        return this.email;
     }
 }

@@ -2,6 +2,6 @@ package users.signup;
 
 import users.UserInputData;
 
-public interface SignupUseCaseBoundary {
+public interface SignupInputBoundary {
     void createUser(UserInputData userInputData);
 }

@@ -1,11 +1,9 @@
 package view;
 
-import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginState;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.sign_up.SignUpController;
-import users.signup.SignupUseCaseBoundary;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
