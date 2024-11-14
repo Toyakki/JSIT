@@ -24,6 +24,10 @@ public class Account {
     }
 
     public boolean passwordIsValid() {
-        return this.password.length() >= 6;
+        return !this.password.replaceAll("[^0,9]", this.password).isBlank() && this.password.length() >= 6;
+    }
+
+    public boolean emailIsValid() {
+        return this.email.length() >= 4 && this.email.contains("@");
     }
 }

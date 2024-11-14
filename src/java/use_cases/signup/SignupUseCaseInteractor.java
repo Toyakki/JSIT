@@ -31,6 +31,9 @@ public class SignupUseCaseInteractor implements SignupInputBoundary  {
         if (!account.passwordIsValid()) {
             userPresenter.prepareErrorView("Password is insufficient.");
             return;
+        } else if (!account.emailIsValid()) {
+            userPresenter.prepareErrorView("Email is invalid.");
+            return;
         }
 
         userDsGateway.saveUser(account);
