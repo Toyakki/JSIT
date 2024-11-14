@@ -52,7 +52,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         password_textbox = new JTextField();
 
         // Creates Button Obj.
-        JButton login_button = new JButton("Login");
+        JButton login_button = new JButton("            Login            ");
         JButton student_sign_up_button = new JButton("Sign Up as a Student");
         JButton teacher_sign_up_button = new JButton("Sign Up as a Teacher");
 
