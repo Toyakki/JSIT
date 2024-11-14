@@ -33,17 +33,20 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.signUpController = signUpController;
 
         // creates error label
-        JLabel error_label = new JLabel(" ");
-        error_label.setForeground(Color.lightGray);
+        JLabel error_label = new JLabel();
+        error_label.setFont(new Font("Tohoma", Font.BOLD, 15));
+        error_label.setForeground(Color.RED);
 
         // Creates Email Obj.
         JLabel email_label = new JLabel("Email");
+        styleLabel(email_label);
         email_textbox = new JTextField();
         JLabel email_example_label = new JLabel("eg: name@example.com");
         email_example_label.setForeground(Color.lightGray);
 
         // Creates Password Obj.
         JLabel password_label = new JLabel("Password");
+        styleLabel(password_label);
         JLabel password_example_label = new JLabel("<html>16 characters, 1 upper case, 1 lower case, 1 number<br>and 1 special character (!@#$%^&*)</html>");
         password_example_label.setForeground(Color.lightGray);
         password_textbox = new JTextField();
@@ -52,6 +55,11 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         JButton login_button = new JButton("Login");
         JButton student_sign_up_button = new JButton("Sign Up as a Student");
         JButton teacher_sign_up_button = new JButton("Sign Up as a Teacher");
+
+        // button styling
+        styleButton(login_button);
+        styleButton(student_sign_up_button);
+        styleButton(teacher_sign_up_button);
 
         // Log-in button functionality
         login_button.addActionListener(
@@ -159,11 +167,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         // Creates Main Panel
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(error_label);
+        addBlankSpace(1);
         add(email_panel);
+        addBlankSpace(1);
         add(password_panel);
-        add(login_button);
-        add(student_sign_up_button);
-        add(teacher_sign_up_button);
+        addBlankSpace(1);
+        add(login_button, BorderLayout.CENTER);
+        addBlankSpace(1);
+        add(student_sign_up_button, BorderLayout.CENTER);
+        addBlankSpace(1);
+        add(teacher_sign_up_button, BorderLayout.CENTER);
+        addBlankSpace(3);
     }
 
     public void actionPerformed(ActionEvent e){
@@ -174,5 +188,22 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     public String getViewName(){
         return viewName;
+    }
+
+    public void styleButton(JButton button) {
+        button.setBackground(Color.BLACK);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Tahoma", Font.BOLD, 15));
+        button.setBorderPainted(false);
+    }
+
+    public void addBlankSpace(int n) {
+        for (int i = 0; i < n; i++){
+            add(new JLabel(" "));
+        }
+    }
+
+    public void styleLabel(JLabel label) {
+        label.setFont(new Font("Tahoma", Font.BOLD, 15));
     }
 }
