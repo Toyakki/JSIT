@@ -1,6 +1,6 @@
-package users.login;
+package use_cases.login;
 
-import users.UserInputData;
+import use_cases.UserInputData;
 
 public interface LoginUseCaseInputBoundary {
     void login(UserInputData userInputData);

@@ -1,16 +1,14 @@
 package interface_adapters.sign_up;
 
 import interface_adapters.ViewManagerModel;
-import interface_adapters.logged_in.LoggedInState;
-import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginState;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
-import users.UserOutputData;
-import users.signup.SignupOutputBoundary;
+import use_cases.UserOutputData;
+import use_cases.signup.SignupOutputBoundary;
 
 public class SignUpPresenter implements SignupOutputBoundary {
     private LoginViewModel loginViewModel;

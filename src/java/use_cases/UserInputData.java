@@ -1,4 +1,4 @@
-package users;
+package use_cases;
 
 public class UserInputData {
 

@@ -1,6 +1,6 @@
 package interface_adapters.teacher;
 
-import users.UserOutputData;
+import use_cases.UserOutputData;
 
 public class TeacherClassesState {
     private String email = "";

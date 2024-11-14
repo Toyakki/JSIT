@@ -1,11 +1,11 @@
-package users.signup;
+package use_cases.signup;
 
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
 import entities.AccountFactory;
 import entities.Account;
-import users.UserInputData;
-import users.UserOutputData;
+import use_cases.UserInputData;
+import use_cases.UserOutputData;
 
 public class SignupUseCaseInteractor implements SignupInputBoundary  {
     final SignupOutputBoundary userPresenter;
@@ -30,6 +30,9 @@ public class SignupUseCaseInteractor implements SignupInputBoundary  {
                 userInputData.getType());
         if (!account.passwordIsValid()) {
             userPresenter.prepareErrorView("Password is insufficient.");
+            return;
+        } else if (!account.emailIsValid()) {
+            userPresenter.prepareErrorView("Email is invalid.");
             return;
         }
 

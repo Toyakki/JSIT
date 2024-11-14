@@ -2,7 +2,6 @@ package view;
 
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
-import users.UserOutputData;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
