@@ -1,7 +1,6 @@
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import interface_adapters.ViewManagerModel;
-import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginPresenter;
 import interface_adapters.login.LoginViewModel;

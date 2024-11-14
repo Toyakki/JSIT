@@ -1,7 +1,6 @@
 package interface_adapters.login;
 
 import interface_adapters.ViewManagerModel;
-import interface_adapters.logged_in.LoggedInState;
 import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.teacher.TeacherClassesState;
