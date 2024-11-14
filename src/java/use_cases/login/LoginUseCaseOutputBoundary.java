@@ -1,7 +1,6 @@
-package users.login;
+package use_cases.login;
 
-import users.UserInputData;
-import users.UserOutputData;
+import use_cases.UserOutputData;
 
 public interface LoginUseCaseOutputBoundary {
     void prepareFailView(String message);

@@ -5,8 +5,8 @@ import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
-import users.login.LoginUseCaseOutputBoundary;
-import users.UserOutputData;
+import use_cases.login.LoginUseCaseOutputBoundary;
+import use_cases.UserOutputData;
 
 public class LoginPresenter implements LoginUseCaseOutputBoundary {
     private final LoginViewModel loginViewModel;

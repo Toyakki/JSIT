@@ -7,8 +7,8 @@ import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
-import users.UserOutputData;
-import users.signup.SignupOutputBoundary;
+import use_cases.UserOutputData;
+import use_cases.signup.SignupOutputBoundary;
 
 public class SignUpPresenter implements SignupOutputBoundary {
     private LoginViewModel loginViewModel;

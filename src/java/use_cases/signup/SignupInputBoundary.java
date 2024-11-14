@@ -1,6 +1,6 @@
-package users.signup;
+package use_cases.signup;
 
-import users.UserInputData;
+import use_cases.UserInputData;
 
 public interface SignupInputBoundary {
     void createUser(UserInputData userInputData);

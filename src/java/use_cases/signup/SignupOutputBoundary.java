@@ -1,7 +1,6 @@
-package users.signup;
+package use_cases.signup;
 
-import entities.Account;
-import users.UserOutputData;
+import use_cases.UserOutputData;
 
 public interface SignupOutputBoundary {
     void prepareSuccessView(UserOutputData account);
