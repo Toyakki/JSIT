@@ -8,25 +8,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "student classes";
     private final StudentClassesViewModel classesViewModel;
-    private final JLabel wip_label = new JLabel("work in progress");
-    private final JLabel email_label = new JLabel("email: ");
-    private final JLabel type_label = new JLabel("type: student");
+    private final JLabel noCoursesLabel = new JLabel("No courses joined yet.");
+    private final JLabel titleLabel = new JLabel("Classes:");
 
     public StudentClassesView(StudentClassesViewModel viewModel) {
         this.classesViewModel = viewModel;
 
-        setFields(this.classesViewModel.getState());
-
         this.classesViewModel.addPropertyChangeListener(this);
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(wip_label);
-        add(email_label);
-        add(type_label);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
     public void actionPerformed(ActionEvent e) { }
@@ -37,13 +32,30 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         }
     }
 
-    public void setFields(StudentClassesState state) {
+    private void setFields(StudentClassesState state) {
         this.classesViewModel.setState(state);
-        email_label.setText("email: " + state.getEmail());
+        renderCourses();
+    }
+
+    private void renderCourses() {
+        if (this.classesViewModel.getState().getCourseNames().isEmpty() && this.getComponentCount() == 0) {
+            add(noCoursesLabel);
+        } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
+            remove(this.noCoursesLabel);
+            add(this.titleLabel);
+            List<String> courseNames = this.classesViewModel.getState().getCourseNames();
+            for (String courseName : courseNames) {
+                add(createCourseLabel(courseName));
+            }
+        }
     }
 
     public String getViewName(){
         return viewName;
+    }
+
+    private JLabel createCourseLabel(String courseName) {
+        return new JLabel(courseName);
     }
 
 }

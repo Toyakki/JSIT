@@ -33,7 +33,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.signUpController = signUpController;
 
         // creates error label
-        JLabel error_label = new JLabel();
+        JLabel error_label = new JLabel(" ");
         error_label.setFont(new Font("Tohoma", Font.BOLD, 15));
         error_label.setForeground(Color.RED);
 
@@ -47,7 +47,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         // Creates Password Obj.
         JLabel password_label = new JLabel("Password");
         styleLabel(password_label);
-        JLabel password_example_label = new JLabel("<html>16 characters, 1 upper case, 1 lower case, 1 number<br>and 1 special character (!@#$%^&*)</html>");
+        JLabel password_example_label = new JLabel("<html>at least 10 characters, 1 upper case, 1 lower case, and 1 number</html>");
         password_example_label.setForeground(Color.lightGray);
         password_textbox = new JTextField();
 

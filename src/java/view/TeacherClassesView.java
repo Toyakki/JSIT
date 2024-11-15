@@ -8,28 +8,42 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 public class TeacherClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private TeacherClassesViewModel classesViewModel;
     private final String viewName = "teacher classes";
-
-    private final JLabel wip_label = new JLabel("work in progress");
-    private JLabel email_label = new JLabel("email: ");
-    private final JLabel type_label = new JLabel("type: teacher");
+    private final JLabel noCoursesLabel = new JLabel("No courses created yet.");
+    private final JLabel titleLabel = new JLabel("Classes:");
 
     public TeacherClassesView(TeacherClassesViewModel classesViewModel) {
         this.classesViewModel = classesViewModel;
+
         this.classesViewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(wip_label);
-        add(email_label);
-        add(type_label);
     }
 
-    public void setFields(TeacherClassesState state){
+    private void setFields(TeacherClassesState state){
         this.classesViewModel.setState(state);
-        email_label.setText("email: " + state.getEmail());
+        renderCourses();
+    }
+
+    private void renderCourses(){
+        if (this.classesViewModel.getState().getCourseNames().isEmpty() && this.getComponentCount() == 0) {
+            add(noCoursesLabel);
+        } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
+            remove(this.noCoursesLabel);
+            add(this.titleLabel);
+            List<String> courseNames = this.classesViewModel.getState().getCourseNames();
+            for (String courseName : courseNames) {
+                add(createCourseLabel(courseName));
+            }
+        }
+    }
+
+    private JLabel createCourseLabel(String courseName){
+        return new JLabel(courseName);
     }
 
     public void actionPerformed(ActionEvent e) { }
