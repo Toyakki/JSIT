@@ -17,6 +17,10 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final JLabel titleLabel = new JLabel("Classes:");
 
     private final JPanel coursesPanel = new JPanel();
+    private final JPanel joinCoursePanel = new JPanel();
+
+    private final JButton joinButton = new JButton("Join Class");
+    private final JTextField joinCodeField = new JTextField();
 
     public StudentClassesView(StudentClassesViewModel viewModel) {
         this.classesViewModel = viewModel;
@@ -26,8 +30,23 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
 
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
+        coursesPanel.setPreferredSize(new Dimension(370, 500));
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        joinButton.setPreferredSize(new Dimension(100, 30));
+        joinCodeField.setPreferredSize(new Dimension(100, 30));
+        joinCoursePanel.setLayout(new BoxLayout(joinCoursePanel, BoxLayout.Y_AXIS));
+
+        JPanel joinCodeFieldWrapper = new JPanel();
+        joinCodeFieldWrapper.add(joinCodeField);
+        joinCodeFieldWrapper.setPreferredSize(new Dimension(100, 30));
+
+        joinCoursePanel.setPreferredSize(new Dimension(100, 70));
+        joinCoursePanel.add(joinCodeFieldWrapper, BorderLayout.CENTER);
+        joinCodeFieldWrapper.add(joinButton, BorderLayout.CENTER);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        add(coursesPanel);
+        add(joinCoursePanel, BorderLayout.NORTH);
     }
 
     public void actionPerformed(ActionEvent e) { }
@@ -45,13 +64,12 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
 
     private void renderCourses() {
         if (this.classesViewModel.getState().getCourseNames().isEmpty() && this.getComponentCount() == 0) {
-            add(noCoursesLabel);
+            coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
-            remove(this.noCoursesLabel);
-            addBlankSpace();
-            add(titleLabel);
-            addBlankSpace(2);
-            add(coursesPanel);
+            coursesPanel.remove(this.noCoursesLabel);
+            addBlankSpace(coursesPanel);
+            coursesPanel.add(titleLabel);
+            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
                 coursesPanel.add(createCourseLabel(courseName));
@@ -98,5 +116,11 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
 
     private void addBlankSpace(JPanel p) {
         p.add(new JLabel(" "));
+    }
+
+    private void addBlankSpace(JPanel p, int n){
+        for (int i = 0; i < n; i++) {
+            p.add(new JLabel(" "));
+        }
     }
 }
