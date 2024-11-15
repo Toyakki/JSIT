@@ -72,7 +72,7 @@ public class Main extends JFrame {
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
         Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher", isaac_courses);
         Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher", jed_courses);
-        Account test = new Account("t", "t", "student", isaac_courses);
+        Account test = new Account("t", "t", "teacher", isaac_courses);
         demo.saveUser(sark);
         demo.saveUser(tohya);
         demo.saveUser(isaac);

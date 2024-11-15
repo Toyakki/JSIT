@@ -20,6 +20,9 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         this.classesViewModel = viewModel;
         this.classesViewModel.addPropertyChangeListener(this);
 
+        noCoursesLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
+        titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
@@ -41,10 +44,13 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
             add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             remove(this.noCoursesLabel);
+            addBlankSpace();
             add(titleLabel);
+            addBlankSpace(2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
-                add(renderCourse(courseName));
+                add(createCourseLabel(courseName));
+                addBlankSpace();
             }
         }
     }
@@ -53,15 +59,35 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         return viewName;
     }
 
-    private JLabel renderCourse(String courseName) {
+    private JLabel createCourseLabel(String courseName) {
         JLabel courseLabel = new JLabel(courseName);
+        courseLabel.setFont(new Font("Tomaha", Font.PLAIN, 16));
         courseLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
                 System.out.println(courseName);
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e){
+                courseLabel.setForeground(Color.lightGray);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e){
+                courseLabel.setForeground(Color.black);
+            }
         });
         return courseLabel;
     }
 
+    private void addBlankSpace(int n) {
+        for (int i = 0; i < n; i++) {
+            add(new JLabel(" "));
+        }
+    }
+
+    private void addBlankSpace(){
+        addBlankSpace(1);
+    }
 }
