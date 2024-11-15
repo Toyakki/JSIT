@@ -18,6 +18,7 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     private final String viewName = "teacher classes";
     private final JLabel noCoursesLabel = new JLabel("No courses created yet.");
     private final JLabel titleLabel = new JLabel("Classes:");
+    private final JPanel coursesPanel = new JPanel();
 
     public TeacherClassesView(TeacherClassesViewModel classesViewModel) {
         this.classesViewModel = classesViewModel;
@@ -25,6 +26,8 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
 
         noCoursesLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
+
+        coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
@@ -42,10 +45,11 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
             addBlankSpace();
             add(this.titleLabel);
             addBlankSpace(2);
+            add(coursesPanel);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
-                add(createCourseLabel(courseName));
-                addBlankSpace();
+                coursesPanel.add(createCourseLabel(courseName));
+                addBlankSpace(coursesPanel);
             }
         }
     }
@@ -80,6 +84,10 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
 
     private void addBlankSpace(){
         addBlankSpace(1);
+    }
+
+    private void addBlankSpace(JPanel p){
+        p.add(new JLabel(" "));
     }
 
     public void actionPerformed(ActionEvent e) { }
