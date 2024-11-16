@@ -14,7 +14,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final String viewName = "student classes";
     private final StudentClassesViewModel classesViewModel;
     private final JLabel noCoursesLabel = new JLabel("No courses joined yet.");
-    private final JLabel titleLabel = new JLabel("Classes:");
+    private final JLabel titleLabel = new JLabel(" Classes:");
 
     private final JPanel coursesPanel = new JPanel();
     private final JPanel joinCoursePanel = new JPanel();
@@ -30,9 +30,13 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
 
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
-        coursesPanel.setPreferredSize(new Dimension(370, 500));
+        coursesPanel.setPreferredSize(new Dimension(370, 10));
 
         joinButton.setPreferredSize(new Dimension(100, 30));
+        joinButton.setBackground(Color.BLACK);
+        joinButton.setForeground(Color.WHITE);
+        joinButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+        joinButton.setBorderPainted(false);
         joinCodeField.setPreferredSize(new Dimension(100, 30));
         joinCoursePanel.setLayout(new BoxLayout(joinCoursePanel, BoxLayout.Y_AXIS));
 
@@ -41,12 +45,12 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         joinCodeFieldWrapper.setPreferredSize(new Dimension(100, 30));
 
         joinCoursePanel.setPreferredSize(new Dimension(100, 70));
-        joinCoursePanel.add(joinCodeFieldWrapper, BorderLayout.CENTER);
-        joinCodeFieldWrapper.add(joinButton, BorderLayout.CENTER);
+        joinCoursePanel.add(joinCodeFieldWrapper);
+        joinCodeFieldWrapper.add(joinButton);
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add(coursesPanel);
-        add(joinCoursePanel, BorderLayout.NORTH);
+        add(joinCoursePanel);
     }
 
     public void actionPerformed(ActionEvent e) { }
@@ -63,7 +67,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     }
 
     private void renderCourses() {
-        if (this.classesViewModel.getState().getCourseNames().isEmpty() && this.getComponentCount() == 0) {
+        if (this.classesViewModel.getState().getCourseNames().isEmpty() && coursesPanel.getComponentCount() == 0) {
             coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
@@ -83,7 +87,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     }
 
     private JLabel createCourseLabel(String courseName) {
-        JLabel courseLabel = new JLabel(courseName);
+        JLabel courseLabel = new JLabel("   " + courseName);
         courseLabel.setFont(new Font("Tomaha", Font.PLAIN, 16));
         courseLabel.addMouseListener(new MouseAdapter() {
             @Override
