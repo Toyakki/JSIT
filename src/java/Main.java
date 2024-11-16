@@ -38,7 +38,7 @@ public class Main extends JFrame {
     private TeacherClassesView teacherClassesView;
 
     private SignupInputBoundary signUpInteractor;
-    private SignupOutputBoundary signUpUseCaseOutputBoundary;
+    private SignupOutputBoundary signUpPresenter;
     private SignUpController signUpController;
 
     private LoginUseCaseInputBoundary loginInteractor;
@@ -96,7 +96,7 @@ public class Main extends JFrame {
                 loginInteractor
         );
 
-        SignupOutputBoundary signUpPresenter = new SignUpPresenter(loginViewModel,
+        signUpPresenter = new SignUpPresenter(loginViewModel,
                 studentClassesViewModel, teacherClassesViewModel, viewManagerModel);
 
         signUpInteractor = new SignupUseCaseInteractor(
