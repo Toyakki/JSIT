@@ -30,7 +30,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
 
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
-        coursesPanel.setPreferredSize(new Dimension(370, 10));
+        coursesPanel.setPreferredSize(new Dimension(370, 300));
 
         joinButton.setPreferredSize(new Dimension(100, 30));
         joinButton.setBackground(Color.BLACK);

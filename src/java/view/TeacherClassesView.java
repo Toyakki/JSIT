@@ -20,6 +20,10 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     private final JLabel titleLabel = new JLabel("Classes:");
     private final JPanel coursesPanel = new JPanel();
 
+    private final JPanel joinCoursePanel = new JPanel();
+    private final JButton joinButton = new JButton("Create Class");
+    private final JTextField joinCodeField = new JTextField();
+
     public TeacherClassesView(TeacherClassesViewModel classesViewModel) {
         this.classesViewModel = classesViewModel;
         this.classesViewModel.addPropertyChangeListener(this);
@@ -28,8 +32,27 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
 
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
+        coursesPanel.setPreferredSize(new Dimension(370, 300));
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        joinButton.setPreferredSize(new Dimension(125, 30));
+        joinButton.setBackground(Color.BLACK);
+        joinButton.setForeground(Color.WHITE);
+        joinButton.setFont(new Font("Tomaha", Font.BOLD, 12));
+        joinButton.setBorderPainted(false);
+        joinCodeField.setPreferredSize(new Dimension(125, 30));
+        joinCoursePanel.setLayout(new BoxLayout(joinCoursePanel, BoxLayout.Y_AXIS));
+
+        JPanel joinCodeFieldWrapper = new JPanel();
+        joinCodeFieldWrapper.add(joinCodeField);
+        joinCodeFieldWrapper.setPreferredSize(new Dimension(125, 30));
+
+        joinCoursePanel.setPreferredSize(new Dimension(125, 70));
+        joinCoursePanel.add(joinCodeFieldWrapper);
+        joinCodeFieldWrapper.add(joinButton);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        add(coursesPanel);
+        add(joinCoursePanel);
     }
 
     private void setFields(TeacherClassesState state){
@@ -38,19 +61,24 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     }
 
     private void renderCourses(){
-        if (this.classesViewModel.getState().getCourseNames().isEmpty() && this.getComponentCount() == 0) {
-            add(noCoursesLabel);
+        if (this.classesViewModel.getState().getCourseNames().isEmpty() && coursesPanel.getComponentCount() == 0) {
+            coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
-            remove(this.noCoursesLabel);
-            addBlankSpace();
-            add(this.titleLabel);
-            addBlankSpace(2);
-            add(coursesPanel);
+            coursesPanel.remove(this.noCoursesLabel);
+            addBlankSpace(coursesPanel);
+            coursesPanel.add(this.titleLabel);
+            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
                 coursesPanel.add(createCourseLabel(courseName));
                 addBlankSpace(coursesPanel);
             }
+        }
+    }
+
+    private void addBlankSpace(JPanel p, int n) {
+        for (int i = 0; i < n; i++){
+            p.add(new JLabel(" "));
         }
     }
 
