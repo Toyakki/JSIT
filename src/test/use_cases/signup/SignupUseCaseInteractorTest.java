@@ -19,15 +19,16 @@ class SignupUseCaseInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
 
     void create(){
-        LoginViewModel loginViewModel = new LoginViewModel();
-        StudentClassesViewModel studentClassesViewModel = new StudentClassesViewModel();
-        TeacherClassesViewModel teacherClassesViewModel = new TeacherClassesViewModel();
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
+//        LoginViewModel loginViewModel = new LoginViewModel();
+//        StudentClassesViewModel studentClassesViewModel = new StudentClassesViewModel();
+//        TeacherClassesViewModel teacherClassesViewModel = new TeacherClassesViewModel();
+//        ViewManagerModel viewManagerModel = new ViewManagerModel();
 //        SignupOutputBoundary userPresenter = new SignUpPresenter(loginViewModel, studentClassesViewModel,
 //                teacherClassesViewModel, viewManagerModel);
-        userDsGateway = new InMemoryUserDataAccessObject();
 //        SignupUseCaseInteractor interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
-        userDsGateway.saveUser(new Account("enze@gmail.com", "Abc123456!", "student"));
+        userDsGateway = new InMemoryUserDataAccessObject();
+        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student");
+        userDsGateway.saveUser(existedUser);
     }
 
 
@@ -35,7 +36,7 @@ class SignupUseCaseInteractorTest {
         SignupOutputBoundary userPresenter = new SignUpPresenter() {
             @Override
             public void prepareErrorView(String error){
-                fail("Valid user");
+                fail("Valid user, use case failure is unexpected.");
             }
 
             @Override
@@ -50,9 +51,58 @@ class SignupUseCaseInteractorTest {
             }
         };
         SignupInputBoundary interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
-        interactor.createUser(new UserInputData(
-                "@gmail.com", "Abc123456!", "student"
-        ));
+        UserInputData validUser = new UserInputData("@gmail.com", "Abc123456!", "student");
+        interactor.createUser(validUser);
     }
 
+    public void testInvalidPassword(UserOutputData account) {
+        SignupOutputBoundary userPresenter = new SignUpPresenter() {
+            @Override
+            public void prepareErrorView(String error){
+                assert true;
+            }
+
+            @Override
+            public void prepareSuccessView(UserOutputData account) {
+                fail("User with invalid password, use case failure is unexpected");
+            }
+        };
+        SignupInputBoundary interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
+        UserInputData invalidPasswordUser = new UserInputData("@gmail.com", "aa", "student");
+        interactor.createUser(invalidPasswordUser);
+    }
+
+    public void testInvalidEmail(UserOutputData account) {
+        SignupOutputBoundary userPresenter = new SignUpPresenter() {
+            @Override
+            public void prepareErrorView(String error){
+                assert true;
+            }
+
+            @Override
+            public void prepareSuccessView(UserOutputData account) {
+                fail("User with invalid username, use case failure is unexpected");
+            }
+        };
+        SignupInputBoundary interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
+        UserInputData invalidEmailUser = new UserInputData("@om", "aAbc123456!", "student");
+        interactor.createUser(invalidEmailUser);
+    }
+
+    public void testExistedUser(UserOutputData account) {
+        SignupOutputBoundary userPresenter = new SignUpPresenter() {
+            @Override
+            public void prepareErrorView(String error){
+                assert true;
+            }
+
+            @Override
+            public void prepareSuccessView(UserOutputData account) {
+                fail("User already existed, use case failure is unexpected");
+            }
+        };
+        SignupInputBoundary interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
+        UserInputData existedUser = new UserInputData("enze@gmail.com", "Abc123456!", "student");
+        interactor.createUser(existedUser);
+    }
 }
