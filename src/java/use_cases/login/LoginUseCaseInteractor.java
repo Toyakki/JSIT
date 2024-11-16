@@ -26,7 +26,8 @@ public class LoginUseCaseInteractor implements LoginUseCaseInputBoundary {
         }
 
         UserOutputData user = new UserOutputData(userInputData.getEmail(),
-                this.userDsGateway.getUserByEmail(userInputData.getEmail()).getType()
+                this.userDsGateway.getUserByEmail(userInputData.getEmail()).getType(),
+                this.userDsGateway.getUserByEmail(userInputData.getEmail()).getCourseNames()
         );
         this.userPresenter.prepareSuccessView(user);
     }

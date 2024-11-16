@@ -21,6 +21,7 @@ import view.ViewManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Main extends JFrame {
 
@@ -51,11 +52,27 @@ public class Main extends JFrame {
         InMemoryUserDataAccessObject demo = new InMemoryUserDataAccessObject();
 
         // load dummy data
-        Account sark = new Account("sark-asadourian@gmail.com", "password123", "student");
-        Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student");
-        Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher");
-        Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher");
-        Account test = new Account("t", "t", "teacher");
+        ArrayList<String> sark_courses = new ArrayList<>();
+        sark_courses.add("CSC207");
+        sark_courses.add("COG250");
+
+        ArrayList<String> tohya_courses = new ArrayList<>();
+        tohya_courses.add("CSC207");
+        tohya_courses.add("PHY256");
+
+        ArrayList<String> jed_courses = new ArrayList<>();
+        jed_courses.add("CSC207");
+        jed_courses.add("HPS100");
+
+        ArrayList<String> isaac_courses = new ArrayList<>();
+        isaac_courses.add("CSC207");
+        isaac_courses.add("MAT347");
+
+        Account sark = new Account("sark-asadourian@gmail.com", "password123", "student", sark_courses);
+        Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
+        Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher", isaac_courses);
+        Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher", jed_courses);
+        Account test = new Account("t", "t", "teacher", jed_courses);
         demo.saveUser(sark);
         demo.saveUser(tohya);
         demo.saveUser(isaac);
@@ -104,7 +121,7 @@ public class Main extends JFrame {
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         add(mainPanel);
-        setSize(500, 400);
+        setSize(500, 425);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 
@@ -112,6 +129,7 @@ public class Main extends JFrame {
 
         viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
+        setTitle("JSIT");
         setVisible(true);
     }
 
