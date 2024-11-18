@@ -1,5 +1,9 @@
 package view;
 
+import interface_adapters.AssignmentCreater.AssignmentCreaterController;
+import interface_adapters.Download.DownloadController;
+import interface_adapters.Grades.GradeController;
+import interface_adapters.TeacherCourse.TeacherCourseBackController;
 import interface_adapters.TeacherCourse.TeacherCourseViewModel;
 
 import javax.swing.*;

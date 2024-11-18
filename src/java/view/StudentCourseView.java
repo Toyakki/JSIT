@@ -1,6 +1,8 @@
 package view;
 
 import entities.Course;
+import interface_adapters.Download.DownloadController;
+import interface_adapters.StudentCourse.StudentCourseBackController;
 import interface_adapters.StudentCourse.StudentCourseViewModel;
 
 import javax.swing.*;
