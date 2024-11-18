@@ -8,10 +8,31 @@ Team Members:
 - Sark Asadourian - sark-adadourian
 
 User stories:
+---current---
+Isaac
+- As a teacher, I want to create an assignment with a due date, PDF, and a total # of marks
+- Upload Interface and Use Case
+
+Tohya
+- As a student, I want to submit by PDF assignment
+- As a teacher, I want to grade assignment as downloading it, then uploading an PDF, and setting grade
+- Download Interface and Use Case
+
+Sark
+- As a student, I want to view my assignment that my teacher submitted
+- As a teacher, I want to view my grade and download my graded PDF
+
+Jed
+- As a teacher, I want to create a class with a name
+- As a student, I want to join a class with class code
+
+
+----old----
+
 - As a student, I want to create an account with a strong password and email so that I can join a class as my teacher 
  explained. (team)
 
-- As a student, I want to join a class with the code given by my teacher so I can submit assignments. (team)
+- As a student, I want to join a class with the code given by my teacher so I can submit assignments.
 
 - As a student, I want to log back into my account and type in my password and username again, so I can see the 
  assignments I have. (team)
@@ -34,5 +55,6 @@ User stories:
  access it. (Isaac)
 
 - As a student, I want to be able to check my grades and recent feedback. (Isaac)
+
 
 
