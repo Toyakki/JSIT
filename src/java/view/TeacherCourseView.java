@@ -52,7 +52,7 @@ public class TeacherCourseView extends JPanel {
         createButton.addActionListener(e -> {
             assignmentCreaterController.setTotalGrade(totalGradeField.getText());
             // this right?
-        })
+        });
 
 
 
