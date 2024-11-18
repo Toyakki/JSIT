@@ -1,3 +1,4 @@
+import com.formdev.flatlaf.FlatLightLaf;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import interface_adapters.ViewManagerModel;
@@ -48,6 +49,9 @@ public class Main extends JFrame {
     private final ViewManager viewManager;
 
     public Main(){
+        // import look and feel for JSwing
+        FlatLightLaf.setup();
+
         InMemoryUserDataAccessObject demo = new InMemoryUserDataAccessObject();
 
         // load dummy data

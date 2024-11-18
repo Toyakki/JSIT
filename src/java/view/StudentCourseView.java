@@ -4,36 +4,31 @@ import entities.Course;
 import interface_adapters.StudentCourse.StudentCourseViewModel;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class StudentCourseView extends JPanel {
     private final StudentCourseViewModel studentCourseViewModel;
-    private final String courseName;
-    private final List<String> assignmentsNames;
-    private final List<String> assignmentsDueDates;
-    private final List<String> assignmentsStages;
-    private final List<String> assignmentsMarks;
-    private final List<String> assignmentsMarksRecived;
 
     public StudentCourseView(StudentCourseViewModel viewModel) {
         this.studentCourseViewModel = viewModel;
-        this.courseName = studentCourseViewModel.getState().getCourseName();
-        this.assignmentsNames = new ArrayList<>(viewModel.getAssignmentsNames());
-        this.assignmentsDueDates = new ArrayList<>(viewModel.getAssignmentsDueDates());
-        this.assignmentsStages = new ArrayList<>(viewModel.getAssignmentsStages());
-        this.assignmentsMarks = new ArrayList<>(viewModel.getAssignmentsMarks());
-        this.assignmentsMarksRecived = new ArrayList<>(viewModel.getAssignmentsMarksRecived());
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(new JLabel(courseName));
-        for (int i = 0; i < assignmentsNames.size(); i++) {
-            add(new JLabel(assignmentsNames.get(i)));
-            add(new JLabel(assignmentsDueDates.get(i)));
-            add(new JLabel(assignmentsMarks.get(i)));
+        this.add(new JLabel(studentCourseViewModel.getState().getCourseName()));
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            StudentCourseBackController.back();
+        });
+        this.add(backButton);
 
-            if (assignmentsStages.equals("graded")){
+        for (int i = 0; i < studentCourseViewModel.getState().getAssignmentsNames().size(); i++) {
+            add(new JLabel(studentCourseViewModel.getState().getAssignmentsNames().get(i)));
+            add(new JLabel(studentCourseViewModel.getState().getAssignmentsDueDates().get(i)));
+            add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarks().get(i)));
+
+            if (studentCourseViewModel.getState().getAssignmentsStages.get(i).equals("graded")){
                 JPanel viewAssignmentsPanel = new JPanel();
                 viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
                 JButton downloadOriginalButton = new JButton("Download Original");
@@ -42,26 +37,27 @@ public class StudentCourseView extends JPanel {
 
                 downloadOriginalButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadOriginalButton)){
-                        //todo
+                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), i);
                     }
                 });
                 downloadSubmittedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadSubmittedButton)){
-                        //todo
+                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", i);
                     }
                 });
                 downloadGradedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadGradedButton)){
-                        //todo
+                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", i);
                     }
                 });
 
                 viewAssignmentsPanel.add(downloadOriginalButton);
                 viewAssignmentsPanel.add(downloadSubmittedButton);
                 viewAssignmentsPanel.add(downloadGradedButton);
-                viewAssignmentsPanel.add(new JLabel(assignmentsMarksRecived.get(i)));
+                viewAssignmentsPanel.add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarksRecived().get(i)));
                 add(viewAssignmentsPanel);
             }
+
             else {
                 JPanel viewAssignmentsPanel = new JPanel();
                 viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
@@ -70,13 +66,19 @@ public class StudentCourseView extends JPanel {
 
                 downloadButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadButton)){
-                        //todo
+                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), i);
                     }
                 });
                 submitButton.addActionListener(e -> {
                     if (e.getSource().equals(submitButton)){
                         JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setAcceptAllFileFilterUsed(false);
+                        FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
+                        fileChooser.addChoosableFileFilter(restrict);
+
+
                         fileChooser.showDialog(null, "Upload");
+                        // I am stuck
 
                     }
                 });
