@@ -14,6 +14,16 @@
             <artifactId>flatlaf</artifactId>
             <version>3.5.2</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dropbox.core</groupId>
+            <artifactId>dropbox-core-sdk</artifactId>
+            <version>7.0.0</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -22,5 +32,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    
 </project>
