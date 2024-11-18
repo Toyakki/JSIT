@@ -11,15 +11,21 @@ import java.util.List;
 
 public class StudentCourseView extends JPanel {
     private final StudentCourseViewModel studentCourseViewModel;
+    private StudentCourseBackController studentCourseBackController;
+    private DownloadController downloadController;
 
-    public StudentCourseView(StudentCourseViewModel viewModel) {
+    public StudentCourseView(StudentCourseViewModel viewModel, StudentCourseBackController studentCourseBackController,
+                             DownloadController downloadController) {
         this.studentCourseViewModel = viewModel;
+        this.studentCourseBackController = studentCourseBackController;
+        this.downloadController = downloadController;
+
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(new JLabel(studentCourseViewModel.getState().getCourseName()));
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> {
-            StudentCourseBackController.back();
+            studentCourseBackController.back();
         });
         this.add(backButton);
 
@@ -37,17 +43,17 @@ public class StudentCourseView extends JPanel {
 
                 downloadOriginalButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadOriginalButton)){
-                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), i);
                     }
                 });
                 downloadSubmittedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadSubmittedButton)){
-                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", i);
                     }
                 });
                 downloadGradedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadGradedButton)){
-                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", i);
                     }
                 });
 
@@ -66,7 +72,7 @@ public class StudentCourseView extends JPanel {
 
                 downloadButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadButton)){
-                        DownloadController.download(studentCourseViewModel.getState().getCourseName(), i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), i);
                     }
                 });
                 submitButton.addActionListener(e -> {

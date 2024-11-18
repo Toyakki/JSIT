@@ -8,9 +8,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class TeacherCourseView extends JPanel {
     private final TeacherCourseViewModel teacherCourseViewModel;
     private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
+    private TeacherCourseBackController teacherCourseBackController;
+    private AssignmentCreaterController assignmentCreaterController;
+    private DownloadController downloadController;
+    private GradeController gradeController;
 
-    public TeacherCourseView(TeacherCourseViewModel viewModel) {
+    public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
+                             AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
+                             GradeController gradeController) {
         this.teacherCourseViewModel = viewModel;
+        this.teacherCourseBackController = teacherCourseBackController;
+        this.assignmentCreaterController = assignmentCreaterController;
+        this.downloadController = downloadController;
+        this.gradeController = gradeController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         // need to add back button
@@ -20,6 +30,27 @@ public class TeacherCourseView extends JPanel {
             teacherCourseBackController.back();
         });
         this.add(backButton);
+
+        this.add(new JLabel("Create Assignment"));
+        JButton uploadButton = new JButton("Upload");
+        uploadButton.addActionListener(e -> {
+            // help
+        });
+        this.add(uploadButton);
+
+        // need to research date picker
+
+        JTextField totalGradeField = new JTextField("Total Grade");
+
+        this.add(totalGradeField);
+
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(e -> {
+            assignmentCreaterController.setTotalGrade(totalGradeField.getText());
+            // this right?
+        })
+
+
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
@@ -77,7 +108,7 @@ public class TeacherCourseView extends JPanel {
                 JTextField gradeField = new JTextField();
                 assignmentsTable.setValueAt(gradeField, 4, x + 1);
                 gradeField.addActionListener(e -> {
-                    GradeController.setGrade(gradeField.getText());
+                    gradeController.setGrade(gradeField.getText());
                     // this right
                 });
 
