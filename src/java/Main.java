@@ -15,6 +15,8 @@ import interface_adapters.login.LoginViewModel;
 import interface_adapters.sign_up.SignUpController;
 import interface_adapters.sign_up.SignUpPresenter;
 import interface_adapters.student.StudentClassesViewModel;
+import interface_adapters.student.StudentCourseViewController;
+import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -22,6 +24,7 @@ import use_cases.login.LoginUseCaseOutputBoundary;
 import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
+import use_cases.student_course_selection.StudentCourseViewInteractor;
 import view.*;
 
 import javax.swing.*;
@@ -80,7 +83,7 @@ public class Main extends JFrame {
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
         Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher", isaac_courses);
         Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher", jed_courses);
-        Account test = new Account("t", "t", "teacher", jed_courses);
+        Account test = new Account("t", "t", "student", jed_courses);
         demo.saveUser(sark);
         demo.saveUser(tohya);
         demo.saveUser(isaac);
@@ -120,8 +123,25 @@ public class Main extends JFrame {
         loginView = new LoginView(loginViewModel, loginController, signUpController);
         mainPanel.add(loginView, loginView.getViewName());
 
+        // course view models
+        TeacherCourseViewModel teacherCourseViewModel = new TeacherCourseViewModel();
+        StudentCourseViewModel studentCourseViewModel = new StudentCourseViewModel();
+
+        // course selection controllers and use case interactors and presenters
+        StudentCourseViewPresenter studentCourseViewPresenter = new StudentCourseViewPresenter(
+                studentClassesViewModel,
+                studentCourseViewModel,
+                viewManagerModel
+        );
+        StudentCourseViewInteractor studentCourseViewInteractor = new StudentCourseViewInteractor(
+                studentCourseViewPresenter
+        );
+        StudentCourseViewController studentCourseViewController = new StudentCourseViewController(
+                studentCourseViewInteractor
+        );
+
         // classes view for students
-        studentClassesView = new StudentClassesView(studentClassesViewModel);
+        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
@@ -134,10 +154,6 @@ public class Main extends JFrame {
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
         GradeController gradeController = new GradeController();
-
-        // course view models
-        TeacherCourseViewModel teacherCourseViewModel = new TeacherCourseViewModel();
-        StudentCourseViewModel studentCourseViewModel = new StudentCourseViewModel();
 
         // course view for student
         StudentCourseView studentCourseView = new StudentCourseView(
