@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class TeacherCourseView extends JPanel {
+    private final String viewName = "teacher course";
     private final TeacherCourseViewModel teacherCourseViewModel;
     private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
     private TeacherCourseBackController teacherCourseBackController;
@@ -126,5 +127,9 @@ public class TeacherCourseView extends JPanel {
 
         }
 
+    }
+
+    public String getViewName(){
+        return this.viewName;
     }
 }

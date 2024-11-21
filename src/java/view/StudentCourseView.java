@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StudentCourseView extends JPanel {
+    private final String viewName = "student course";
     private final StudentCourseViewModel studentCourseViewModel;
     private StudentCourseBackController studentCourseBackController;
     private DownloadController downloadController;
@@ -97,5 +98,9 @@ public class StudentCourseView extends JPanel {
             }
         }
 
+    }
+
+    public String getViewName(){
+        return this.viewName;
     }
 }

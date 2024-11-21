@@ -1,6 +1,13 @@
 import com.formdev.flatlaf.FlatLightLaf;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
+import interface_adapters.AssignmentCreater.AssignmentCreaterController;
+import interface_adapters.Download.DownloadController;
+import interface_adapters.Grades.GradeController;
+import interface_adapters.StudentCourse.StudentCourseBackController;
+import interface_adapters.StudentCourse.StudentCourseViewModel;
+import interface_adapters.TeacherCourse.TeacherCourseBackController;
+import interface_adapters.TeacherCourse.TeacherCourseViewModel;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginPresenter;
@@ -15,10 +22,7 @@ import use_cases.login.LoginUseCaseOutputBoundary;
 import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
-import view.LoginView;
-import view.StudentClassesView;
-import view.TeacherClassesView;
-import view.ViewManager;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -123,6 +127,35 @@ public class Main extends JFrame {
         // classes view for teachers
         teacherClassesView = new TeacherClassesView(teacherClassesViewModel);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
+
+        // download, back, etc. controllers
+        DownloadController downloadController = new DownloadController();
+        StudentCourseBackController studentCourseBackController = new StudentCourseBackController();
+        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+        GradeController gradeController = new GradeController();
+
+        // course view models
+        TeacherCourseViewModel teacherCourseViewModel = new TeacherCourseViewModel();
+        StudentCourseViewModel studentCourseViewModel = new StudentCourseViewModel();
+
+        // course view for student
+        StudentCourseView studentCourseView = new StudentCourseView(
+                studentCourseViewModel,
+                studentCourseBackController,
+                downloadController
+        );
+        mainPanel.add(studentCourseView, studentCourseView.getViewName());
+
+        // course view for teacher
+        TeacherCourseView teacherCourseView = new TeacherCourseView(
+                teacherCourseViewModel,
+                teacherCourseBackController,
+                assignmentCreaterController,
+                downloadController,
+                gradeController
+        );
+        mainPanel.add(teacherCourseView, teacherCourseView.getViewName());
 
         add(mainPanel);
         setSize(500, 425);
