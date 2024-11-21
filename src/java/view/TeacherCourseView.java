@@ -58,8 +58,8 @@ public class TeacherCourseView extends JPanel {
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().assignmentsDueDates().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().assignmentsMarks().get(i)));
+            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
+            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
 
             JTable assignmentsTable = new JTable(teacherCourseViewModel.getState().getStudentEmails().size(), 4);
             for (int x = 0; x < 5; x++){
@@ -71,19 +71,23 @@ public class TeacherCourseView extends JPanel {
             for (int x = 0; x < teacherCourseViewModel.getState().getStudentEmails().size(); x++){
                 assignmentsTable.setValueAt(teacherCourseViewModel.getState().getStudentEmails().get(x), 0, x + 1);
 
-                if (!teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("assigned")){
+                if (!teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
                     JButton downloadButton = new JButton("Download");
                     assignmentsTable.setValueAt(downloadButton, 1, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(x), "submitted", i);
+                        // can't pass local variables into lambda functions, fixed
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "submitted");
                     });
                 }
 
-                if (teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("graded")){
+                if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
                     JButton gradingButton = new JButton("graded/download");
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     gradingButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(x), "graded", i);
+                        // can't pass local variables into lambda functions, fixed
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "graded");
                     });
                 }
                 else {
@@ -102,7 +106,7 @@ public class TeacherCourseView extends JPanel {
                     });
                 }
 
-                if (teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("assigned")){
+                if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
                     assignmentsTable.setValueAt("not submitted", 3, x + 1);
                 }
                 else {
