@@ -52,6 +52,11 @@ public class TeacherCourseView extends JPanel {
         createButton.addActionListener(e -> {
             assignmentCreaterController.setTotalGrade(totalGradeField.getText());
             // this right?
+            // assignmentCreatorController.createAssignment(
+            //      totalGradeField.getText(), (should only be int)
+            //      dueDate,
+            //      file
+            // )
         });
 
 
@@ -79,7 +84,7 @@ public class TeacherCourseView extends JPanel {
                     });
                 }
 
-                if (teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("graded")){
+                if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
                     JButton gradingButton = new JButton("graded/download");
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
                     gradingButton.addActionListener(e -> {
@@ -102,7 +107,7 @@ public class TeacherCourseView extends JPanel {
                     });
                 }
 
-                if (teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("assigned")){
+                if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
                     assignmentsTable.setValueAt("not submitted", 3, x + 1);
                 }
                 else {
