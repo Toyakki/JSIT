@@ -8,6 +8,7 @@ import interface_adapters.TeacherCourse.TeacherCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 
 public class TeacherCourseView extends JPanel {
     private final TeacherCourseViewModel teacherCourseViewModel;
@@ -17,6 +18,7 @@ public class TeacherCourseView extends JPanel {
     private DownloadController downloadController;
     private GradeController gradeController;
     private UploadController uploadController;
+    private File newAssignmentFile;
 
     public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
                              AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
@@ -40,7 +42,14 @@ public class TeacherCourseView extends JPanel {
         this.add(new JLabel("Create Assignment"));
         JButton uploadButton = new JButton("Upload");
         uploadButton.addActionListener(e -> {
-            // help
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
+            fileChooser.addChoosableFileFilter(restrict);
+            int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+            if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+                newAssignmentFile = fileChooser.getSelectedFile();
+            }
         });
         this.add(uploadButton);
 
@@ -53,10 +62,16 @@ public class TeacherCourseView extends JPanel {
 
         JButton createButton = new JButton("Create");
         createButton.addActionListener(e -> {
-            assignmentCreaterController.createAssignment(
-                    dueDate.getText(),
-                    totalGradeField.getText()
-            );
+            if (newAssignmentFile.equals(null)) {
+                JOptionPane.showMessageDialog(null, "Assignment not Selected");
+            }
+            else {
+                assignmentCreaterController.createAssignment(
+                        dueDate.getText(),
+                        totalGradeField.getText(),
+                        newAssignmentFile
+                );
+            }
         });
 
 
@@ -71,8 +86,6 @@ public class TeacherCourseView extends JPanel {
             for (int x = 0; x < 5; x++){
                 assignmentsTable.setValueAt(columnNames[x], x, 0);
             }
-
-            // how can see what this looks like
 
             for (int x = 0; x < teacherCourseViewModel.getState().getStudentEmails().size(); x++){
                 final int index = x;
