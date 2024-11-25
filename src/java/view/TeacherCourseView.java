@@ -16,15 +16,17 @@ public class TeacherCourseView extends JPanel {
     private AssignmentCreaterController assignmentCreaterController;
     private DownloadController downloadController;
     private GradeController gradeController;
+    private UploadController uploadController;
 
     public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
                              AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
-                             GradeController gradeController) {
+                             GradeController gradeController, UploadController uploadController) {
         this.teacherCourseViewModel = viewModel;
         this.teacherCourseBackController = teacherCourseBackController;
         this.assignmentCreaterController = assignmentCreaterController;
         this.downloadController = downloadController;
         this.gradeController = gradeController;
+        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         // need to add back button
@@ -42,26 +44,25 @@ public class TeacherCourseView extends JPanel {
         });
         this.add(uploadButton);
 
-        // need to research date picker
+        this.add(new JLabel("Set Due Date, e.g. Jan. 1"));
+        JTextField dueDate = new JTextField();
+        this.add(dueDate);
 
         JTextField totalGradeField = new JTextField("Total Grade");
-
         this.add(totalGradeField);
 
         JButton createButton = new JButton("Create");
         createButton.addActionListener(e -> {
-            assignmentCreaterController.setTotalGrade(totalGradeField.getText());
-            // this right?
-            // assignmentCreatorController.createAssignment(
-            //      totalGradeField.getText(), (should only be int)
-            //      dueDate,
-            //      file
-            // )
+            assignmentCreaterController.createAssignment(
+                    dueDate.getText(),
+                    totalGradeField.getText()
+            );
         });
 
 
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
+            final int outer_index = i;
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
             add(new JLabel(teacherCourseViewModel.getState().assignmentsDueDates().get(i)));
             add(new JLabel(teacherCourseViewModel.getState().assignmentsMarks().get(i)));
@@ -74,13 +75,14 @@ public class TeacherCourseView extends JPanel {
             // how can see what this looks like
 
             for (int x = 0; x < teacherCourseViewModel.getState().getStudentEmails().size(); x++){
+                final int index = x;
                 assignmentsTable.setValueAt(teacherCourseViewModel.getState().getStudentEmails().get(x), 0, x + 1);
 
                 if (!teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("assigned")){
                     JButton downloadButton = new JButton("Download");
                     assignmentsTable.setValueAt(downloadButton, 1, x + 1);
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(x), "submitted", i);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "submitted", outer_index);
                     });
                 }
 
@@ -88,7 +90,7 @@ public class TeacherCourseView extends JPanel {
                     JButton gradingButton = new JButton("graded/download");
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
                     gradingButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(x), "graded", i);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "graded", outer_index);
                     });
                 }
                 else {
@@ -99,11 +101,10 @@ public class TeacherCourseView extends JPanel {
                         fileChooser.setAcceptAllFileFilterUsed(false);
                         FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
                         fileChooser.addChoosableFileFilter(restrict);
-
-
-                        fileChooser.showDialog(null, "Upload");
-                        // I am stuck
-
+                        int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+                        if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+                            uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
+                        }
                     });
                 }
 

@@ -32,11 +32,12 @@ public class StudentCourseView extends JPanel {
         this.add(backButton);
 
         for (int i = 0; i < studentCourseViewModel.getState().getAssignmentsNames().size(); i++) {
+            final int index = i;
             add(new JLabel(studentCourseViewModel.getState().getAssignmentsNames().get(i)));
             add(new JLabel(studentCourseViewModel.getState().getAssignmentsDueDates().get(i)));
             add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarks().get(i)));
 
-            if (studentCourseViewModel.getState().getAssignmentsStages.get(i).equals("graded")){
+            if (studentCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
                 JPanel viewAssignmentsPanel = new JPanel();
                 viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
                 JButton downloadOriginalButton = new JButton("Download Original");
@@ -45,24 +46,24 @@ public class StudentCourseView extends JPanel {
 
                 downloadOriginalButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadOriginalButton)){
-                        downloadController.download(studentCourseViewModel.getState().getCourseName(), i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
                     }
                 });
                 downloadSubmittedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadSubmittedButton)){
-                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", index);
                     }
                 });
                 downloadGradedButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadGradedButton)){
-                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", index);
                     }
                 });
 
                 viewAssignmentsPanel.add(downloadOriginalButton);
                 viewAssignmentsPanel.add(downloadSubmittedButton);
                 viewAssignmentsPanel.add(downloadGradedButton);
-                viewAssignmentsPanel.add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarksRecived().get(i)));
+                viewAssignmentsPanel.add(new JLabel(String.valueOf(studentCourseViewModel.getState().getAssignmentsMarksRecived().get(i))));
                 add(viewAssignmentsPanel);
             }
 
@@ -74,7 +75,7 @@ public class StudentCourseView extends JPanel {
 
                 downloadButton.addActionListener(e -> {
                     if (e.getSource().equals(downloadButton)){
-                        downloadController.download(studentCourseViewModel.getState().getCourseName(), i);
+                        downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
                     }
                 });
                 submitButton.addActionListener(e -> {
