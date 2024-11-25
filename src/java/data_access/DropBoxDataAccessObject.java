@@ -13,6 +13,7 @@ import com.dropbox.core.DbxDownloader;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
+import java.util.List;
 
 public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDataAccessInterface {
     private static final String ACCESS_TOKEN;
@@ -53,6 +54,12 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         } catch (IOException | DbxException e) {
             throw new RuntimeException("Error downloading file: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<PDFFile> getFiles(String path){
+        // need to update somehow
+        return null;
     }
 
 
