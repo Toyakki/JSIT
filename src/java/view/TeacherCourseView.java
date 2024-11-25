@@ -11,24 +11,25 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 public class TeacherCourseView extends JPanel {
+    private final String viewName = "teacher course";
     private final TeacherCourseViewModel teacherCourseViewModel;
     private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
     private TeacherCourseBackController teacherCourseBackController;
     private AssignmentCreaterController assignmentCreaterController;
     private DownloadController downloadController;
     private GradeController gradeController;
-    private UploadController uploadController;
+//    private UploadController uploadController;
     private File newAssignmentFile;
 
     public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
                              AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
-                             GradeController gradeController, UploadController uploadController) {
+                             GradeController gradeController) {
         this.teacherCourseViewModel = viewModel;
         this.teacherCourseBackController = teacherCourseBackController;
         this.assignmentCreaterController = assignmentCreaterController;
         this.downloadController = downloadController;
         this.gradeController = gradeController;
-        this.uploadController = uploadController;
+//        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         // need to add back button
@@ -79,8 +80,8 @@ public class TeacherCourseView extends JPanel {
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             final int outer_index = i;
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().assignmentsDueDates().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().assignmentsMarks().get(i)));
+            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
+            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
 
             JTable assignmentsTable = new JTable(teacherCourseViewModel.getState().getStudentEmails().size(), 4);
             for (int x = 0; x < 5; x++){
@@ -91,19 +92,21 @@ public class TeacherCourseView extends JPanel {
                 final int index = x;
                 assignmentsTable.setValueAt(teacherCourseViewModel.getState().getStudentEmails().get(x), 0, x + 1);
 
-                if (!teacherCourseViewModel.getState().getAssignmentsStages.get(i).equals("assigned")){
+                if (!teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
                     JButton downloadButton = new JButton("Download");
                     assignmentsTable.setValueAt(downloadButton, 1, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "submitted", outer_index);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "submitted");
                     });
                 }
 
                 if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
                     JButton gradingButton = new JButton("graded/download");
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     gradingButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "graded", outer_index);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "graded");
                     });
                 }
                 else {
@@ -116,7 +119,7 @@ public class TeacherCourseView extends JPanel {
                         fileChooser.addChoosableFileFilter(restrict);
                         int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
                         if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
-                            uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
+//                            uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
                         }
                     });
                 }
@@ -141,5 +144,9 @@ public class TeacherCourseView extends JPanel {
 
         }
 
+    }
+
+    public String getViewName(){
+        return this.viewName;
     }
 }
