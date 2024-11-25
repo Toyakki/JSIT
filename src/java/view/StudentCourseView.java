@@ -147,7 +147,7 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         viewAssignmentsPanel.add(downloadOriginalButton);
         viewAssignmentsPanel.add(downloadSubmittedButton);
         viewAssignmentsPanel.add(downloadGradedButton);
-        viewAssignmentsPanel.add(new JLabel(String.valueOf(studentCourseViewModel.getState().getAssignmentsMarksRecived().get(index))));
+        viewAssignmentsPanel.add(new JLabel(String.valueOf(studentCourseViewModel.getState().getAssignmentsMarksReceived().get(index))));
         add(viewAssignmentsPanel);
     }
 

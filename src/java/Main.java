@@ -3,9 +3,7 @@ import data_access.FileDataAccessInterface;
 import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
-import entities.Account;
-import entities.Course;
-import entities.CourseFactory;
+import entities.*;
 import interface_adapters.AssignmentCreater.AssignmentCreaterController;
 import interface_adapters.Download.DownloadController;
 import interface_adapters.Grades.GradeController;
@@ -23,6 +21,7 @@ import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.student.StudentCourseViewController;
 import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
+import use_cases.StudentCourseBack.StudentCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
 import use_cases.login.LoginUseCaseOutputBoundary;
@@ -74,6 +73,14 @@ public class Main extends JFrame {
         Course csCourse = CourseFactory.createClass("Johnathon Calver", "CSC207");
         Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
         Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
+
+        Assignment ps1 = new Assignment("Problem Set 1", "December 1st", "100", "graded", "true");
+        Assignment ps2 = new Assignment("Problem Set 2", "December 15st", "100", "assigned", "false");
+        Assignment finalProject = new Assignment("Final Project", "December 4th", "25", "submitted", "false");
+
+        csCourse.addAssignment(finalProject);
+        matCourse.addAssignment(ps1);
+        matCourse.addAssignment(ps2);
 
         List<Course> joe_courses = new ArrayList<>();
         joe_courses.add(matCourse);
@@ -156,8 +163,9 @@ public class Main extends JFrame {
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         // download, back, etc. controllers
+        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo);
         DownloadController downloadController = new DownloadController();
-        StudentCourseBackController studentCourseBackController = new StudentCourseBackController();
+        StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
         GradeController gradeController = new GradeController();

@@ -11,6 +11,7 @@ public class Assignment {
         this.name = name;
         this.dueDate = dueDate;
         this.marks = marks;
+        // stage is one of assigned, submitted, graded
         this.stage = stage;
         this.marksReceivedStatus = marksReceivedStatus;
     }

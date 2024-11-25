@@ -10,5 +10,7 @@ public class DownloadController {
 
     }
 
+    public void download(String courseName, String email, String downloadType){}
+
     public void download(String courseName, String downloadType, String email, int index){}
 }
