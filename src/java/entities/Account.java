@@ -43,4 +43,8 @@ public class Account {
     public List<String> getCourseNames() {
         return List.copyOf(this.courseNames);
     }
+
+    public void addCourse(String courseCode) {
+        this.courseNames.add(courseCode);
+    }
 }

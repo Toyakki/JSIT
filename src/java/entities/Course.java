@@ -14,4 +14,8 @@ public class Course {
         this.classCode = classCode;
         this.students = students;
     }
+
+    public String getClassName() {
+        return className;
+    }
 }
