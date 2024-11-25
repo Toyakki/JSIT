@@ -1,6 +1,18 @@
 import com.formdev.flatlaf.FlatLightLaf;
+import data_access.FileDataAccessInterface;
+import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessInterface;
 import entities.Account;
+import entities.Course;
+import entities.CourseFactory;
+import interface_adapters.AssignmentCreater.AssignmentCreaterController;
+import interface_adapters.Download.DownloadController;
+import interface_adapters.Grades.GradeController;
+import interface_adapters.StudentCourse.StudentCourseBackController;
+import interface_adapters.StudentCourse.StudentCourseViewModel;
+import interface_adapters.TeacherCourse.TeacherCourseBackController;
+import interface_adapters.TeacherCourse.TeacherCourseViewModel;
 import interface_adapters.ViewManagerModel;
 import interface_adapters.login.LoginController;
 import interface_adapters.login.LoginPresenter;
@@ -8,6 +20,8 @@ import interface_adapters.login.LoginViewModel;
 import interface_adapters.sign_up.SignUpController;
 import interface_adapters.sign_up.SignUpPresenter;
 import interface_adapters.student.StudentClassesViewModel;
+import interface_adapters.student.StudentCourseViewController;
+import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -15,14 +29,13 @@ import use_cases.login.LoginUseCaseOutputBoundary;
 import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
-import view.LoginView;
-import view.StudentClassesView;
-import view.TeacherClassesView;
-import view.ViewManager;
+import use_cases.student_course_selection.StudentCourseViewInteractor;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends JFrame {
 
@@ -53,34 +66,33 @@ public class Main extends JFrame {
         // import look and feel for JSwing
         FlatLightLaf.setup();
 
-        InMemoryUserDataAccessObject demo = new InMemoryUserDataAccessObject();
+        FileDataAccessInterface fileDataAccessObject = new InMemoryFileDataAccessObject();
+
+        UserDataAccessInterface demo = new InMemoryUserDataAccessObject();
 
         // load dummy data
-        ArrayList<String> sark_courses = new ArrayList<>();
-        sark_courses.add("CSC207");
-        sark_courses.add("COG250");
+        Course csCourse = CourseFactory.createClass("Johnathon Calver", "CSC207");
+        Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
+        Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
 
-        ArrayList<String> tohya_courses = new ArrayList<>();
-        tohya_courses.add("CSC207");
-        tohya_courses.add("PHY256");
+        List<Course> joe_courses = new ArrayList<>();
+        joe_courses.add(matCourse);
 
-        ArrayList<String> jed_courses = new ArrayList<>();
-        jed_courses.add("CSC207");
-        jed_courses.add("HPS100");
+        List<Course> tohya_courses = new ArrayList<>();
+        tohya_courses.add(statsCourse);
+        tohya_courses.add(csCourse);
 
-        ArrayList<String> isaac_courses = new ArrayList<>();
-        isaac_courses.add("CSC207");
-        isaac_courses.add("MAT347");
+        List<Course> test_courses = new ArrayList<>();
+        test_courses.add(statsCourse);
+        test_courses.add(csCourse);
+        test_courses.add(matCourse);
 
-        Account sark = new Account("sark-asadourian@gmail.com", "password123", "student", sark_courses);
+
+        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra","teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account isaac = new Account("isaac@gmail.com", "ftlopbd", "teacher", isaac_courses);
-        Account jed = new Account("jedi@gmail.com", "jediiiiiiiiiii", "teacher", jed_courses);
-        Account test = new Account("t", "t", "teacher", jed_courses);
-        demo.saveUser(sark);
+        Account test = new Account("t", "t", "student", test_courses);
+        demo.saveUser(joe);
         demo.saveUser(tohya);
-        demo.saveUser(isaac);
-        demo.saveUser(jed);
         demo.saveUser(test);
 
         // data access layer
@@ -116,13 +128,57 @@ public class Main extends JFrame {
         loginView = new LoginView(loginViewModel, loginController, signUpController);
         mainPanel.add(loginView, loginView.getViewName());
 
+        // course view models
+        TeacherCourseViewModel teacherCourseViewModel = new TeacherCourseViewModel();
+        StudentCourseViewModel studentCourseViewModel = new StudentCourseViewModel();
+
+        // course selection controllers and use case interactors and presenters
+        StudentCourseViewPresenter studentCourseViewPresenter = new StudentCourseViewPresenter(
+                studentClassesViewModel,
+                studentCourseViewModel,
+                viewManagerModel
+        );
+        StudentCourseViewInteractor studentCourseViewInteractor = new StudentCourseViewInteractor(
+                studentCourseViewPresenter,
+                fileDataAccessObject,
+                demo
+        );
+        StudentCourseViewController studentCourseViewController = new StudentCourseViewController(
+                studentCourseViewInteractor
+        );
+
         // classes view for students
-        studentClassesView = new StudentClassesView(studentClassesViewModel);
+        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
         teacherClassesView = new TeacherClassesView(teacherClassesViewModel);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
+
+        // download, back, etc. controllers
+        DownloadController downloadController = new DownloadController();
+        StudentCourseBackController studentCourseBackController = new StudentCourseBackController();
+        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+        GradeController gradeController = new GradeController();
+
+        // course view for student
+        StudentCourseView studentCourseView = new StudentCourseView(
+                studentCourseViewModel,
+                studentCourseBackController,
+                downloadController
+        );
+        mainPanel.add(studentCourseView, studentCourseView.getViewName());
+
+        // course view for teacher
+        TeacherCourseView teacherCourseView = new TeacherCourseView(
+                teacherCourseViewModel,
+                teacherCourseBackController,
+                assignmentCreaterController,
+                downloadController,
+                gradeController
+        );
+        mainPanel.add(teacherCourseView, teacherCourseView.getViewName());
 
         add(mainPanel);
         setSize(500, 425);

@@ -6,6 +6,8 @@ import interface_adapters.login.LoginPresenter;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginUseCaseInteractorTest {
@@ -13,7 +15,7 @@ class LoginUseCaseInteractorTest {
 
     void create() {
         userDsGateway = new InMemoryUserDataAccessObject();
-        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student");
+        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
         userDsGateway.saveUser(existedUser);
     }
 

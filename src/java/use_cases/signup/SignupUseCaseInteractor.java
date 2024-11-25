@@ -14,7 +14,7 @@ public class SignupUseCaseInteractor implements SignupInputBoundary  {
     final UserDataAccessInterface userDsGateway;
 
 
-    public SignupUseCaseInteractor(InMemoryUserDataAccessObject userSignupDataAccessInterface,
+    public SignupUseCaseInteractor(UserDataAccessInterface userSignupDataAccessInterface,
                                    SignupOutputBoundary userPresenter
     ) {
         this.userPresenter = userPresenter;
