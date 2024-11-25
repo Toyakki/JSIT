@@ -11,6 +11,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 public class TeacherCourseView extends JPanel {
+    private final String viewName = "teacher course";
     private final TeacherCourseViewModel teacherCourseViewModel;
     private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
     private TeacherCourseBackController teacherCourseBackController;
@@ -94,16 +95,18 @@ public class TeacherCourseView extends JPanel {
                 if (!teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
                     JButton downloadButton = new JButton("Download");
                     assignmentsTable.setValueAt(downloadButton, 1, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "submitted", outer_index);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "submitted");
                     });
                 }
 
                 if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
                     JButton gradingButton = new JButton("graded/download");
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
+                    final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     gradingButton.addActionListener(e -> {
-                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), teacherCourseViewModel.getState().getStudentEmails().get(index), "graded", outer_index);
+                        downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "graded");
                     });
                 }
                 else {
@@ -141,5 +144,9 @@ public class TeacherCourseView extends JPanel {
 
         }
 
+    }
+
+    public String getViewName(){
+        return this.viewName;
     }
 }

@@ -1,14 +1,15 @@
 package use_cases.login;
 
 import data_access.InMemoryUserDataAccessObject;
+import data_access.UserDataAccessInterface;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
 
 public class LoginUseCaseInteractor implements LoginUseCaseInputBoundary {
-    private final InMemoryUserDataAccessObject userDsGateway;
+    private final UserDataAccessInterface userDsGateway;
     private final LoginUseCaseOutputBoundary userPresenter;
 
-    public LoginUseCaseInteractor(InMemoryUserDataAccessObject userDsGateway,
+    public LoginUseCaseInteractor(UserDataAccessInterface userDsGateway,
                                   LoginUseCaseOutputBoundary loginUseCaseBoundary) {
         this.userDsGateway = userDsGateway;
         this.userPresenter = loginUseCaseBoundary;

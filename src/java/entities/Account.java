@@ -1,18 +1,42 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
     private final String email;
     private final String password;
     private final String type;
+    private List<Course> courses;
     private List<String> courseNames;
 
-    public Account(String email, String password, String type, List<String> courseNames) {
+    public Account(String email, String password, String type, List<Course> courses) {
         this.email = email;
         this.password = password;
         this.type = type;
-        this.courseNames = List.copyOf(courseNames);
+        this.courses = courses;
+        this.courseNames = new ArrayList<>();
+        for (Course course : this.courses) {
+            this.courseNames.add(course.getName());
+        }
+    }
+
+    public Course getCourseByName(String name) {
+        Course course = null;
+        for (Course candidateCourse : this.courses){
+            if (candidateCourse.getName().equals(name)){
+                course = candidateCourse;
+                break;
+            }
+        }
+        if (course == null){
+            throw new IllegalArgumentException("Course not found");
+        }
+        return course;
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
     }
 
     public String getEmail() {
@@ -42,5 +66,9 @@ public class Account {
 
     public List<String> getCourseNames() {
         return List.copyOf(this.courseNames);
+    }
+
+    public void addCourse(String courseCode) {
+        this.courseNames.add(courseCode);
     }
 }

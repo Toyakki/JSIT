@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class StudentCourseView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "student course";
     private final StudentCourseViewModel studentCourseViewModel;
     private StudentCourseBackController studentCourseBackController;
     private DownloadController downloadController;
@@ -97,7 +98,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 //                add(viewAssignmentsPanel);
 //            }
 //        }
-
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -178,5 +178,9 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         viewAssignmentsPanel.add(downloadButton);
         viewAssignmentsPanel.add(submitButton);
         add(viewAssignmentsPanel);
+    }
+
+    public String getViewName(){
+        return this.viewName;
     }
 }
