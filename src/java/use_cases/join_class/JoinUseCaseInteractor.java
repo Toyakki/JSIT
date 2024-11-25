@@ -23,7 +23,7 @@ public class JoinUseCaseInteractor {
             presenter.prepareFailView("Course does not exist");
         }
         Course course = this.coursedataAccess.getCourseByCode(courseCode);
-        user.addCourse(courseCode);
+        user.addCourse(course);
         presenter.prepareSuccessView(new UserOutputData(email, "student", user.getCourseNames()));
     }
 }

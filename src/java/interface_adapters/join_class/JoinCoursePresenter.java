@@ -11,7 +11,8 @@ public class JoinCoursePresenter {
     public JoinCoursePresenter(StudentClassesViewModel studentClassesViewModel) {
         this.viewModel = studentClassesViewModel;
     }
-    public void prepareFailView(String courseDoesNotExist) {
+    
+    public void prepareFailView(String error) {
 
     }
 
