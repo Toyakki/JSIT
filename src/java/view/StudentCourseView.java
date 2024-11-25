@@ -15,13 +15,14 @@ public class StudentCourseView extends JPanel {
     private final StudentCourseViewModel studentCourseViewModel;
     private StudentCourseBackController studentCourseBackController;
     private DownloadController downloadController;
+    private UploadController uploadController;
 
     public StudentCourseView(StudentCourseViewModel viewModel, StudentCourseBackController studentCourseBackController,
-                             DownloadController downloadController) {
+                             DownloadController downloadController, UploadController uploadController) {
         this.studentCourseViewModel = viewModel;
         this.studentCourseBackController = studentCourseBackController;
         this.downloadController = downloadController;
-
+        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(new JLabel(studentCourseViewModel.getState().getCourseName()));
@@ -84,11 +85,10 @@ public class StudentCourseView extends JPanel {
                         fileChooser.setAcceptAllFileFilterUsed(false);
                         FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
                         fileChooser.addChoosableFileFilter(restrict);
-
-
-                        fileChooser.showDialog(null, "Upload");
-                        // I am stuck
-
+                        int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+                        if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+                            uploadController.uploadStudent(fileChooser.getSelectedFile(), studentCourseViewModel.getState().getAssignmentsNames().get(index));
+                        }
                     }
                 });
 
