@@ -1,7 +1,6 @@
 package interface_adapters.TeacherCourse;
 
 public class TeacherCourseBackController {
-    public void back(){
-
+    public void back() {
     }
 }

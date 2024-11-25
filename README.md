@@ -20,7 +20,7 @@ Tohya
 
 Sark
 - As a student, I want to view my assignment that my teacher submitted
-- As a teacher, I want to view my grade and download my graded PDF
+- As a student, I want to view my grade and download my graded PDF
 
 Jed
 - As a teacher, I want to create a class with a name

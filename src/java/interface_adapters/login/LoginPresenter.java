@@ -27,7 +27,9 @@ public class LoginPresenter implements LoginUseCaseOutputBoundary {
     public void prepareSuccessView(UserOutputData userOutputData){
         // load teacher vs student view model depending on type of output data
         if (userOutputData.getType().equals("student")){
+            // get current state
             final StudentClassesState studentClassesState = studentClassesViewModel.getState();
+
             studentClassesState.setUser(userOutputData);
             this.studentClassesViewModel.setState(studentClassesState);
             this.studentClassesViewModel.firePropertyChanged();

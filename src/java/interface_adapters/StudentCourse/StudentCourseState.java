@@ -2,10 +2,12 @@ package interface_adapters.StudentCourse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StudentCourseState {
     private String email;
     private String courseName;
+
     private List<String> assignmentNames;
     private List<String> assignmentDueDates;
     private List<String> assignmentMarks;

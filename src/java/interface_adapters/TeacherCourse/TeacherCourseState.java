@@ -2,6 +2,7 @@ package interface_adapters.TeacherCourse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TeacherCourseState {
     private String courseName;
@@ -38,11 +39,10 @@ public class TeacherCourseState {
         this.studentEmails = new ArrayList<>();
     }
 
-    public String getCourseName(){
+    public String getCourseName() {
         return courseName;
     }
-
-    public List<String> getAssignmentsNames(){
+    public List<String> getAssignmentsNames() {
         return List.copyOf(assignmentNames);
     }
 

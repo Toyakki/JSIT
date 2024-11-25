@@ -8,6 +8,7 @@ import interface_adapters.TeacherCourse.TeacherCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 
 public class TeacherCourseView extends JPanel {
     private final String viewName = "teacher course";
@@ -17,6 +18,8 @@ public class TeacherCourseView extends JPanel {
     private AssignmentCreaterController assignmentCreaterController;
     private DownloadController downloadController;
     private GradeController gradeController;
+//    private UploadController uploadController;
+    private File newAssignmentFile;
 
     public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
                              AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
@@ -26,6 +29,7 @@ public class TeacherCourseView extends JPanel {
         this.assignmentCreaterController = assignmentCreaterController;
         this.downloadController = downloadController;
         this.gradeController = gradeController;
+//        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         // need to add back button
@@ -39,25 +43,42 @@ public class TeacherCourseView extends JPanel {
         this.add(new JLabel("Create Assignment"));
         JButton uploadButton = new JButton("Upload");
         uploadButton.addActionListener(e -> {
-            // help
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
+            fileChooser.addChoosableFileFilter(restrict);
+            int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+            if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+                newAssignmentFile = fileChooser.getSelectedFile();
+            }
         });
         this.add(uploadButton);
 
-        // need to research date picker
+        this.add(new JLabel("Set Due Date, e.g. Jan. 1"));
+        JTextField dueDate = new JTextField();
+        this.add(dueDate);
 
         JTextField totalGradeField = new JTextField("Total Grade");
-
         this.add(totalGradeField);
 
         JButton createButton = new JButton("Create");
         createButton.addActionListener(e -> {
-            assignmentCreaterController.setTotalGrade(totalGradeField.getText());
-            // this right?
+            if (newAssignmentFile.length() == 0) {
+                JOptionPane.showMessageDialog(null, "Assignment not Selected");
+            }
+            else {
+                assignmentCreaterController.createAssignment(
+                        dueDate.getText(),
+                        totalGradeField.getText(),
+                        newAssignmentFile
+                );
+            }
         });
 
 
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
+            final int outer_index = i;
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
             add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
@@ -67,9 +88,8 @@ public class TeacherCourseView extends JPanel {
                 assignmentsTable.setValueAt(columnNames[x], x, 0);
             }
 
-            // how can see what this looks like
-
             for (int x = 0; x < teacherCourseViewModel.getState().getStudentEmails().size(); x++){
+                final int index = x;
                 assignmentsTable.setValueAt(teacherCourseViewModel.getState().getStudentEmails().get(x), 0, x + 1);
 
                 if (!teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
@@ -77,7 +97,6 @@ public class TeacherCourseView extends JPanel {
                     assignmentsTable.setValueAt(downloadButton, 1, x + 1);
                     final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     downloadButton.addActionListener(e -> {
-                        // can't pass local variables into lambda functions, fixed
                         downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "submitted");
                     });
                 }
@@ -87,7 +106,6 @@ public class TeacherCourseView extends JPanel {
                     assignmentsTable.setValueAt(gradingButton, 2, x + 1);
                     final String email = teacherCourseViewModel.getState().getStudentEmails().get(x);
                     gradingButton.addActionListener(e -> {
-                        // can't pass local variables into lambda functions, fixed
                         downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "graded");
                     });
                 }
@@ -99,11 +117,10 @@ public class TeacherCourseView extends JPanel {
                         fileChooser.setAcceptAllFileFilterUsed(false);
                         FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
                         fileChooser.addChoosableFileFilter(restrict);
-
-
-                        fileChooser.showDialog(null, "Upload");
-                        // I am stuck
-
+                        int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+                        if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+//                            uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
+                        }
                     });
                 }
 
