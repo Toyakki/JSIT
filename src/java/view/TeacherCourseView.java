@@ -62,7 +62,7 @@ public class TeacherCourseView extends JPanel {
 
         JButton createButton = new JButton("Create");
         createButton.addActionListener(e -> {
-            if (newAssignmentFile.equals(null)) {
+            if (newAssignmentFile.length() == 0) {
                 JOptionPane.showMessageDialog(null, "Assignment not Selected");
             }
             else {
