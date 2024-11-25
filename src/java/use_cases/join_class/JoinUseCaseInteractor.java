@@ -5,6 +5,7 @@ import data_access.UserDataAccessInterface;
 import entities.Account;
 import entities.Course;
 import interface_adapters.join_class.JoinCoursePresenter;
+import use_cases.UserOutputData;
 
 public class JoinUseCaseInteractor {
     private JoinCoursePresenter presenter;
@@ -23,7 +24,7 @@ public class JoinUseCaseInteractor {
         }
         Course course = this.coursedataAccess.getCourseByCode(courseCode);
         user.addCourse(courseCode);
-        presenter.prepareSuccessView("You have successfully joined" + course.getClassName());
+        presenter.prepareSuccessView(new UserOutputData(email, "student", user.getCourseNames()));
         }
     }
 }
