@@ -2,6 +2,7 @@ package view;
 
 import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
+import interface_adapters.student.StudentCourseViewController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,7 @@ import java.util.List;
 public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "student classes";
     private final StudentClassesViewModel classesViewModel;
+    private final StudentCourseViewController courseViewController;
     private final JLabel noCoursesLabel = new JLabel("No courses joined yet.");
     private final JLabel titleLabel = new JLabel(" Classes:");
 
@@ -22,7 +24,10 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final JButton joinButton = new JButton("Join Class");
     private final JTextField joinCodeField = new JTextField();
 
-    public StudentClassesView(StudentClassesViewModel viewModel) {
+    public StudentClassesView(StudentClassesViewModel viewModel,
+                              StudentCourseViewController controller
+    ) {
+        this.courseViewController = controller;
         this.classesViewModel = viewModel;
         this.classesViewModel.addPropertyChangeListener(this);
 
@@ -89,10 +94,13 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private JLabel createCourseLabel(String courseName) {
         JLabel courseLabel = new JLabel("   " + courseName);
         courseLabel.setFont(new Font("Tomaha", Font.PLAIN, 16));
+        final StudentCourseViewController controller = this.courseViewController;
         courseLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
-                System.out.println(courseName);
+                controller.viewCourse(
+                        courseLabel.getText().strip()
+                );
             }
 
             @Override
