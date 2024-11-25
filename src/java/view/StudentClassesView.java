@@ -95,10 +95,12 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         JLabel courseLabel = new JLabel("   " + courseName);
         courseLabel.setFont(new Font("Tomaha", Font.PLAIN, 16));
         final StudentCourseViewController controller = this.courseViewController;
+        final StudentClassesViewModel viewModel = this.classesViewModel;
         courseLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e){
                 controller.viewCourse(
+                        viewModel.getState().getEmail(),
                         courseLabel.getText().strip()
                 );
             }

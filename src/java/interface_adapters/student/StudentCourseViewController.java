@@ -9,7 +9,7 @@ public class StudentCourseViewController {
         this.studentCourseViewInteractor = studentCourseViewInteractor;
     }
 
-    public void viewCourse(String courseName){
-        this.studentCourseViewInteractor.viewCourse(courseName);
+    public void viewCourse(String email, String courseName){
+        this.studentCourseViewInteractor.viewCourse(email, courseName);
     }
 }

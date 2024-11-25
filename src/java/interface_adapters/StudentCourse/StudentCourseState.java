@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentCourseState {
+    private String email;
     private String courseName;
     private List<String> assignmentNames;
     private List<String> assignmentDueDates;
@@ -11,13 +12,15 @@ public class StudentCourseState {
     private List<String> assignmentStages;
     private List<String> assignmentMarksReceived;
 
-    public StudentCourseState(String courseName,
+    public StudentCourseState(String email,
+                              String courseName,
                               List<String> assignmentNames,
                               List<String> assignmentDueDates,
                               List<String> assignmentMarks,
                               List<String> assignmentStages,
                               List<String> assignmentMarksReceived
     ) {
+        this.email = email;
         this.courseName = courseName;
         this.assignmentNames = List.copyOf(assignmentNames);
         this.assignmentDueDates = List.copyOf(assignmentDueDates);
@@ -27,6 +30,7 @@ public class StudentCourseState {
     }
 
     public StudentCourseState(){
+        this.email = "";
         this.assignmentNames = new ArrayList<>();
         this.assignmentDueDates = new ArrayList<>();
         this.assignmentMarks = new ArrayList<>();

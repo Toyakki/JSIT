@@ -5,6 +5,7 @@ import interface_adapters.StudentCourse.StudentCourseViewModel;
 import interface_adapters.ViewManagerModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StudentCourseViewPresenter {
     private StudentClassesViewModel studentClassesViewModel;
@@ -22,14 +23,22 @@ public class StudentCourseViewPresenter {
     }
 
     // will probably end up replacing this with dedicated boundary data
-    public void prepareView(String courseName){
+    public void prepareView(String email,
+                            String courseName,
+                            List<String> assignmentNames,
+                            List<String> assignmentDueDates,
+                            List<String> assignmentMarks,
+                            List<String> assignmentStages,
+                            List<String> assignmentMarksReceived
+    ){
         final StudentCourseState state = new StudentCourseState(
+                email,
                 courseName,
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>()
+                assignmentNames,
+                assignmentDueDates,
+                assignmentMarks,
+                assignmentStages,
+                assignmentMarksReceived
         );
         this.courseViewModel.setState(state);
         this.courseViewModel.firePropertyChanged();
