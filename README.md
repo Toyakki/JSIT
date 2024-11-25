@@ -26,7 +26,6 @@ Jed
 - As a teacher, I want to create a class with a name
 - As a student, I want to join a class with class code
 
-
 ----old----
 
 - As a student, I want to create an account with a strong password and email so that I can join a class as my teacher

@@ -13,6 +13,8 @@ import use_cases.UserOutputData;
 import view.TeacherClassesView;
 
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SignupUseCaseInteractorTest {
@@ -27,7 +29,7 @@ class SignupUseCaseInteractorTest {
 //                teacherClassesViewModel, viewManagerModel);
 //        SignupUseCaseInteractor interactor = new SignupUseCaseInteractor(userDsGateway, userPresenter);
         userDsGateway = new InMemoryUserDataAccessObject();
-        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student");
+        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
         userDsGateway.saveUser(existedUser);
     }
 
