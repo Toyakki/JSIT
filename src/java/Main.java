@@ -20,6 +20,7 @@ import interface_adapters.sign_up.SignUpPresenter;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.student.StudentCourseViewController;
 import interface_adapters.student.StudentCourseViewPresenter;
+import interface_adapters.student.StudentCoursesPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
 import use_cases.StudentCourseBack.StudentCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
@@ -163,7 +164,8 @@ public class Main extends JFrame {
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         // download, back, etc. controllers
-        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo);
+        StudentCoursesPresenter studentCoursesPresenter = new StudentCoursesPresenter(viewManagerModel, studentClassesViewModel);
+        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
         DownloadController downloadController = new DownloadController();
         StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();

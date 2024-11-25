@@ -9,7 +9,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StudentClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "student classes";
@@ -18,6 +20,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final JLabel noCoursesLabel = new JLabel("No courses joined yet.");
     private final JLabel titleLabel = new JLabel(" Classes:");
 
+    private final Map<String, JLabel> courseLabels = new HashMap<>();
     private final JPanel coursesPanel = new JPanel();
     private final JPanel joinCoursePanel = new JPanel();
 
@@ -71,18 +74,34 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         renderCourses();
     }
 
+    private void clearView(){
+        if (coursesPanel.getComponentCount() == 0){
+            return;
+        }
+        for (String courseName : this.classesViewModel.getState().getCourseNames()){
+            coursesPanel.remove(this.courseLabels.get(courseName));
+        }
+        courseLabels.clear();
+    }
+
     private void renderCourses() {
+        clearView();
         if (this.classesViewModel.getState().getCourseNames().isEmpty() && coursesPanel.getComponentCount() == 0) {
+            courseLabels.put("no courses", noCoursesLabel);
             coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
-            addBlankSpace(coursesPanel);
+            courseLabels.remove("no courses");
+
+//            addBlankSpace(coursesPanel);
             coursesPanel.add(titleLabel);
-            addBlankSpace(coursesPanel, 2);
+//            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
-                coursesPanel.add(createCourseLabel(courseName));
-                addBlankSpace(coursesPanel);
+                JLabel courseLabel = createCourseLabel(courseName);
+                courseLabels.put(courseName, courseLabel);
+                coursesPanel.add(courseLabel);
+//                addBlankSpace(coursesPanel);
             }
         }
     }
