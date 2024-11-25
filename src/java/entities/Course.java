@@ -29,4 +29,10 @@ public class Course {
     public String getName(){
         return this.className;
     }
+
+    public String getClassName() {
+        return className;
+    }
+
+
 }
