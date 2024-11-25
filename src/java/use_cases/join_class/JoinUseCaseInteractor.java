@@ -25,6 +25,5 @@ public class JoinUseCaseInteractor {
         Course course = this.coursedataAccess.getCourseByCode(courseCode);
         user.addCourse(course);
         presenter.prepareSuccessView(new UserOutputData(email, "student", user.getCourseNames()));
-
     }
 }
