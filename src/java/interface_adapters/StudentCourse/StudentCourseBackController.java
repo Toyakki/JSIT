@@ -11,6 +11,6 @@ public class StudentCourseBackController {
    }
 
     public void back(String email) {
-        studentCourseBackUseCase.goBack(email);
+        studentCourseBackUseCase.back(email);
     }
 }
