@@ -11,7 +11,8 @@ public class StudentCourseBackUseCase {
         this.userDsGateway = userDsGateway;
     }
 
-    public void back(String email) {
+    @Override
+    public void goBack(String email) {
         List<String> courses = new ArrayList<>();
         for (int i = 0; i < userDsGateway.getUserByEmail(email).getCourseNames().size(); i++) {
             courses.add(userDsGateway.getUserByEmail(email).getCourseNames().get(i));
