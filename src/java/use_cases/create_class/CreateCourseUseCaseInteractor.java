@@ -5,6 +5,7 @@ import entities.Account;
 import entities.Course;
 import entities.CourseFactory;
 import interface_adapters.create_class.CreateCoursePresenter;
+import use_cases.UserOutputData;
 
 import java.util.ArrayList;
 
@@ -19,9 +20,9 @@ public class CreateCourseUseCaseInteractor {
     }
     public void createCourse(String email, String classname) {
         Account user = this.dataAccess.getUserByEmail(email);
-        Course course = this.courseFactory.createClass(user.getEmail(), classname, new ArrayList<String>());
+        Course course = this.courseFactory.createClass(user.getEmail(), classname);
         user.addCourse(course);
-        presenter.prepareSuccessView();
+        presenter.prepareSuccessView(new UserOutputData(email, "teacher", user.getCourseNames()));
 
     }
 }
