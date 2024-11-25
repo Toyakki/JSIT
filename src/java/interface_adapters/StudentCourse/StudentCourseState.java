@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class StudentCourseState {
-    private String CourseName;
-    private ArrayList<String> AssignmentsName;
-    private ArrayList<String> AssignmentsStage;
-    private ArrayList<String> AssignmentsDueDates;
-    private ArrayList<String> AssignmentsMarks;
-    private ArrayList<Float> AssignmentsMarksRecived;
+    private String email;
+    private String courseName;
+    private ArrayList<String> assignmentsName;
+    private ArrayList<String> assignmentsStage;
+    private ArrayList<String> assignmentsDueDates;
+    private ArrayList<String> assignmentsMarks;
+    private ArrayList<Float> assignmentsMarksRecived;
 
-    public String getCourseName() {return this.CourseName;}
+    public String getCourseName() {return this.courseName;}
 
-    public ArrayList<String> getAssignmentsNames() {return this.AssignmentsName;}
+    public ArrayList<String> getAssignmentsNames() {return this.assignmentsName;}
 
-    public ArrayList<String> getAssignmentsStages() {return this.AssignmentsStage;}
+    public ArrayList<String> getAssignmentsStages() {return this.assignmentsStage;}
 
-    public ArrayList<String> getAssignmentsDueDates() {return this.AssignmentsDueDates;}
+    public ArrayList<String> getAssignmentsDueDates() {return this.assignmentsDueDates;}
 
-    public ArrayList<String> getAssignmentsMarks() {return this.AssignmentsMarks;}
+    public ArrayList<String> getAssignmentsMarks() {return this.assignmentsMarks;}
 
-    public ArrayList<Float> getAssignmentsMarksRecived() {return this.AssignmentsMarksRecived;}
+    public ArrayList<Float> getAssignmentsMarksRecived() {return this.assignmentsMarksRecived;}
 }
