@@ -12,6 +12,8 @@ public class StudentCourseState {
     private ArrayList<String> assignmentsMarks;
     private ArrayList<Float> assignmentsMarksRecived;
 
+    public String getEmail() {return email;}
+
     public String getCourseName() {return this.courseName;}
 
     public ArrayList<String> getAssignmentsNames() {return this.assignmentsName;}

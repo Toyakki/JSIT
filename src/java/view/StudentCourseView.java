@@ -28,7 +28,7 @@ public class StudentCourseView extends JPanel {
         this.add(new JLabel(studentCourseViewModel.getState().getCourseName()));
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> {
-            studentCourseBackController.back();
+            studentCourseBackController.back(studentCourseViewModel.getState().getEmail());
         });
         this.add(backButton);
 
