@@ -91,6 +91,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
             coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
+            // LOOK AT THIS SARK!
             courseLabels.remove("no courses");
 
 //            addBlankSpace(coursesPanel);
