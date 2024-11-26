@@ -16,7 +16,7 @@ public class StudentCoursesPresenter implements StudentCourseBackOutputBoundary 
     }
 
     @Override
-    public void prepareStudentCourseView(UserOutputData userOutputData) {
+    public void prepareStudentCoursesView(UserOutputData userOutputData) {
         final StudentClassesState studentClassesState = studentClassesViewModel.getState();
         studentClassesState.setUser(userOutputData);
         this.studentClassesViewModel.setState(studentClassesState);

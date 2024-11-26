@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapters.TeacherCourse.TeacherCourseBackController;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class TeacherClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private TeacherClassesViewModel classesViewModel;
+    private TeacherCourseBackController teacherCourseBackController;
     private final String viewName = "teacher classes";
     private final JLabel noCoursesLabel = new JLabel("No courses created yet.");
     private final JLabel titleLabel = new JLabel("Classes:");
@@ -24,9 +26,16 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     private final JButton joinButton = new JButton("Create Class");
     private final JTextField joinCodeField = new JTextField();
 
-    public TeacherClassesView(TeacherClassesViewModel classesViewModel) {
+    public TeacherClassesView(TeacherClassesViewModel classesViewModel, TeacherCourseBackController teacherCourseBackController) {
         this.classesViewModel = classesViewModel;
+        this.teacherCourseBackController = teacherCourseBackController;
         this.classesViewModel.addPropertyChangeListener(this);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            teacherCourseBackController.back(classesViewModel.getState().getEmail());
+        });
+        coursesPanel.add(backButton);
 
         noCoursesLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));

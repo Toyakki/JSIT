@@ -22,7 +22,9 @@ import interface_adapters.student.StudentCourseViewController;
 import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.student.StudentCoursesPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
+import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.StudentCourseBack.StudentCourseBackUseCase;
+import use_cases.TeacherCourseBack.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
 import use_cases.login.LoginUseCaseOutputBoundary;
@@ -62,7 +64,7 @@ public class Main extends JFrame {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager;
 
-    public Main(){
+    public Main() {
         // import look and feel for JSwing
         FlatLightLaf.setup();
 
@@ -96,7 +98,7 @@ public class Main extends JFrame {
         test_courses.add(matCourse);
 
 
-        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra","teacher", joe_courses);
+        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
         Account test = new Account("t", "t", "student", test_courses);
         demo.saveUser(joe);
@@ -155,22 +157,24 @@ public class Main extends JFrame {
                 studentCourseViewInteractor
         );
 
+        // download, back, etc. controllers
+        StudentCoursesPresenter studentCoursesPresenter = new StudentCoursesPresenter(viewManagerModel, studentClassesViewModel);
+        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
+        TeacherCoursesPresenter teacherCoursesPresenter = new TeacherCoursesPresenter(viewManagerModel, teacherClassesViewModel);
+        TeacherCourseBackUseCase teacherCourseBackUseCase = new TeacherCourseBackUseCase(demo, teacherCoursesPresenter);
+        DownloadController downloadController = new DownloadController();
+        StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
+        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+        GradeController gradeController = new GradeController();
+
         // classes view for students
         studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
-        teacherClassesView = new TeacherClassesView(teacherClassesViewModel);
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
-
-        // download, back, etc. controllers
-        StudentCoursesPresenter studentCoursesPresenter = new StudentCoursesPresenter(viewManagerModel, studentClassesViewModel);
-        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
-        DownloadController downloadController = new DownloadController();
-        StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
-        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
-        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
-        GradeController gradeController = new GradeController();
 
         // course view for student
         StudentCourseView studentCourseView = new StudentCourseView(
