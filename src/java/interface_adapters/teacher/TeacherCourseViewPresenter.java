@@ -1,7 +1,7 @@
 package interface_adapters.teacher;
 
-import interface_adapters.TeacherCourse.TeacherCourseState;
-import interface_adapters.TeacherCourse.TeacherCourseViewModel;
+import interface_adapters.teacher_course.TeacherCourseState;
+import interface_adapters.teacher_course.TeacherCourseViewModel;
 import interface_adapters.ViewManagerModel;
 
 import java.util.List;

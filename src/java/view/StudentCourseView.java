@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapters.Download.DownloadController;
-import interface_adapters.StudentCourse.StudentCourseBackController;
-import interface_adapters.StudentCourse.StudentCourseViewModel;
+import interface_adapters.download.DownloadController;
+import interface_adapters.student_course.StudentCourseBackController;
+import interface_adapters.student_course.StudentCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

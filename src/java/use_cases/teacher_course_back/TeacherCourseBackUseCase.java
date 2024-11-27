@@ -1,4 +1,4 @@
-package use_cases.StudentCourseBack;
+package use_cases.teacher_course_back;
 
 import data_access.UserDataAccessInterface;
 import use_cases.UserOutputData;
@@ -6,11 +6,12 @@ import use_cases.UserOutputData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentCourseBackUseCase implements StudentCourseBackInputBoundary {
+public class TeacherCourseBackUseCase implements TeacherCourseBackInputBoundary{
     final UserDataAccessInterface userDsGateway;
-    final StudentCourseBackOutputBoundary outputBoundary;
+    final TeacherCourseBackOutputBoundary outputBoundary;
 
-    public StudentCourseBackUseCase(UserDataAccessInterface userDsGateway, StudentCourseBackOutputBoundary outputBoundary) {
+    public TeacherCourseBackUseCase(UserDataAccessInterface userDsGateway,
+                                    TeacherCourseBackOutputBoundary outputBoundary) {
         this.userDsGateway = userDsGateway;
         this.outputBoundary = outputBoundary;
     }
@@ -21,6 +22,8 @@ public class StudentCourseBackUseCase implements StudentCourseBackInputBoundary 
             courses.add(userDsGateway.getUserByEmail(email).getCourseNames().get(i));
         }
         UserOutputData userOutputData = new UserOutputData(email,"student", courses);
-        this.outputBoundary.prepareStudentCoursesView(userOutputData);
+        this.outputBoundary.prepareTeacherCoursesView(userOutputData);
     }
+
+
 }

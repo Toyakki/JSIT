@@ -1,9 +1,7 @@
-package interface_adapters.StudentCourse;
+package interface_adapters.student_course;
 
-import entities.Course;
 import interface_adapters.ViewManagerModel;
 import use_cases.UserOutputData;
-import view.StudentCourseView;
 
 public class StudentCoursePresenter {
     private StudentCourseViewModel viewModel;

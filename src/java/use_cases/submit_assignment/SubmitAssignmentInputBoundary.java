@@ -1,4 +1,4 @@
-package use_cases.SubmitAssignment;
+package use_cases.submit_assignment;
 
 import java.io.File;
 

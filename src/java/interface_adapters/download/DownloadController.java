@@ -1,4 +1,4 @@
-package interface_adapters.Download;
+package interface_adapters.download;
 
 public class DownloadController {
   

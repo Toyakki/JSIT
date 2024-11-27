@@ -1,7 +1,6 @@
-package interface_adapters.StudentCourse;
+package interface_adapters.student_course;
 
-import use_cases.StudentCourseBack.StudentCourseBackInputBoundary;
-import use_cases.StudentCourseBack.StudentCourseBackUseCase;
+import use_cases.student_course_back.StudentCourseBackInputBoundary;
 
 public class StudentCourseBackController {
    private StudentCourseBackInputBoundary studentCourseBackInputBoundary;

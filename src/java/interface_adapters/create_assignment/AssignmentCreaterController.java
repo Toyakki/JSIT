@@ -1,4 +1,4 @@
-package interface_adapters.AssignmentCreater;
+package interface_adapters.create_assignment;
 
 import java.io.File;
 

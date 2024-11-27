@@ -1,4 +1,4 @@
-package interface_adapters.TeacherCourse;
+package interface_adapters.teacher_course;
 
 import interface_adapters.ViewModel;
 

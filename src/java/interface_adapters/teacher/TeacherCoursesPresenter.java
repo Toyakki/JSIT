@@ -1,7 +1,7 @@
 package interface_adapters.teacher;
 
 import interface_adapters.ViewManagerModel;
-import use_cases.TeacherCourseBack.TeacherCourseBackOutputBoundary;
+import use_cases.teacher_course_back.TeacherCourseBackOutputBoundary;
 import use_cases.UserOutputData;
 
 public class TeacherCoursesPresenter implements TeacherCourseBackOutputBoundary {

@@ -1,7 +1,6 @@
 package view;
 
-import interface_adapters.TeacherCourse.TeacherCourseBackController;
-import interface_adapters.student.StudentClassesViewModel;
+import interface_adapters.teacher_course.TeacherCourseBackController;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;

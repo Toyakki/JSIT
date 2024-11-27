@@ -1,10 +1,8 @@
 package interface_adapters.student;
 
 import interface_adapters.ViewManagerModel;
-import use_cases.StudentCourseBack.StudentCourseBackOutputBoundary;
+import use_cases.student_course_back.StudentCourseBackOutputBoundary;
 import use_cases.UserOutputData;
-
-import java.util.List;
 
 public class StudentCoursesPresenter implements StudentCourseBackOutputBoundary {
     private ViewManagerModel viewManagerModel;

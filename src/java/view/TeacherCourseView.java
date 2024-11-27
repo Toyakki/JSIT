@@ -1,10 +1,10 @@
 package view;
 
-import interface_adapters.AssignmentCreater.AssignmentCreaterController;
-import interface_adapters.Download.DownloadController;
-import interface_adapters.Grades.GradeController;
-import interface_adapters.TeacherCourse.TeacherCourseBackController;
-import interface_adapters.TeacherCourse.TeacherCourseViewModel;
+import interface_adapters.create_assignment.AssignmentCreaterController;
+import interface_adapters.download.DownloadController;
+import interface_adapters.grade.GradeController;
+import interface_adapters.teacher_course.TeacherCourseBackController;
+import interface_adapters.teacher_course.TeacherCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

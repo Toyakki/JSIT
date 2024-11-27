@@ -1,55 +1,49 @@
-package interface_adapters.TeacherCourse;
+package interface_adapters.student_course;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class TeacherCourseState {
-    private String courseName;
+public class StudentCourseState {
     private String email;
+    private String courseName;
 
     private List<String> assignmentNames;
     private List<String> assignmentDueDates;
     private List<String> assignmentMarks;
     private List<String> assignmentStages;
     private List<String> assignmentMarksReceived;
-    private List<String> studentEmails;
 
-    public TeacherCourseState(String courseName,
-                              String email,
+    public StudentCourseState(String email,
+                              String courseName,
                               List<String> assignmentNames,
                               List<String> assignmentDueDates,
                               List<String> assignmentMarks,
                               List<String> assignmentStages,
-                              List<String> assignmentMarksReceived,
-                              List<String> studentEmails
+                              List<String> assignmentMarksReceived
     ) {
-        this.courseName = courseName;
         this.email = email;
+        this.courseName = courseName;
         this.assignmentNames = List.copyOf(assignmentNames);
         this.assignmentDueDates = List.copyOf(assignmentDueDates);
         this.assignmentMarks = List.copyOf(assignmentMarks);
         this.assignmentStages = List.copyOf(assignmentStages);
         this.assignmentMarksReceived = List.copyOf(assignmentMarksReceived);
-        this.studentEmails = List.copyOf(studentEmails);
     }
 
-    public TeacherCourseState(){
+    public StudentCourseState(){
+        this.email = "";
         this.assignmentNames = new ArrayList<>();
         this.assignmentDueDates = new ArrayList<>();
         this.assignmentMarks = new ArrayList<>();
         this.assignmentStages = new ArrayList<>();
         this.assignmentMarksReceived = new ArrayList<>();
-        this.studentEmails = new ArrayList<>();
     }
 
-    public String getEmail() {return email;}
-
-    public String getCourseName() {
+    public String getCourseName(){
         return courseName;
     }
 
-    public List<String> getAssignmentsNames() {
+    public List<String> getAssignmentsNames(){
         return List.copyOf(assignmentNames);
     }
 
@@ -65,7 +59,11 @@ public class TeacherCourseState {
         return List.copyOf(assignmentStages);
     }
 
-    public List<String> getStudentEmails(){
-        return List.copyOf(studentEmails);
+    public List<String> getAssignmentsMarksReceived(){
+        return List.copyOf(assignmentMarksReceived);
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 }

@@ -1,6 +1,6 @@
-package interface_adapters.SubmitAssignment;
+package interface_adapters.submit_assignment;
 
-import use_cases.SubmitAssignment.SubmitAssignmentInputBoundary;
+import use_cases.submit_assignment.SubmitAssignmentInputBoundary;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package use_cases.StudentCourseBack;
+package use_cases.student_course_back;
 
 import use_cases.UserOutputData;
 

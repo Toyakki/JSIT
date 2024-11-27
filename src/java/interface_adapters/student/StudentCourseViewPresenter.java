@@ -1,10 +1,9 @@
 package interface_adapters.student;
 
-import interface_adapters.StudentCourse.StudentCourseState;
-import interface_adapters.StudentCourse.StudentCourseViewModel;
+import interface_adapters.student_course.StudentCourseState;
+import interface_adapters.student_course.StudentCourseViewModel;
 import interface_adapters.ViewManagerModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentCourseViewPresenter {

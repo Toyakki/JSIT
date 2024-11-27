@@ -1,6 +1,6 @@
-package interface_adapters.TeacherCourse;
+package interface_adapters.teacher_course;
 
-import use_cases.TeacherCourseBack.TeacherCourseBackInputBoundary;
+import use_cases.teacher_course_back.TeacherCourseBackInputBoundary;
 
 public class TeacherCourseBackController {
     TeacherCourseBackInputBoundary teacherCourseBackInputBoundary;
