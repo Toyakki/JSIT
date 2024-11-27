@@ -34,7 +34,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             String studentEmail = account.getEmail();
 
             // Create a unique path for the file in Dropbox
-            String dropboxPath = "/" + courseName + "/" + studentEmail + "_" + selectedFile.getName();
+            String dropboxPath = "/" + courseName + "/" + studentEmail;
 
             PDFFile assignment = new PDFFile(
                     selectedFile.getName(),
