@@ -1,4 +1,6 @@
 package use_cases.submit_assignment;
 
-public class SubmitAssignmentOutputBoundary {
+public interface SubmitAssignmentOutputBoundary {
+    void presentSuccess(String message);
+    void presentError(String message);
 }
