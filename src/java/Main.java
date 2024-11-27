@@ -5,6 +5,7 @@ import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
 import entities.*;
 import interface_adapters.create_assignment.AssignmentCreaterController;
+import interface_adapters.create_assignment.CreateAssignmentPresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
 import interface_adapters.student_course.StudentCourseBackController;
@@ -25,6 +26,7 @@ import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
+import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
@@ -168,7 +170,14 @@ public class Main extends JFrame {
         DownloadController downloadController = new DownloadController();
         StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
-        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+
+        CreateAssignmentPresenter createAssignmentPresenter = new CreateAssignmentPresenter(teacherCourseViewModel);
+        CreateAssignmentInteractor createAssignmentInteractor = new CreateAssignmentInteractor(
+                createAssignmentPresenter,
+                demo,
+                fileDataAccessObject
+        );
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
         GradeController gradeController = new GradeController();
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,

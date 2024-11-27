@@ -32,50 +32,15 @@ public class TeacherCourseView extends JPanel {
 //        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        // need to add back button
-        this.add(new JLabel(teacherCourseViewModel.getState().getCourseName()));
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> {
             teacherCourseBackController.back(teacherCourseViewModel.getState().getEmail());
         });
         this.add(backButton);
 
-        this.add(new JLabel("Create Assignment"));
-        JButton uploadButton = new JButton("Upload");
-        uploadButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
-            fileChooser.addChoosableFileFilter(restrict);
-            int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
-            if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
-                newAssignmentFile = fileChooser.getSelectedFile();
-            }
-        });
-        this.add(uploadButton);
+        this.add(new JLabel(teacherCourseViewModel.getState().getCourseName()));
 
-        this.add(new JLabel("Set Due Date, e.g. Jan. 1"));
-        JTextField dueDate = new JTextField();
-        this.add(dueDate);
-
-        JTextField totalGradeField = new JTextField("Total Grade");
-        this.add(totalGradeField);
-
-        JButton createButton = new JButton("Create");
-        createButton.addActionListener(e -> {
-            if (newAssignmentFile.length() == 0) {
-                JOptionPane.showMessageDialog(null, "Assignment not Selected");
-            }
-            else {
-                assignmentCreaterController.createAssignment(
-                        dueDate.getText(),
-                        totalGradeField.getText(),
-                        newAssignmentFile
-                );
-            }
-        });
-
-
+        // create assignment panel
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             final int outer_index = i;
@@ -148,5 +113,48 @@ public class TeacherCourseView extends JPanel {
 
     public String getViewName(){
         return this.viewName;
+    }
+
+    private JPanel buildCreateAssignmentPanel(){
+        JPanel createAssignmentPanel = new JPanel();
+        createAssignmentPanel.add(new JLabel("Create Assignment"));
+        JButton uploadButton = new JButton("Upload");
+        uploadButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
+            fileChooser.addChoosableFileFilter(restrict);
+            int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
+            if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
+                newAssignmentFile = fileChooser.getSelectedFile();
+            }
+        });
+        createAssignmentPanel.add(uploadButton);
+
+        createAssignmentPanel.add(new JLabel("Set Due Date, e.g. Jan. 1"));
+        JTextField dueDate = new JTextField();
+        createAssignmentPanel.add(dueDate);
+
+        JTextField totalGradeField = new JTextField("Total Grade");
+        createAssignmentPanel.add(totalGradeField);
+
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(e -> {
+            if (newAssignmentFile.length() == 0) {
+                JOptionPane.showMessageDialog(null, "Assignment not Selected");
+            }
+            else {
+                String assignmentName = ""; // need to replace with an actual naming scheme
+                assignmentCreaterController.createAssignment(
+                        this.teacherCourseViewModel.getState().getEmail(),
+                        assignmentName,
+                        this.teacherCourseViewModel.getState().getCourseName(),
+                        dueDate.getText(),
+                        totalGradeField.getText(),
+                        newAssignmentFile
+                );
+            }
+        });
+        return createAssignmentPanel;
     }
 }
