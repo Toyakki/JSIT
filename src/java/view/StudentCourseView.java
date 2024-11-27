@@ -1,6 +1,5 @@
 package view;
 
-import entities.Course;
 import interface_adapters.Download.DownloadController;
 import interface_adapters.StudentCourse.StudentCourseBackController;
 import interface_adapters.StudentCourse.StudentCourseViewModel;
@@ -9,6 +8,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudentCourseView extends JPanel implements PropertyChangeListener {
     private final String viewName = "student course";
@@ -16,6 +17,8 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
     private StudentCourseBackController studentCourseBackController;
     private DownloadController downloadController;
 //    private UploadController uploadController;
+
+    private Map<String, JPanel> assignmentNameToPanel = new HashMap<>();
 
     public StudentCourseView(StudentCourseViewModel viewModel, StudentCourseBackController studentCourseBackController,
                              DownloadController downloadController) {
@@ -33,71 +36,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         });
         this.add(backButton);
         renderAssignments();
-//        for (int i = 0; i < studentCourseViewModel.getState().getAssignmentsNames().size(); i++) {
-//            final int index = i;
-//            add(new JLabel(studentCourseViewModel.getState().getAssignmentsNames().get(i)));
-//            add(new JLabel(studentCourseViewModel.getState().getAssignmentsDueDates().get(i)));
-//            add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarks().get(i)));
-//
-//            if (studentCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
-//                JPanel viewAssignmentsPanel = new JPanel();
-//                viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
-//                JButton downloadOriginalButton = new JButton("Download Original");
-//                JButton downloadSubmittedButton = new JButton("Download Submitted");
-//                JButton downloadGradedButton = new JButton("Download Graded");
-//
-//                downloadOriginalButton.addActionListener(e -> {
-//                    if (e.getSource().equals(downloadOriginalButton)){
-//                        downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
-//                    }
-//                });
-//                downloadSubmittedButton.addActionListener(e -> {
-//                    if (e.getSource().equals(downloadSubmittedButton)){
-//                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", index);
-//                    }
-//                });
-//                downloadGradedButton.addActionListener(e -> {
-//                    if (e.getSource().equals(downloadGradedButton)){
-//                        downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", index);
-//                    }
-//                });
-//
-//                viewAssignmentsPanel.add(downloadOriginalButton);
-//                viewAssignmentsPanel.add(downloadSubmittedButton);
-//                viewAssignmentsPanel.add(downloadGradedButton);
-//                viewAssignmentsPanel.add(new JLabel(String.valueOf(studentCourseViewModel.getState().getAssignmentsMarksRecived().get(i))));
-//                add(viewAssignmentsPanel);
-//            }
-//
-//            else {
-//                JPanel viewAssignmentsPanel = new JPanel();
-//                viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
-//                JButton downloadButton = new JButton("Download");
-//                JButton submitButton = new JButton("Submit");
-//
-//                downloadButton.addActionListener(e -> {
-//                    if (e.getSource().equals(downloadButton)){
-//                        downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
-//                    }
-//                });
-//                submitButton.addActionListener(e -> {
-//                    if (e.getSource().equals(submitButton)){
-//                        JFileChooser fileChooser = new JFileChooser();
-//                        fileChooser.setAcceptAllFileFilterUsed(false);
-//                        FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only PDFs", "pdf");
-//                        fileChooser.addChoosableFileFilter(restrict);
-//                        int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
-//                        if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
-////                            uploadController.uploadStudent(fileChooser.getSelectedFile(), studentCourseViewModel.getState().getAssignmentsNames().get(index));
-//                        }
-//                    }
-//                });
-//
-//                viewAssignmentsPanel.add(downloadButton);
-//                viewAssignmentsPanel.add(submitButton);
-//                add(viewAssignmentsPanel);
-//            }
-//        }
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -106,22 +44,36 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         }
     }
 
+    private void clearScreen() {
+        if (!assignmentNameToPanel.isEmpty()) {
+            for (String assignmentName : assignmentNameToPanel.keySet()) {
+                remove(assignmentNameToPanel.get(assignmentName));
+            }
+        }
+        assignmentNameToPanel.clear();
+    }
+
     private void renderAssignments(){
+        clearScreen();
         for (int i = 0; i < studentCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             final int index = i;
-            add(new JLabel(studentCourseViewModel.getState().getAssignmentsNames().get(index)));
-            add(new JLabel(studentCourseViewModel.getState().getAssignmentsDueDates().get(index)));
-            add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarks().get(index)));
+            JPanel coursePanel = new JPanel();
+            coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
+            coursePanel.add(new JLabel(studentCourseViewModel.getState().getAssignmentsNames().get(index)));
+            coursePanel.add(new JLabel(studentCourseViewModel.getState().getAssignmentsDueDates().get(index)));
+            coursePanel.add(new JLabel(studentCourseViewModel.getState().getAssignmentsMarks().get(index)));
 
             if (studentCourseViewModel.getState().getAssignmentsStages().get(index).equals("graded")){
-                renderGradedAssignmentComponents(index);
+                renderGradedAssignmentComponents(index, coursePanel);
             } else {
-                renderUngradedAssignmentComponents(index);
+                renderUngradedAssignmentComponents(index, coursePanel);
             }
+            assignmentNameToPanel.put(studentCourseViewModel.getState().getAssignmentsNames().get(index), coursePanel);
+            add(coursePanel);
         }
     }
 
-    private void renderGradedAssignmentComponents(int index){
+    private void renderGradedAssignmentComponents(int index, JPanel coursePanel){
         JPanel viewAssignmentsPanel = new JPanel();
         viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
         JButton downloadOriginalButton = new JButton("Download Original");
@@ -148,10 +100,10 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         viewAssignmentsPanel.add(downloadSubmittedButton);
         viewAssignmentsPanel.add(downloadGradedButton);
         viewAssignmentsPanel.add(new JLabel(String.valueOf(studentCourseViewModel.getState().getAssignmentsMarksReceived().get(index))));
-        add(viewAssignmentsPanel);
+        coursePanel.add(viewAssignmentsPanel);
     }
 
-    private void renderUngradedAssignmentComponents(int index){
+    private void renderUngradedAssignmentComponents(int index, JPanel coursePanel){
         JPanel viewAssignmentsPanel = new JPanel();
         viewAssignmentsPanel.setLayout(new BoxLayout(viewAssignmentsPanel, BoxLayout.X_AXIS));
         JButton downloadButton = new JButton("Download");
@@ -177,7 +129,7 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 
         viewAssignmentsPanel.add(downloadButton);
         viewAssignmentsPanel.add(submitButton);
-        add(viewAssignmentsPanel);
+        coursePanel.add(viewAssignmentsPanel);
     }
 
     public String getViewName(){
