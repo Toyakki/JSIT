@@ -63,4 +63,8 @@ public class StudentCourseState {
     public List<String> getAssignmentsMarksReceived(){
         return List.copyOf(assignmentMarksReceived);
     }
+
+    public String getEmail() {
+        return this.email;
+    }
 }

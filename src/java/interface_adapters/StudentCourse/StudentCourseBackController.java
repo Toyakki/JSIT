@@ -1,15 +1,16 @@
 package interface_adapters.StudentCourse;
 
+import use_cases.StudentCourseBack.StudentCourseBackInputBoundary;
 import use_cases.StudentCourseBack.StudentCourseBackUseCase;
 
 public class StudentCourseBackController {
-    private StudentCourseBackUseCase studentBackUseCase;
+   private StudentCourseBackInputBoundary studentCourseBackInputBoundary;
 
-    public StudentCourseBackController(StudentCourseBackUseCase studentCourseBackUseCase) {
-        this.studentBackUseCase = studentCourseBackUseCase;
-    }
+   public StudentCourseBackController(StudentCourseBackInputBoundary studentCourseBackInputBoundary) {
+       this.studentCourseBackInputBoundary = studentCourseBackInputBoundary;
+   }
 
     public void back(String email) {
-        studentBackUseCase.back(email);
+        studentCourseBackInputBoundary.back(email);
     }
 }

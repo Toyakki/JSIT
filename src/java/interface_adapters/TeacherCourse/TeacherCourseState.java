@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class TeacherCourseState {
     private String courseName;
+    private String email;
+
     private List<String> assignmentNames;
     private List<String> assignmentDueDates;
     private List<String> assignmentMarks;
@@ -14,6 +16,7 @@ public class TeacherCourseState {
     private List<String> studentEmails;
 
     public TeacherCourseState(String courseName,
+                              String email,
                               List<String> assignmentNames,
                               List<String> assignmentDueDates,
                               List<String> assignmentMarks,
@@ -22,6 +25,7 @@ public class TeacherCourseState {
                               List<String> studentEmails
     ) {
         this.courseName = courseName;
+        this.email = email;
         this.assignmentNames = List.copyOf(assignmentNames);
         this.assignmentDueDates = List.copyOf(assignmentDueDates);
         this.assignmentMarks = List.copyOf(assignmentMarks);
@@ -39,9 +43,12 @@ public class TeacherCourseState {
         this.studentEmails = new ArrayList<>();
     }
 
+    public String getEmail() {return email;}
+
     public String getCourseName() {
         return courseName;
     }
+
     public List<String> getAssignmentsNames() {
         return List.copyOf(assignmentNames);
     }

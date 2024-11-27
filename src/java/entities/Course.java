@@ -23,7 +23,11 @@ public class Course {
     }
 
     public List<Assignment> getAssignments() {
-        return this.assignments;
+        return List.copyOf(this.assignments);
+    }
+
+    public List<String> getStudentEmails() {
+        return List.copyOf(this.students);
     }
 
     public String getName(){
@@ -32,5 +36,9 @@ public class Course {
 
     public String getClassName() {
         return className;
+    }
+
+    public void addAssignment(Assignment assignment) {
+        this.assignments.add(assignment);
     }
 }

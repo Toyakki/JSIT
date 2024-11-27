@@ -3,9 +3,7 @@ import data_access.FileDataAccessInterface;
 import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
-import entities.Account;
-import entities.Course;
-import entities.CourseFactory;
+import entities.*;
 import interface_adapters.AssignmentCreater.AssignmentCreaterController;
 import interface_adapters.Download.DownloadController;
 import interface_adapters.Grades.GradeController;
@@ -22,7 +20,13 @@ import interface_adapters.sign_up.SignUpPresenter;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.student.StudentCourseViewController;
 import interface_adapters.student.StudentCourseViewPresenter;
+import interface_adapters.student.StudentCoursesPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
+import interface_adapters.teacher.TeacherCourseViewController;
+import interface_adapters.teacher.TeacherCourseViewPresenter;
+import interface_adapters.teacher.TeacherCoursesPresenter;
+import use_cases.StudentCourseBack.StudentCourseBackUseCase;
+import use_cases.TeacherCourseBack.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
 import use_cases.login.LoginUseCaseOutputBoundary;
@@ -30,6 +34,7 @@ import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
+import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
 import view.*;
 
 import javax.swing.*;
@@ -62,7 +67,7 @@ public class Main extends JFrame {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager;
 
-    public Main(){
+    public Main() {
         // import look and feel for JSwing
         FlatLightLaf.setup();
 
@@ -74,6 +79,14 @@ public class Main extends JFrame {
         Course csCourse = CourseFactory.createClass("Johnathon Calver", "CSC207");
         Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
         Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
+
+        Assignment ps1 = new Assignment("Problem Set 1", "December 1st", "100", "graded", "true");
+        Assignment ps2 = new Assignment("Problem Set 2", "December 15st", "100", "assigned", "false");
+        Assignment finalProject = new Assignment("Final Project", "December 4th", "25", "submitted", "false");
+
+        csCourse.addAssignment(finalProject);
+        matCourse.addAssignment(ps1);
+        matCourse.addAssignment(ps2);
 
         List<Course> joe_courses = new ArrayList<>();
         joe_courses.add(matCourse);
@@ -88,9 +101,9 @@ public class Main extends JFrame {
         test_courses.add(matCourse);
 
 
-        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra","teacher", joe_courses);
+        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account test = new Account("t", "t", "student", test_courses);
+        Account test = new Account("t", "t", "teacher", test_courses);
         demo.saveUser(joe);
         demo.saveUser(tohya);
         demo.saveUser(test);
@@ -147,20 +160,33 @@ public class Main extends JFrame {
                 studentCourseViewInteractor
         );
 
+        // download, back, etc. controllers
+        StudentCoursesPresenter studentCoursesPresenter = new StudentCoursesPresenter(viewManagerModel, studentClassesViewModel);
+        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
+        TeacherCoursesPresenter teacherCoursesPresenter = new TeacherCoursesPresenter(viewManagerModel, teacherClassesViewModel);
+        TeacherCourseBackUseCase teacherCourseBackUseCase = new TeacherCourseBackUseCase(demo, teacherCoursesPresenter);
+        DownloadController downloadController = new DownloadController();
+        StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
+        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+        GradeController gradeController = new GradeController();
+
+        TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
+                teacherCourseViewModel, viewManagerModel
+        );
+        TeacherCourseViewInteractor teacherCourseViewInteractor = new TeacherCourseViewInteractor(teacherCourseViewPresenter,
+                fileDataAccessObject,
+                demo
+        );
+        TeacherCourseViewController teacherCourseViewController = new TeacherCourseViewController(teacherCourseViewInteractor);
+
         // classes view for students
         studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
-        teacherClassesView = new TeacherClassesView(teacherClassesViewModel);
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController, teacherCourseViewController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
-
-        // download, back, etc. controllers
-        DownloadController downloadController = new DownloadController();
-        StudentCourseBackController studentCourseBackController = new StudentCourseBackController();
-        TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController();
-        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
-        GradeController gradeController = new GradeController();
 
         // course view for student
         StudentCourseView studentCourseView = new StudentCourseView(

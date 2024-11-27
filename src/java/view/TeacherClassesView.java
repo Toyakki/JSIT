@@ -1,7 +1,10 @@
 package view;
 
+import interface_adapters.TeacherCourse.TeacherCourseBackController;
+import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
+import interface_adapters.teacher.TeacherCourseViewController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,21 +14,31 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TeacherClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private TeacherClassesViewModel classesViewModel;
+    private TeacherCourseBackController teacherCourseBackController;
+    private TeacherCourseViewController courseViewController;
     private final String viewName = "teacher classes";
     private final JLabel noCoursesLabel = new JLabel("No courses created yet.");
     private final JLabel titleLabel = new JLabel("Classes:");
     private final JPanel coursesPanel = new JPanel();
 
+    private final Map<String, JLabel> courseLabels = new HashMap<>();
+
     private final JPanel joinCoursePanel = new JPanel();
     private final JButton joinButton = new JButton("Create Class");
     private final JTextField joinCodeField = new JTextField();
 
-    public TeacherClassesView(TeacherClassesViewModel classesViewModel) {
+    public TeacherClassesView(TeacherClassesViewModel classesViewModel,
+                              TeacherCourseBackController teacherCourseBackController,
+                              TeacherCourseViewController courseViewController) {
         this.classesViewModel = classesViewModel;
+        this.teacherCourseBackController = teacherCourseBackController;
+        this.courseViewController = courseViewController;
         this.classesViewModel.addPropertyChangeListener(this);
 
         noCoursesLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
@@ -60,18 +73,33 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
         renderCourses();
     }
 
+    public void clearView(){
+        if (coursesPanel.getComponentCount() == 0){
+            return;
+        }
+        for (String courseName : courseLabels.keySet()){
+            coursesPanel.remove(this.courseLabels.get(courseName));
+        }
+        courseLabels.clear();
+    }
+
     private void renderCourses(){
+        clearView();
         if (this.classesViewModel.getState().getCourseNames().isEmpty() && coursesPanel.getComponentCount() == 0) {
+            courseLabels.put("no courses", noCoursesLabel);
             coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
-            addBlankSpace(coursesPanel);
+            courseLabels.remove("no courses");
+//            addBlankSpace(coursesPanel);
             coursesPanel.add(this.titleLabel);
-            addBlankSpace(coursesPanel, 2);
+//            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
-                coursesPanel.add(createCourseLabel(courseName));
-                addBlankSpace(coursesPanel);
+                JLabel courseLabel = createCourseLabel(courseName);
+                courseLabels.put(courseName, courseLabel);
+                coursesPanel.add(courseLabel);
+//                addBlankSpace(coursesPanel);
             }
         }
     }
@@ -83,12 +111,17 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     }
 
     private JLabel createCourseLabel(String courseName){
-        JLabel courseLabel = new JLabel(courseName);
+        JLabel courseLabel = new JLabel("   " + courseName);
         courseLabel.setFont(new Font("Tomaha", Font.PLAIN, 16));
+        final TeacherCourseViewController controller = this.courseViewController;
+        final TeacherClassesViewModel viewModel = this.classesViewModel;
         courseLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println(courseName);
+                controller.viewCourse(
+                        viewModel.getState().getEmail(),
+                        courseLabel.getText().strip()
+                );
             }
 
             @Override
