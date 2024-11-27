@@ -1,6 +1,5 @@
 package use_cases.create_courses;
 
-import data_access.InMemeoryCourseDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import entities.AccountFactory;
@@ -10,11 +9,9 @@ import entities.CourseFactory;
 import java.util.List;
 
 public class CreateCoursesInteractorTest {
-    private InMemeoryCourseDataAccessObject courseDsGateway;
     private InMemoryUserDataAccessObject userDsGateway;
 
     void create(){
-        courseDsGateway = new InMemeoryCourseDataAccessObject();
         userDsGateway = new InMemoryUserDataAccessObject();
         Account instructor = AccountFactory.createAccount("lindsey@mail.com", "Abc123456!",
                 "teacher");
