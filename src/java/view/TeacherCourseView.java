@@ -8,9 +8,16 @@ import interface_adapters.teacher_course.TeacherCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TeacherCourseView extends JPanel {
+public class TeacherCourseView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "teacher course";
     private final TeacherCourseViewModel teacherCourseViewModel;
     private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
@@ -20,6 +27,10 @@ public class TeacherCourseView extends JPanel {
     private GradeController gradeController;
 //    private UploadController uploadController;
     private File newAssignmentFile;
+
+    JLabel courseLabel;
+    JPanel createAssignmentPanel;
+    Map<String, JPanel> assignmentPanels = new HashMap<>();
 
     public TeacherCourseView(TeacherCourseViewModel viewModel, TeacherCourseBackController teacherCourseBackController,
                              AssignmentCreaterController assignmentCreaterController, DownloadController downloadController,
@@ -31,30 +42,71 @@ public class TeacherCourseView extends JPanel {
         this.gradeController = gradeController;
 //        this.uploadController = uploadController;
 
+        this.teacherCourseViewModel.addPropertyChangeListener(this);
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        courseLabel = new JLabel(teacherCourseViewModel.getState().getCourseName());
+        add(courseLabel);
+
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> {
             teacherCourseBackController.back(teacherCourseViewModel.getState().getEmail());
         });
         this.add(backButton);
 
-        this.add(new JLabel(teacherCourseViewModel.getState().getCourseName()));
+        createAssignmentPanel = buildCreateAssignmentPanel();
+        createAssignmentPanel.setPreferredSize(new Dimension(600, 100));
+        add(createAssignmentPanel);
+    }
 
-        // create assignment panel
+    public void actionPerformed(ActionEvent e) { }
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("state")) {
+            courseLabel.setText(teacherCourseViewModel.getState().getCourseName());
+            renderAssignments();
+        }
+    }
+
+    public String getViewName(){
+        return this.viewName;
+    }
+
+    private void clearView(){
+        if (!this.assignmentPanels.isEmpty()){
+            for (String assignmentName : this.assignmentPanels.keySet()){
+                remove(this.assignmentPanels.get(assignmentName));
+            }
+        }
+        this.assignmentPanels.clear();
+    }
+
+    public void renderAssignments(){
+        clearView();
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
-            final int outer_index = i;
-            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
-            add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
+            JPanel assignmentPanel = new JPanel();
+            assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
+            assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
+            assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
 
             JTable assignmentsTable = new JTable(teacherCourseViewModel.getState().getStudentEmails().size(), 4);
+            assignmentPanel.add(assignmentsTable);
+            this.assignmentPanels.put(
+                    teacherCourseViewModel.getState().getAssignmentsNames().get(i),
+                    assignmentPanel
+            );
+            add(assignmentPanel);
+
+            if (teacherCourseViewModel.getState().getStudentEmails().isEmpty()){
+                break;
+            }
+
             for (int x = 0; x < 5; x++){
                 assignmentsTable.setValueAt(columnNames[x], x, 0);
             }
 
             for (int x = 0; x < teacherCourseViewModel.getState().getStudentEmails().size(); x++){
-                final int index = x;
                 assignmentsTable.setValueAt(teacherCourseViewModel.getState().getStudentEmails().get(x), 0, x + 1);
 
                 if (!teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
@@ -64,6 +116,7 @@ public class TeacherCourseView extends JPanel {
                     downloadButton.addActionListener(e -> {
                         downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "submitted");
                     });
+                    add(downloadButton);
                 }
 
                 if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("graded")){
@@ -73,6 +126,7 @@ public class TeacherCourseView extends JPanel {
                     gradingButton.addActionListener(e -> {
                         downloadController.download(teacherCourseViewModel.getState().getCourseName(), email, "graded");
                     });
+                    add(gradingButton);
                 }
                 else {
                     JButton gradingButton = new JButton("not graded/upload");
@@ -87,6 +141,7 @@ public class TeacherCourseView extends JPanel {
 //                            uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
                         }
                     });
+                    add(gradingButton);
                 }
 
                 if (teacherCourseViewModel.getState().getAssignmentsStages().get(i).equals("assigned")){
@@ -104,15 +159,7 @@ public class TeacherCourseView extends JPanel {
                 });
 
             }
-
-        add(assignmentsTable);
-
         }
-
-    }
-
-    public String getViewName(){
-        return this.viewName;
     }
 
     private JPanel buildCreateAssignmentPanel(){
@@ -155,6 +202,7 @@ public class TeacherCourseView extends JPanel {
                 );
             }
         });
+        createAssignmentPanel.add(createButton);
         return createAssignmentPanel;
     }
 }

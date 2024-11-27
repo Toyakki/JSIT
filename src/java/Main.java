@@ -216,7 +216,7 @@ public class Main extends JFrame {
         mainPanel.add(teacherCourseView, teacherCourseView.getViewName());
 
         add(mainPanel);
-        setSize(500, 425);
+        setSize(600, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 
