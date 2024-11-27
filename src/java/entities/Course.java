@@ -26,6 +26,10 @@ public class Course {
         return List.copyOf(this.assignments);
     }
 
+    public List<String> getStudentEmails() {
+        return List.copyOf(this.students);
+    }
+
     public String getName(){
         return this.className;
     }

@@ -78,7 +78,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         if (coursesPanel.getComponentCount() == 0){
             return;
         }
-        for (String courseName : this.classesViewModel.getState().getCourseNames()){
+        for (String courseName : courseLabels.keySet()) {
             coursesPanel.remove(this.courseLabels.get(courseName));
         }
         courseLabels.clear();
@@ -91,7 +91,6 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
             coursesPanel.add(noCoursesLabel);
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
-            // LOOK AT THIS SARK!
             courseLabels.remove("no courses");
 
 //            addBlankSpace(coursesPanel);

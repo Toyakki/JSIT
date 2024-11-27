@@ -22,6 +22,8 @@ import interface_adapters.student.StudentCourseViewController;
 import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.student.StudentCoursesPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
+import interface_adapters.teacher.TeacherCourseViewController;
+import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.StudentCourseBack.StudentCourseBackUseCase;
 import use_cases.TeacherCourseBack.TeacherCourseBackUseCase;
@@ -32,6 +34,7 @@ import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
+import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
 import view.*;
 
 import javax.swing.*;
@@ -100,7 +103,7 @@ public class Main extends JFrame {
 
         Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account test = new Account("t", "t", "student", test_courses);
+        Account test = new Account("t", "t", "teacher", test_courses);
         demo.saveUser(joe);
         demo.saveUser(tohya);
         demo.saveUser(test);
@@ -168,12 +171,21 @@ public class Main extends JFrame {
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
         GradeController gradeController = new GradeController();
 
+        TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
+                teacherCourseViewModel, viewManagerModel
+        );
+        TeacherCourseViewInteractor teacherCourseViewInteractor = new TeacherCourseViewInteractor(teacherCourseViewPresenter,
+                fileDataAccessObject,
+                demo
+        );
+        TeacherCourseViewController teacherCourseViewController = new TeacherCourseViewController(teacherCourseViewInteractor);
+
         // classes view for students
         studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
-        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController);
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController, teacherCourseViewController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         // course view for student
