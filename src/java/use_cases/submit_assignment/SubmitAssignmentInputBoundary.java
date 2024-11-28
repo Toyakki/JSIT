@@ -5,5 +5,5 @@ import entities.Assignment;
 import java.io.File;
 
 public interface SubmitAssignmentInputBoundary {
-    void submitAssignment(File selectedFile, Assignment assignment, String courseName);
+    void submitAssignment(File selectedFile, Assignment assignment);
 }

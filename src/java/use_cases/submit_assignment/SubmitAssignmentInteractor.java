@@ -27,7 +27,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
     }
 
     @Override
-    public void submitAssignment(File selectedFile, Assignment assignment, String courseName) {
+    public void submitAssignment(File selectedFile, Assignment assignment_metadata) {
         try {
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("Only PDF files are allowed.");
@@ -39,6 +39,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
 
             byte[] content = Files.readAllBytes(selectedFile.toPath());
             String studentEmail = account.getEmail();
+            String courseName = assignment_metadata.getName();
 
             // Create a unique path for the file in Dropbox
             String dropboxPath = "/" + courseName + "/" + studentEmail;
@@ -49,6 +50,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
                     content);
 
             // Modify the assignment metadata.
+            assignment_metadata.
 
             fileDataAccessInterface.saveFile(new_assignment);
 

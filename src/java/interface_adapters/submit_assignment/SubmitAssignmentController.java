@@ -1,6 +1,7 @@
 package interface_adapters.submit_assignment;
 
 
+import entities.Assignment;
 import use_cases.submit_assignment.SubmitAssignmentInputBoundary;
 
 import java.io.File;
@@ -12,7 +13,7 @@ public class SubmitAssignmentController {
         this.inputBoundary = inputBoundary;
     }
 
-    public void handleSubmitAssignment(File selectedFile, String courseName) {
-        inputBoundary.submitAssignment(selectedFile, courseName);
+    public void handleSubmitAssignment(File selectedFile, Assignment assignment) {
+        inputBoundary.submitAssignment(selectedFile, assignment);
     }
 }
