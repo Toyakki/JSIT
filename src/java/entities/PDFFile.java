@@ -25,7 +25,7 @@ public class PDFFile {
         return fileContent;
     }
 
-    public byte[] setFileContent(byte[] newContent) {
+    public void setFileContent(byte[] newContent) {
         this.fileContent = newContent;
     }
 }
