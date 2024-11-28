@@ -30,9 +30,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     public void saveFile(PDFFile file) {
 //        Input: filePath.
         // Upload the file to Dropbox
-        try (InputStream in = new ByteArrayInputStream(file.getContent())) {
+        try (InputStream in = new ByteArrayInputStream(file.getFileContent())) {
             FileMetadata metadata = client.files()
-                    .uploadBuilder(file.getPath())
+                    .uploadBuilder(file.getFilePath())
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(in);
             System.out.println("File uploaded successfully to:" + metadata.getPathLower());
@@ -99,7 +99,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             PDFFile downloadedFile = dao.getFile("/" + testFilePath);
 
             // Print the content of the downloaded file
-            System.out.println("Downloaded File Content: " + new String(downloadedFile.getContent()));
+            System.out.println("Downloaded File Content: " + new String(downloadedFile.getFileContent()));
 
         } catch (Exception e) {
             e.printStackTrace();
