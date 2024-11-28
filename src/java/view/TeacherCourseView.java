@@ -82,15 +82,26 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         this.assignmentPanels.clear();
     }
 
+    private void setFields(){
+        remove(createAssignmentPanel);
+        createAssignmentPanel = buildCreateAssignmentPanel();
+        add(createAssignmentPanel);
+    }
+
     public void renderAssignments(){
         clearView();
+        setFields();
+        System.out.println(teacherCourseViewModel.getState().getAssignmentsNames().size());
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
             JPanel assignmentPanel = new JPanel();
+            assignmentPanel.setPreferredSize(new Dimension(600, 100));
+
             assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsNames().get(i)));
             assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsDueDates().get(i)));
             assignmentPanel.add(new JLabel(teacherCourseViewModel.getState().getAssignmentsMarks().get(i)));
 
             JTable assignmentsTable = new JTable(teacherCourseViewModel.getState().getStudentEmails().size(), 4);
+            assignmentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             assignmentPanel.add(assignmentsTable);
             this.assignmentPanels.put(
                     teacherCourseViewModel.getState().getAssignmentsNames().get(i),
