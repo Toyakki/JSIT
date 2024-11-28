@@ -2,7 +2,6 @@ package use_cases.submit_assignment;
 
 import entities.Account;
 import data_access.FileDataAccessInterface;
-import entities.Assignment;
 import entities.PDFFile;
 
 import java.io.File;
@@ -13,21 +12,18 @@ import java.util.List;
 public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary {
     private final FileDataAccessInterface fileDataAccessInterface;
     private final SubmitAssignmentOutputBoundary outputBoundary;
-    private final Assignment assignment_metadata;
     private final Account account;
 
     public SubmitAssignmentInteractor(FileDataAccessInterface fileDataAccessInterface,
                                       SubmitAssignmentOutputBoundary outputBoundary,
-                                      Assignment assignment_metadata,
                                       Account account) {
         this.fileDataAccessInterface = fileDataAccessInterface;
         this.outputBoundary = outputBoundary;
-        this.assignment_metadata = assignment_metadata;
         this.account = account;
     }
 
     @Override
-    public void submitAssignment(File selectedFile, Assignment assignment_metadata) {
+    public void submitAssignment(File selectedFile, String courseName) {
         try {
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("Only PDF files are allowed.");
@@ -39,7 +35,6 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
 
             byte[] content = Files.readAllBytes(selectedFile.toPath());
             String studentEmail = account.getEmail();
-            String courseName = assignment_metadata.getName();
 
             // Create a unique path for the file in Dropbox
             String dropboxPath = "/" + courseName + "/" + studentEmail;
@@ -48,9 +43,6 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
                     selectedFile.getName(),
                     dropboxPath,
                     content);
-
-            // Modify the assignment stage status.
-            assignment_metadata.setStage("submitted");
 
             fileDataAccessInterface.saveFile(new_assignment);
 
