@@ -49,8 +49,8 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
                     dropboxPath,
                     content);
 
-            // Modify the assignment metadata.
-            assignment_metadata.
+            // Modify the assignment stage status.
+            assignment_metadata.setStage("submitted");
 
             fileDataAccessInterface.saveFile(new_assignment);
 

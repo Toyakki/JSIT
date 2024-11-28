@@ -35,4 +35,8 @@ public class Assignment {
     public String getMarksReceivedStatus() {
         return marksReceivedStatus;
     }
+
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
 }
