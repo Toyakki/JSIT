@@ -3,16 +3,9 @@ package use_cases.submit_assignment;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.InMemoryFileDataAccessObject;
 import entities.Account;
-import entities.Course;
-import entities.CourseFactory;
-import org.junit.Test;
+import entities.Assignment;
 import org.junit.jupiter.api.BeforeEach;
-
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,10 +19,18 @@ public class SubmitAssignmentInteractorTest {
         userDsGateway = new InMemoryUserDataAccessObject();
         fileDsGateway = new InMemoryFileDataAccessObject();
 
+        Assignment finalProject = new Assignment(
+                "Final Project",
+                "December 4th",
+                "25", 
+                "submitted",
+                "false"
+        );
+
         SubmitAssignmentOutputBoundary outputBoundary = new MockSubmitAssignmentPresenter();
         Account tohya_test_account = userDsGateway.getUserByEmail("henrik-ibsen707@gmail.com");
 
-        submitAssignmentInteractor = new SubmitAssignmentInteractor(fileDsGateway, outputBoundary, tohya_test_account);
+        submitAssignmentInteractor = new SubmitAssignmentInteractor(fileDsGateway, outputBoundary, userDsGateway);
     }
 
     private static class MockSubmitAssignmentPresenter implements SubmitAssignmentOutputBoundary {
@@ -42,26 +43,25 @@ public class SubmitAssignmentInteractorTest {
         public void presentError(String message) {
             System.err.println("Error: " + message);
         }
-
     }
 
     @Test
     public void testValidFormat() {
+        // Implement the test logic
     }
 
     @Test
     public void testValidAssignment() {
-
+        // Implement the test logic
     }
 
     @Test
     public void testValidSubmission() {
-
+        // Implement the test logic
     }
 
     @Test
     public void testFailedSubmission() {
-
+        // Implement the test logic
     }
-
 }
