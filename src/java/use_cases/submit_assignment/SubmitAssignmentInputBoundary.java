@@ -6,6 +6,5 @@ import entities.Assignment;
 import java.io.File;
 
 public interface SubmitAssignmentInputBoundary {
-    void submitAssignment(File selectedFile, String courseName, String email,
-                          InMemoryUserDataAccessObject userDataAccessObject);
+    void submitAssignment(File selectedFile, String courseName, String email);
 }

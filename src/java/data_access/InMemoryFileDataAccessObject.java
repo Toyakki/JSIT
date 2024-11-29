@@ -10,7 +10,7 @@ public class InMemoryFileDataAccessObject implements FileDataAccessInterface {
     public PDFFile getFile(String path){return null;}
 
     @Override
-    public boolean fileExistsByPath(String path) throws DbxException {
+    public boolean fileExistsByPath(String path){
         return false;
     }
 

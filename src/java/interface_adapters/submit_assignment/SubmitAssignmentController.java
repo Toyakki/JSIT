@@ -18,6 +18,6 @@ public class SubmitAssignmentController {
     public void handleSubmitAssignment(File selectedFile,
                                        String courseName,
                                        String email) {
-        inputBoundary.submitAssignment(selectedFile, courseName, email, this.dataAccessObject);
+        inputBoundary.submitAssignment(selectedFile, courseName, email);
     }
 }

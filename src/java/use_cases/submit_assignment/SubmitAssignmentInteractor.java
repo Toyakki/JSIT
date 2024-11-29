@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 
 public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary {
     private final FileDataAccessInterface fileDataAccessInterface;
@@ -27,8 +26,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
     @Override
     public void submitAssignment(File selectedFile,
                                  String courseName,
-                                 String email,
-                                 InMemoryUserDataAccessObject userDataAccessObject){
+                                 String email){
         try{
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("File must be a PDF");
@@ -53,10 +51,12 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
     
             fileDataAccessInterface.saveFile(newAssignment);
     
-            outputBoundary.presentSuccess("File uploaded successfully to: " + dropboxPath);
+            outputBoundary.presentSuccess();
             
-        } catch (Exception e){
-            outputBoundary.presentError(e.getMessage());
+        } catch (IllegalArgumentException | FileNotFoundException e){
+            outputBoundary.presentError();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
