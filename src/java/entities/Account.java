@@ -77,6 +77,9 @@ public class Account {
 
     public boolean hasCourse(String courseName) {
         return this.courseNames.contains(courseName);
+
+    public List<Course> getCourses() {
+        return List.copyOf(this.courses);
     }
 
 }
