@@ -45,7 +45,7 @@ public class SubmitAssignmentInteractorTest {
             this.errorMessage = message;
         }
 
-        public String getSuccesMessage() {
+        public String getSuccessMessage() {
             return successMessage;
         }
         public String getErrorMessage() {
@@ -55,8 +55,6 @@ public class SubmitAssignmentInteractorTest {
 
     @Test
     public void testValidSubmission() throws Exception{
-        Account tohya = userDsGateway.getUserByEmail("henrik-ibsen707@gmail.com");
-        userDsGateway.saveUser(tohya);
 
         File testFile = Files.createTempFile("test", ".pdf").toFile();
         Files.write(testFile.toPath(), "Sample".getBytes());
@@ -71,7 +69,7 @@ public class SubmitAssignmentInteractorTest {
         PDFFile savedFile = fileDsGateway.getFile("/CSC207/henrik-ibsen707@gmail.com");
 
         String expectedFileName = "test.pdf";
-        String expectedFilePath = "/CSC207/henrik-ibsen707@gmail.com"
+        String expectedFilePath = "/CSC207/henrik-ibsen707@gmail.com";
         String actualFileName = savedFile.getFileName();
         String actualFilePath = savedFile.getFilePath();
 
@@ -79,21 +77,29 @@ public class SubmitAssignmentInteractorTest {
         assertEquals(expectedFileName, actualFileName);
         assertEquals(expectedFilePath, actualFilePath);
         assertEquals("File uploaded successfully to: " + expectedFilePath,
-                outputBoundary.getSuccesMessage());
+                outputBoundary.getSuccessMessage());
     }
 
     @Test
-    void testSubmitAssignmentWithNonPDFFile() {
+    public void testNonPDFSubmission() {
+        // Arrange
 
+        File testFile = new File("test.txt");
+
+        // Act
+        submitAssignmentInteractor.submitAssignment(testFile, "CSC207", "test@example.com", userDsGateway);
+
+        // Assert
+        assertNull(outputBoundary.getSuccessMessage());
+        assertEquals("File must be a PDF", outputBoundary.getErrorMessage());
     }
-
     @Test
-    public void testValidFormat() {
+    public void testInvalidFormat() {
         // Implement the test logic
     }
 
     @Test
-    public void testValidAssignment() {
+    public void testInvalidAssignment() {
         // Implement the test logic
     }
 
