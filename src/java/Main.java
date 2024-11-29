@@ -194,6 +194,8 @@ public class Main extends JFrame {
         SubmitGradeInputBoundary submitGradeInputBoundary = new SubmitGradeInteractor(userDataAccessInterface);
         GradeController gradeController = new GradeController(submitGradeInputBoundary);
 
+        UserDataAccessInterface userDataAccessInterface2 
+
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
         );
