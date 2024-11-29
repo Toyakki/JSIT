@@ -43,6 +43,7 @@ public class Account {
 
     public void addCourse(Course course) {
         this.courses.add(course);
+        this.courseNames.add(course.getName());
     }
 
     public String getEmail() {
@@ -74,7 +75,11 @@ public class Account {
         return List.copyOf(this.courseNames);
     }
 
+    public boolean hasCourse(String courseName) {
+        return this.courseNames.contains(courseName);
+
     public List<Course> getCourses() {
         return List.copyOf(this.courses);
     }
+
 }
