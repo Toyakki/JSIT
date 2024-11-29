@@ -4,14 +4,9 @@ import com.dropbox.core.DbxException;
 import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
-import entities.Assignment;
-import entities.Course;
 import entities.PDFFile;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeacherDownoadInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
