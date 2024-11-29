@@ -37,7 +37,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                     .uploadAndFinish(in);
             System.out.println("File uploaded successfully to:" + metadata.getPathLower());
         } catch (DbxException | IOException e) {
-            throw new RuntimeException("Error uploading file: " + e.getMessage(), e);
+            throw new RuntimeException("Error in uploading file to dropbox", e);
         }
     }
 
@@ -48,11 +48,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             DownloadBuilder downloader = client.files().downloadBuilder(path);
             downloader.download(out);
             byte[] content = out.toByteArray();
-
-            // Return the PDFFile entity
             return new PDFFile(new File(path).getName(), path, content);
-        } catch (IOException | DbxException e) {
-            throw new RuntimeException("Error downloading file: " + e.getMessage(), e);
+        } catch (DbxException | IOException e) {
+            throw new RuntimeException("Error in downloading the file from dropbox: " + e.getMessage());
         }
     }
 
