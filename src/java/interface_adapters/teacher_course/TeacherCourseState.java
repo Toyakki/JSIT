@@ -16,6 +16,7 @@ public class TeacherCourseState {
     private List<Map<String, String>> assignmentMarksReceived;
     private List<String> assignmentBaseMarks;
     private List<String> studentEmails;
+    private String courseCode;
 
     public TeacherCourseState(String courseName,
                               String email,
@@ -25,7 +26,8 @@ public class TeacherCourseState {
                               List<Map<String, String>> assignmentStages,
                               List<Map<String, String>> assignmentMarksReceived,
                               List<String> assignmentBaseMarks,
-                              List<String> studentEmails
+                              List<String> studentEmails,
+                              String courseCode
     ) {
         this.courseName = courseName;
         this.email = email;
@@ -36,6 +38,7 @@ public class TeacherCourseState {
         this.assignmentMarksReceived = assignmentMarksReceived;
         this.assignmentBaseMarks = List.copyOf(assignmentBaseMarks);
         this.studentEmails = List.copyOf(studentEmails);
+        this.courseCode = courseCode;
     }
 
     public TeacherCourseState(){
@@ -46,6 +49,7 @@ public class TeacherCourseState {
         this.assignmentMarksReceived = new ArrayList<>();
         this.studentEmails = new ArrayList<>();
         this.assignmentBaseMarks = new ArrayList<>();
+        this.courseCode = "";
     }
 
     public String getEmail() {return email;}
@@ -69,4 +73,6 @@ public class TeacherCourseState {
     public List<String> getStudentEmails(){ return List.copyOf(studentEmails); }
 
     public List<String> getAssignmentBaseMarks(){ return assignmentBaseMarks; }
+
+    public String getCourseCode(){ return courseCode; }
 }

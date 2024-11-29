@@ -10,6 +10,6 @@ public class CreateAssignmentPresenter {
     }
 
     public void refreshView(){
-        this.viewModel.firePropertyChanged();
+        this.viewModel.firePropertyChange("refresh");
     }
 }

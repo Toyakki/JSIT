@@ -30,7 +30,10 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 //    private UploadController uploadController;
     private File newAssignmentFile;
 
+    JPanel headerPanel;
     JLabel courseLabel;
+    JLabel instructorLabel;
+    JLabel codeLabel;
     JPanel createAssignmentPanel;
     Map<String, JPanel> assignmentPanels = new HashMap<>();
 
@@ -48,14 +51,31 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        courseLabel = new JLabel(teacherCourseViewModel.getState().getCourseName());
-        add(courseLabel);
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
+        add(headerPanel);
 
         JButton backButton = new JButton("Back");
+        backButton.setBackground(Color.BLACK);
+        backButton.setForeground(Color.WHITE);
+        backButton.setBorderPainted(false);
+        backButton.setFont(new Font("Tomaha", Font.BOLD, 17));
         backButton.addActionListener(e -> {
             this.teacherCourseBackController.back(teacherCourseViewModel.getState().getEmail());
         });
-        this.add(backButton);
+        headerPanel.add(backButton);
+
+        courseLabel = new JLabel(teacherCourseViewModel.getState().getCourseName());
+        courseLabel.setFont(new Font("Tomaha", Font.BOLD, 15));
+        headerPanel.add(courseLabel);
+
+        instructorLabel = new JLabel("Instructor: " + teacherCourseViewModel.getState().getEmail());
+        instructorLabel.setFont(new Font("Tomaha", Font.BOLD, 15));
+        headerPanel.add(instructorLabel);
+
+        codeLabel = new JLabel("Code: " + teacherCourseViewModel.getState().getCourseCode());
+        codeLabel.setFont(new Font("Tomaha", Font.BOLD, 15));
+        headerPanel.add(codeLabel);
 
         createAssignmentPanel = buildCreateAssignmentPanel();
         createAssignmentPanel.setPreferredSize(new Dimension(600, 100));
@@ -65,8 +85,10 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
     public void actionPerformed(ActionEvent e) { }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            courseLabel.setText(teacherCourseViewModel.getState().getCourseName());
+        if (evt.getPropertyName().equals("state") || evt.getPropertyName().equals("refresh")) {
+            courseLabel.setText("     " + teacherCourseViewModel.getState().getCourseName() + "      ");
+            instructorLabel.setText("  Instructor: " + teacherCourseViewModel.getState().getEmail() + "     ");
+            codeLabel.setText("  Code: " + teacherCourseViewModel.getState().getCourseCode());
             renderAssignments();
         }
     }
@@ -96,6 +118,9 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         if (teacherCourseViewModel.getState().getStudentEmails().isEmpty()){
             return;
         }
+
+        System.out.println(teacherCourseViewModel.getState().getAssignmentsNames());
+
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
 
             JPanel assignmentPanel = new JPanel();
@@ -166,7 +191,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                     if (row != -1 && col != -1) {
                         if (actionListeners[row][col] != null){
                             actionListeners[row][col].doClick();
-                            System.out.println(assignmentData[row][col]);
                         }
                     }
                 }
@@ -189,6 +213,10 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         JPanel createAssignmentPanel = new JPanel();
         createAssignmentPanel.add(new JLabel("Create Assignment"));
         JButton uploadButton = new JButton("Upload");
+        uploadButton.setBackground(Color.BLACK);
+        uploadButton.setForeground(Color.WHITE);
+        uploadButton.setFont(new Font("Tomaha", Font.BOLD, 14));
+        uploadButton.setBorderPainted(false);
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setAcceptAllFileFilterUsed(false);
@@ -201,27 +229,41 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         });
         createAssignmentPanel.add(uploadButton);
 
-        createAssignmentPanel.add(new JLabel("Set Due Date, e.g. Jan. 1"));
-        JTextField dueDate = new JTextField();
+        JTextField nameField = new JTextField("Name");
+        nameField.setFont(new Font("Tomaha", Font.BOLD, 14));
+        nameField.setBackground(Color.BLACK);
+        nameField.setForeground(Color.WHITE);
+        createAssignmentPanel.add(nameField);
+
+        JTextField dueDate = new JTextField("Due Date");
+        dueDate.setFont(new Font("Tomaha", Font.BOLD, 14));
+        dueDate.setBackground(Color.BLACK);
+        dueDate.setForeground(Color.WHITE);
         createAssignmentPanel.add(dueDate);
 
         JTextField totalGradeField = new JTextField("Total Grade");
+        totalGradeField.setFont(new Font("Tomaha", Font.BOLD, 14));
+        totalGradeField.setBackground(Color.BLACK);
+        totalGradeField.setForeground(Color.WHITE);
         createAssignmentPanel.add(totalGradeField);
 
         JButton createButton = new JButton("Create");
+        createButton.setBackground(Color.BLACK);
+        createButton.setForeground(Color.WHITE);
+        createButton.setFont(new Font("Tomaha", Font.BOLD, 14));
         createButton.addActionListener(e -> {
-            if (newAssignmentFile.length() == 0) {
+            if (this.newAssignmentFile.length() == 0) {
                 JOptionPane.showMessageDialog(null, "Assignment not Selected");
             }
             else {
                 String assignmentName = ""; // need to replace with an actual naming scheme
                 assignmentCreaterController.createAssignment(
                         this.teacherCourseViewModel.getState().getEmail(),
-                        assignmentName,
+                        nameField.getText(),
                         this.teacherCourseViewModel.getState().getCourseName(),
                         dueDate.getText(),
                         totalGradeField.getText(),
-                        newAssignmentFile
+                        this.newAssignmentFile
                 );
             }
         });

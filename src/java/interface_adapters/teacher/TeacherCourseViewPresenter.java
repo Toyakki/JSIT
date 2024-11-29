@@ -28,7 +28,8 @@ public class TeacherCourseViewPresenter {
                             List<Map<String, String>> assignmentStages,
                             List<Map<String, String>> assignmentMarksReceived,
                             List<String> assignmentBaseMarks,
-                            List<String> studentEmails) {
+                            List<String> studentEmails,
+                            String courseCode) {
         final TeacherCourseState state = new TeacherCourseState(
                 courseName,
                 email,
@@ -38,7 +39,8 @@ public class TeacherCourseViewPresenter {
                 assignmentStages,
                 assignmentMarksReceived,
                 assignmentBaseMarks,
-                studentEmails
+                studentEmails,
+                courseCode
         );
         this.courseViewModel.setState(state);
         this.courseViewModel.firePropertyChanged();

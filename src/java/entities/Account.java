@@ -18,7 +18,12 @@ public class Account {
         this.courseNames = new ArrayList<>();
         for (Course course : this.courses) {
             this.courseNames.add(course.getName());
-            course.addStudent(email);
+            if (this.type.equals("student")){
+                course.addStudent(email);
+            } else {
+                course.setInstructor(email);
+            }
+
         }
     }
 

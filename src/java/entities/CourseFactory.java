@@ -9,7 +9,7 @@ public class CourseFactory {
         return new Course(
                 instructor,
                 className,
-                UUID.randomUUID().toString().replace("-", "").substring(0, 3),
+                UUID.randomUUID().toString().replace("-", "").substring(0, 6),
                 new ArrayList<>(),
                 new ArrayList<>()
         );

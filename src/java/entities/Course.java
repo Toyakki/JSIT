@@ -22,6 +22,14 @@ public class Course {
         this.assignments = assignments;
     }
 
+    public String getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
+
     public List<Assignment> getAssignments() {
         return List.copyOf(this.assignments);
     }
@@ -44,5 +52,9 @@ public class Course {
 
     public void addStudent(String student) {
         this.students.add(student);
+    }
+
+    public String getCourseCode() {
+        return classCode;
     }
 }

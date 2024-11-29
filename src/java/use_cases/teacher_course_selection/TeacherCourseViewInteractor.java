@@ -31,6 +31,7 @@ public class TeacherCourseViewInteractor {
         List<PDFFile> assignmentFiles = this.fileDataAccess.getFiles(courseName + "/assignments");
         Account user = userDataAccess.getUserByEmail(email);
         Course course = user.getCourseByName(courseName);
+        String courseCode = course.getCourseCode();
 
         List<String> studentEmails = course.getStudentEmails();
 
@@ -73,7 +74,8 @@ public class TeacherCourseViewInteractor {
                 assignmentStages,
                 assignmentMarksReceived,
                 assignmentBaseMarks,
-                studentEmails
+                studentEmails,
+                courseCode
         );
     }
 }
