@@ -41,21 +41,6 @@ public class SubmitAssignmentInteractorTest {
     }
 
     @Test
-    void testSubmitAssignmentWithNonPDFFile() {
-
-    }
-
-    @Test
-    public void testValidFormat() {
-        // Implement the test logic
-    }
-
-    @Test
-    public void testValidAssignment() {
-        // Implement the test logic
-    }
-
-    @Test
     public void testValidSubmission() throws Exception{
         Account user = userDsGateway.getUserByEmail("");
         File testFile = Files.createTempFile("test", ".pdf").toFile();
@@ -70,6 +55,21 @@ public class SubmitAssignmentInteractorTest {
         assertNotNull(savedFile);
         assertEquals("test.pdf", savedFile.getFileName());
         assertEquals("/CSC207/test@example.com", savedFile.getFilePath());
+    }
+
+    @Test
+    void testSubmitAssignmentWithNonPDFFile() {
+
+    }
+
+    @Test
+    public void testValidFormat() {
+        // Implement the test logic
+    }
+
+    @Test
+    public void testValidAssignment() {
+        // Implement the test logic
     }
 
     @Test
