@@ -72,7 +72,7 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
     private void setFields(TeacherClassesState state){
         this.classesViewModel.setState(state);
         final String email = state.getEmail();
-        final String newCourseName = courseNameField.getText();
+        courseNameField.setText("");
         for (ActionListener actionListener : createButton.getActionListeners()) {
             createButton.removeActionListener(actionListener);
         }
@@ -103,22 +103,13 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
         } else if (!this.classesViewModel.getState().getCourseNames().isEmpty()) {
             coursesPanel.remove(this.noCoursesLabel);
             courseLabels.remove("no courses");
-//            addBlankSpace(coursesPanel);
             coursesPanel.add(this.titleLabel);
-//            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
                 JLabel courseLabel = createCourseLabel(courseName);
                 courseLabels.put(courseName, courseLabel);
                 coursesPanel.add(courseLabel);
-//                addBlankSpace(coursesPanel);
             }
-        }
-    }
-
-    private void addBlankSpace(JPanel p, int n) {
-        for (int i = 0; i < n; i++){
-            p.add(new JLabel(" "));
         }
     }
 
@@ -147,20 +138,6 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
             }
         });
         return courseLabel;
-    }
-
-    private void addBlankSpace(int n){
-        for (int i = 0; i < n; i++) {
-            add(new JLabel(" "));
-        }
-    }
-
-    private void addBlankSpace(){
-        addBlankSpace(1);
-    }
-
-    private void addBlankSpace(JPanel p){
-        p.add(new JLabel(" "));
     }
 
     public void actionPerformed(ActionEvent e) { }
