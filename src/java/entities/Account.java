@@ -27,7 +27,7 @@ public class Account {
         }
     }
 
-    public Course getCourseByName(String name) throws IllegalArgumentException {
+    public Course getCourseByName(String name) {
         Course course = null;
         for (Course candidateCourse : this.courses){
             if (candidateCourse.getName().equals(name)){
@@ -43,6 +43,7 @@ public class Account {
 
     public void addCourse(Course course) {
         this.courses.add(course);
+        this.courseNames.add(course.getName());
     }
 
     public String getEmail() {
@@ -74,7 +75,8 @@ public class Account {
         return List.copyOf(this.courseNames);
     }
 
-    public void addCourse(String courseCode) {
-        this.courseNames.add(courseCode);
+    public boolean hasCourse(String courseName) {
+        return this.courseNames.contains(courseName);
     }
+
 }

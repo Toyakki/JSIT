@@ -8,8 +8,8 @@ import interface_adapters.join_class.JoinCoursePresenter;
 import use_cases.UserOutputData;
 
 public class JoinUseCaseInteractor {
-    private JoinCoursePresenter presenter;
-    private UserDataAccessInterface userdataAccess;
+    private final JoinCoursePresenter presenter;
+    private final UserDataAccessInterface userdataAccess;
 
     public JoinUseCaseInteractor(JoinCoursePresenter presenter, UserDataAccessInterface userdataAccess) {
         this.presenter = presenter;
@@ -23,14 +23,12 @@ public class JoinUseCaseInteractor {
             return;
         }
         Account teacher = this.userdataAccess.getUserByEmail(instructorEmail);
-        try {
-            Course course = teacher.getCourseByName(courseName);
-            student.addCourse(course);
-        }
-        catch (IllegalArgumentException e){
+        if (!teacher.hasCourse(courseName)) {
             presenter.prepareFailView("Invalid course!");
             return;
         }
+        Course course = teacher.getCourseByName(courseName);
+        student.addCourse(course);
         presenter.prepareSuccessView(new UserOutputData(studentEmail, "student", student.getCourseNames()));
     }
 }
