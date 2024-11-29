@@ -85,7 +85,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
     public void actionPerformed(ActionEvent e) { }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state") || evt.getPropertyName().equals("refresh")) {
+        if (evt.getPropertyName().equals("state")) {
             courseLabel.setText("     " + teacherCourseViewModel.getState().getCourseName() + "      ");
             instructorLabel.setText("  Instructor: " + teacherCourseViewModel.getState().getEmail() + "     ");
             codeLabel.setText("  Code: " + teacherCourseViewModel.getState().getCourseCode());
@@ -207,6 +207,8 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
             );
             add(assignmentPanel);
         }
+        this.revalidate();
+        this.repaint();
     }
 
     private JPanel buildCreateAssignmentPanel(){
