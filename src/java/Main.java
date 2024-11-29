@@ -5,6 +5,7 @@ import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
 import entities.*;
 import interface_adapters.create_assignment.AssignmentCreaterController;
+import interface_adapters.create_assignment.CreateAssignmentPresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
 import interface_adapters.student_course.StudentCourseBackController;
@@ -25,6 +26,7 @@ import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
+import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
@@ -80,14 +82,6 @@ public class Main extends JFrame {
         Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
         Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
 
-        Assignment ps1 = new Assignment("Problem Set 1", "December 1st", "100", "graded", "true");
-        Assignment ps2 = new Assignment("Problem Set 2", "December 15st", "100", "assigned", "false");
-        Assignment finalProject = new Assignment("Final Project", "December 4th", "25", "submitted", "false");
-
-        csCourse.addAssignment(finalProject);
-        matCourse.addAssignment(ps1);
-        matCourse.addAssignment(ps2);
-
         List<Course> joe_courses = new ArrayList<>();
         joe_courses.add(matCourse);
 
@@ -107,6 +101,24 @@ public class Main extends JFrame {
         demo.saveUser(joe);
         demo.saveUser(tohya);
         demo.saveUser(test);
+
+        Assignment ps1 = new Assignment(matCourse,"Problem Set 1", "December 1st", "100", "graded", "true");
+        Assignment ps2 = new Assignment(matCourse,"Problem Set 2", "December 15st", "100", "assigned", "false");
+        Assignment ps3 = new Assignment(matCourse,"Problem Set 3", "December 15st", "100", "assigned", "false");
+        Assignment ps4 = new Assignment(matCourse, "Problem Set 4", "December 15st", "100", "assigned", "false");
+        Assignment ps5 = new Assignment(matCourse, "Problem Set 5", "December 15st", "100", "assigned", "false");
+        Assignment ps6 = new Assignment(matCourse, "Problem Set 6", "December 15st", "100", "assigned", "false");
+        Assignment ps7 = new Assignment(matCourse, "Problem Set 7", "December 15st", "100", "assigned", "false");
+        Assignment finalProject = new Assignment(csCourse, "Final Project", "December 4th", "25", "submitted", "false");
+
+        csCourse.addAssignment(finalProject);
+        matCourse.addAssignment(ps1);
+        matCourse.addAssignment(ps2);
+        matCourse.addAssignment(ps3);
+        matCourse.addAssignment(ps4);
+        matCourse.addAssignment(ps5);
+        matCourse.addAssignment(ps6);
+        matCourse.addAssignment(ps7);
 
         // data access layer
         loginUseCaseOutputBoundary = new LoginPresenter(
@@ -168,7 +180,14 @@ public class Main extends JFrame {
         DownloadController downloadController = new DownloadController();
         StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
-        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController();
+
+        CreateAssignmentPresenter createAssignmentPresenter = new CreateAssignmentPresenter(teacherCourseViewModel);
+        CreateAssignmentInteractor createAssignmentInteractor = new CreateAssignmentInteractor(
+                createAssignmentPresenter,
+                demo,
+                fileDataAccessObject
+        );
+        AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
         GradeController gradeController = new GradeController();
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
@@ -207,7 +226,7 @@ public class Main extends JFrame {
         mainPanel.add(teacherCourseView, teacherCourseView.getViewName());
 
         add(mainPanel);
-        setSize(500, 425);
+        setSize(600, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(mainPanel);
 
