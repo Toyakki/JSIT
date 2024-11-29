@@ -13,7 +13,7 @@ public class GradeController {
         this.submitGradeInputBoundary = submitGradeInputBoundary;
     }
 
-    public void setGrade(String grade, String course, String email, Assignment assignment) {
-        submitGradeInputBoundary.submitGrade(grade, course, email, assignment);
+    public void setGrade(String grade, String nameCourse, String email, String nameAssignment) {
+        submitGradeInputBoundary.submitGrade(grade, nameCourse, email, nameAssignment);
     }
 }

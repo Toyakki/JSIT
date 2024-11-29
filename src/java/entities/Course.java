@@ -26,6 +26,15 @@ public class Course {
         return List.copyOf(this.assignments);
     }
 
+    public Assignment getAssignmentByName(String assignmentName) {
+        for (int i = 0; i < this.assignments.size(); i++) {
+            if (this.assignments.get(i).getName().equals(assignmentName)) {
+                return this.assignments.get(i);
+            }
+        }
+        throw new RuntimeException("Assignment not found");
+    };
+
     public List<String> getStudentEmails() {
         return List.copyOf(this.students);
     }

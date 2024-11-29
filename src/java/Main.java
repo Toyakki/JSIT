@@ -28,6 +28,8 @@ import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
+import use_cases.submit_grade.SubmitGradeInputBoundary;
+import use_cases.submit_grade.SubmitGradeInteractor;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -188,7 +190,9 @@ public class Main extends JFrame {
                 fileDataAccessObject
         );
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
-        GradeController gradeController = new GradeController();
+        UserDataAccessInterface userDataAccessInterface = new InMemoryUserDataAccessObject();
+        SubmitGradeInputBoundary submitGradeInputBoundary = new SubmitGradeInteractor(userDataAccessInterface);
+        GradeController gradeController = new GradeController(submitGradeInputBoundary);
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
