@@ -22,6 +22,14 @@ public class Course {
         this.assignments = assignments;
     }
 
+    public String getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
+
     public List<Assignment> getAssignments() {
         return List.copyOf(this.assignments);
     }
@@ -34,11 +42,19 @@ public class Course {
         return this.className;
     }
 
-    public String getClassName() {
-        return className;
-    }
+    public String getClassCode() {return this.classCode;}
+
+    public String getInstructor() {return this.instructor;}
 
     public void addAssignment(Assignment assignment) {
         this.assignments.add(assignment);
+    }
+
+    public void addStudent(String student) {
+        this.students.add(student);
+    }
+
+    public String getCourseCode() {
+        return classCode;
     }
 }

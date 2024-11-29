@@ -18,6 +18,12 @@ public class Account {
         this.courseNames = new ArrayList<>();
         for (Course course : this.courses) {
             this.courseNames.add(course.getName());
+            if (this.type.equals("student")){
+                course.addStudent(email);
+            } else {
+                course.setInstructor(email);
+            }
+
         }
     }
 
@@ -37,6 +43,7 @@ public class Account {
 
     public void addCourse(Course course) {
         this.courses.add(course);
+        this.courseNames.add(course.getName());
     }
 
     public String getEmail() {
@@ -68,7 +75,11 @@ public class Account {
         return List.copyOf(this.courseNames);
     }
 
-    public void addCourse(String courseCode) {
-        this.courseNames.add(courseCode);
+    public boolean hasCourse(String courseName) {
+        return this.courseNames.contains(courseName);
+
+    public List<Course> getCourses() {
+        return List.copyOf(this.courses);
     }
+
 }

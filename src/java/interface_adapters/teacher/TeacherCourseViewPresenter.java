@@ -5,6 +5,7 @@ import interface_adapters.teacher_course.TeacherCourseViewModel;
 import interface_adapters.ViewManagerModel;
 
 import java.util.List;
+import java.util.Map;
 
 public class TeacherCourseViewPresenter {
     private TeacherClassesViewModel teacherClassesViewModel;
@@ -23,10 +24,12 @@ public class TeacherCourseViewPresenter {
                             String courseName,
                             List<String> assignmentNames,
                             List<String> assignmentDueDates,
-                            List<String> assignmentMarks,
-                            List<String> assignmentStages,
-                            List<String> assignmentMarksReceived,
-                            List<String> studentEmails) {
+                            List<Map<String, String>> assignmentMarks,
+                            List<Map<String, String>> assignmentStages,
+                            List<Map<String, String>> assignmentMarksReceived,
+                            List<String> assignmentBaseMarks,
+                            List<String> studentEmails,
+                            String courseCode) {
         final TeacherCourseState state = new TeacherCourseState(
                 courseName,
                 email,
@@ -35,7 +38,9 @@ public class TeacherCourseViewPresenter {
                 assignmentMarks,
                 assignmentStages,
                 assignmentMarksReceived,
-                studentEmails
+                assignmentBaseMarks,
+                studentEmails,
+                courseCode
         );
         this.courseViewModel.setState(state);
         this.courseViewModel.firePropertyChanged();
