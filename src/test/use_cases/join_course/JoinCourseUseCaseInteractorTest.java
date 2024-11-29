@@ -10,6 +10,8 @@ import use_cases.UserOutputData;
 import use_cases.join_class.JoinUseCaseInteractor;
 import use_cases.login.LoginUseCaseInputBoundary;
 
+import static org.junit.Assert.fail;
+
 public class JoinCourseUseCaseInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
 
