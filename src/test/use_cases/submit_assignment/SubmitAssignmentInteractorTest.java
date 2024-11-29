@@ -70,15 +70,15 @@ public class SubmitAssignmentInteractorTest {
 
         PDFFile savedFile = fileDsGateway.getFile("/CSC207/henrik-ibsen707@gmail.com");
 
-        String expectedfileName = "test.pdf";
-        String expectedfilePath = "/CSC207/henrik-ibsen707@gmail.com"
-        String actualfileName = savedFile.getFileName();
-        String actualfilePath = savedFile.getFilePath();
+        String expectedFileName = "test.pdf";
+        String expectedFilePath = "/CSC207/henrik-ibsen707@gmail.com"
+        String actualFileName = savedFile.getFileName();
+        String actualFilePath = savedFile.getFilePath();
 
         assertNotNull(savedFile);
-        assertEquals(expectedfileName, actualfileName);
-        assertEquals(expectedfilePath, actualfilePath);
-        assertEquals("File uploaded successfully to: " + expectedfilePath,
+        assertEquals(expectedFileName, actualFileName);
+        assertEquals(expectedFilePath, actualFilePath);
+        assertEquals("File uploaded successfully to: " + expectedFilePath,
                 outputBoundary.getSuccesMessage());
     }
 
