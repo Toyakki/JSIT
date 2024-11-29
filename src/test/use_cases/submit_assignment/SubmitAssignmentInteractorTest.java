@@ -16,14 +16,19 @@ public class SubmitAssignmentInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
     private InMemoryFileDataAccessObject fileDsGateway;
     private SubmitAssignmentInteractor submitAssignmentInteractor;
+    private MockSubmitAssignmentPresenter outputBoundary;
 
 
     @BeforeEach
     void create() {
         userDsGateway = new InMemoryUserDataAccessObject();
         fileDsGateway = new InMemoryFileDataAccessObject();
-        SubmitAssignmentOutputBoundary outputBoundary = new MockSubmitAssignmentPresenter();
-        submitAssignmentInteractor = new SubmitAssignmentInteractor(fileDsGateway, outputBoundary, userDsGateway);
+        outputBoundary = new MockSubmitAssignmentPresenter();
+        submitAssignmentInteractor = new SubmitAssignmentInteractor(
+                fileDsGateway,
+                outputBoundary,
+                userDsGateway
+        );
     }
 
     private static class MockSubmitAssignmentPresenter implements SubmitAssignmentOutputBoundary {
@@ -57,6 +62,9 @@ public class SubmitAssignmentInteractorTest {
         assertNotNull(savedFile);
         assertEquals("test.pdf", savedFile.getFileName());
         assertEquals("/CSC207/henrik-ibsen707@gmail.com", savedFile.getFilePath());
+
+        MockSubmitAssignmentPresenter presenter = new MockSubmitAssignmentPresenter();
+        assertEquals(presenter)
     }
 
     @Test
