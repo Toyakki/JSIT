@@ -27,7 +27,7 @@ public class Account {
         }
     }
 
-    public Course getCourseByName(String name) {
+    public Course getCourseByName(String name) throws IllegalArgumentException {
         Course course = null;
         for (Course candidateCourse : this.courses){
             if (candidateCourse.getName().equals(name)){

@@ -10,20 +10,27 @@ import use_cases.UserOutputData;
 public class JoinUseCaseInteractor {
     private JoinCoursePresenter presenter;
     private UserDataAccessInterface userdataAccess;
-    private CourseDataAccessInterface coursedataAccess;
 
     public JoinUseCaseInteractor(JoinCoursePresenter presenter, UserDataAccessInterface userdataAccess) {
         this.presenter = presenter;
         this.userdataAccess = userdataAccess;
     }
 
-    public void joinCourse(String email, String courseCode) {
-        Account user = this.userdataAccess.getUserByEmail(email);
-        if (!coursedataAccess.existsByCode(courseCode)) {
-            presenter.prepareFailView("Course does not exist");
+    public void joinCourse(String studentEmail, String courseName, String instructorEmail) {
+        Account student = this.userdataAccess.getUserByEmail(studentEmail);
+        if (!userdataAccess.userExistsByEmail(instructorEmail)) {
+            presenter.prepareFailView("Invalid instructor!");
+            return;
         }
-        Course course = this.coursedataAccess.getCourseByCode(courseCode);
-        user.addCourse(course);
-        presenter.prepareSuccessView(new UserOutputData(email, "student", user.getCourseNames()));
+        Account teacher = this.userdataAccess.getUserByEmail(instructorEmail);
+        try {
+            Course course = teacher.getCourseByName(courseName);
+            student.addCourse(course);
+        }
+        catch (IllegalArgumentException e){
+            presenter.prepareFailView("Invalid course!");
+            return;
+        }
+        presenter.prepareSuccessView(new UserOutputData(studentEmail, "student", student.getCourseNames()));
     }
 }
