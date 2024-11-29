@@ -1,13 +1,11 @@
 package use_cases.submit_assignment;
 
-import data_access.FileDataAccessInterface;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.InMemoryFileDataAccessObject;
 import entities.Account;
 import entities.PDFFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -42,19 +40,23 @@ public class SubmitAssignmentInteractorTest {
 
     @Test
     public void testValidSubmission() throws Exception{
-        Account user = userDsGateway.getUserByEmail("");
+        Account tohya = userDsGateway.getUserByEmail("henrik-ibsen707@gmail.com");
+        userDsGateway.saveUser(tohya);
+
         File testFile = Files.createTempFile("test", ".pdf").toFile();
         Files.write(testFile.toPath(), "Sample".getBytes());
+
         submitAssignmentInteractor.submitAssignment(
                 testFile,
                 "CSC207",
-                "test@example.com",
+                "henrik-ibsen707@gmail.com",
                 userDsGateway
         );
-        PDFFile savedFile = fileDsGateway.getFile("/CSC207/test@example.com");
+
+        PDFFile savedFile = fileDsGateway.getFile("/CSC207/henrik-ibsen707@gmail.com");
         assertNotNull(savedFile);
         assertEquals("test.pdf", savedFile.getFileName());
-        assertEquals("/CSC207/test@example.com", savedFile.getFilePath());
+        assertEquals("/CSC207/henrik-ibsen707@gmail.com", savedFile.getFilePath());
     }
 
     @Test
