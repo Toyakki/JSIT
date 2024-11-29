@@ -44,7 +44,10 @@ public class CreateAssignmentInteractor {
                     assignmentBytes
             );
 
+            Course course = userDataAccessInterface.getUserByEmail(email).getCourseByName(courseName);
+
             Assignment assignment = new Assignment(
+                    course,
                     assignmentName,
                     dueDate,
                     marks,
@@ -52,7 +55,6 @@ public class CreateAssignmentInteractor {
                     "false"
             );
 
-            Course course = userDataAccessInterface.getUserByEmail(email).getCourseByName(courseName);
             course.addAssignment(assignment);
 
             // upload assignmentBytes
