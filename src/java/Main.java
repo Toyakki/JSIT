@@ -6,6 +6,8 @@ import data_access.UserDataAccessInterface;
 import entities.*;
 import interface_adapters.create_assignment.AssignmentCreaterController;
 import interface_adapters.create_assignment.CreateAssignmentPresenter;
+import interface_adapters.create_class.CreateCourseController;
+import interface_adapters.create_class.CreateCoursePresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
 import interface_adapters.student_course.StudentCourseBackController;
@@ -27,6 +29,7 @@ import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.create_assignment.CreateAssignmentInteractor;
+import use_cases.create_class.CreateCourseUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
@@ -199,12 +202,17 @@ public class Main extends JFrame {
         );
         TeacherCourseViewController teacherCourseViewController = new TeacherCourseViewController(teacherCourseViewInteractor);
 
+        // create course controller, interactor, presenter
+        CreateCoursePresenter createCoursePresenter = new CreateCoursePresenter(teacherClassesViewModel);
+        CreateCourseUseCaseInteractor createCourseUseCaseInteractor = new CreateCourseUseCaseInteractor(createCoursePresenter, demo);
+        CreateCourseController createCourseController = new CreateCourseController(createCourseUseCaseInteractor);
+
         // classes view for students
         studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
-        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController, teacherCourseViewController);
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseViewController, createCourseController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         // course view for student

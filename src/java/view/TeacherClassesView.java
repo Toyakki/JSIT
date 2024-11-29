@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapters.create_class.CreateCourseController;
 import interface_adapters.teacher_course.TeacherCourseBackController;
 import interface_adapters.teacher.TeacherClassesState;
 import interface_adapters.teacher.TeacherClassesViewModel;
@@ -19,8 +20,8 @@ import java.util.Map;
 
 public class TeacherClassesView extends JPanel implements ActionListener, PropertyChangeListener {
     private TeacherClassesViewModel classesViewModel;
-    private TeacherCourseBackController teacherCourseBackController;
     private TeacherCourseViewController courseViewController;
+    private CreateCourseController createCourseController;
     private final String viewName = "teacher classes";
     private final JLabel noCoursesLabel = new JLabel("No courses created yet.");
     private final JLabel titleLabel = new JLabel("Classes:");
@@ -28,15 +29,15 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
 
     private final Map<String, JLabel> courseLabels = new HashMap<>();
 
-    private final JPanel joinCoursePanel = new JPanel();
-    private final JButton joinButton = new JButton("Create Class");
-    private final JTextField joinCodeField = new JTextField();
+    private final JPanel createCoursePanel = new JPanel();
+    private final JButton createButton = new JButton("Create Class");
+    private final JTextField courseNameField = new JTextField();
 
     public TeacherClassesView(TeacherClassesViewModel classesViewModel,
-                              TeacherCourseBackController teacherCourseBackController,
-                              TeacherCourseViewController courseViewController) {
+                              TeacherCourseViewController courseViewController,
+                              CreateCourseController createCourseController) {
         this.classesViewModel = classesViewModel;
-        this.teacherCourseBackController = teacherCourseBackController;
+        this.createCourseController = createCourseController;
         this.courseViewController = courseViewController;
         this.classesViewModel.addPropertyChangeListener(this);
 
@@ -46,29 +47,41 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
         coursesPanel.setPreferredSize(new Dimension(370, 300));
 
-        joinButton.setPreferredSize(new Dimension(125, 30));
-        joinButton.setBackground(Color.BLACK);
-        joinButton.setForeground(Color.WHITE);
-        joinButton.setFont(new Font("Tomaha", Font.BOLD, 12));
-        joinButton.setBorderPainted(false);
-        joinCodeField.setPreferredSize(new Dimension(125, 30));
-        joinCoursePanel.setLayout(new BoxLayout(joinCoursePanel, BoxLayout.Y_AXIS));
+        courseNameField.setPreferredSize(new Dimension(125, 30));
+        createCoursePanel.setLayout(new BoxLayout(createCoursePanel, BoxLayout.Y_AXIS));
+
+        createButton.setPreferredSize(new Dimension(125, 30));
+        createButton.setBackground(Color.BLACK);
+        createButton.setForeground(Color.WHITE);
+        createButton.setFont(new Font("Tomaha", Font.BOLD, 12));
+        createButton.setBorderPainted(false);
 
         JPanel joinCodeFieldWrapper = new JPanel();
-        joinCodeFieldWrapper.add(joinCodeField);
+        joinCodeFieldWrapper.add(courseNameField);
         joinCodeFieldWrapper.setPreferredSize(new Dimension(125, 30));
 
-        joinCoursePanel.setPreferredSize(new Dimension(125, 70));
-        joinCoursePanel.add(joinCodeFieldWrapper);
-        joinCodeFieldWrapper.add(joinButton);
+        createCoursePanel.setPreferredSize(new Dimension(125, 70));
+        createCoursePanel.add(joinCodeFieldWrapper);
+        joinCodeFieldWrapper.add(createButton);
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add(coursesPanel);
-        add(joinCoursePanel);
+        add(createCoursePanel);
     }
 
     private void setFields(TeacherClassesState state){
         this.classesViewModel.setState(state);
+        final String email = state.getEmail();
+        final String newCourseName = courseNameField.getText();
+        for (ActionListener actionListener : createButton.getActionListeners()) {
+            createButton.removeActionListener(actionListener);
+        }
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createCourseController.createCourse(email, courseNameField.getText());
+            }
+        });
         renderCourses();
     }
 
