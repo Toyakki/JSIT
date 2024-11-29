@@ -172,6 +172,8 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 }
             };
 
+            assignmentsTable.setDefaultEditor(Object.class, null);
+
             assignmentsTable.addMouseListener(tableListener);
 
             assignmentPanel.add(assignmentsTable);
