@@ -32,14 +32,24 @@ public class SubmitAssignmentInteractorTest {
     }
 
     private static class MockSubmitAssignmentPresenter implements SubmitAssignmentOutputBoundary {
+        private String successMessage;
+        private String errorMessage;
+
         @Override
         public void presentSuccess(String message) {
-            System.out.println("SUCCESS: " + message);
+            this.successMessage = message;
         }
 
         @Override
         public void presentError(String message) {
-            System.err.println("Error: " + message);
+            this.errorMessage = message;
+        }
+
+        public String getSuccesMessage() {
+            return successMessage;
+        }
+        public String getErrorMessage() {
+            return errorMessage;
         }
     }
 
