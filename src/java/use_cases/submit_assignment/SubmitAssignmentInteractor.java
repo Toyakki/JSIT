@@ -1,5 +1,6 @@
 package use_cases.submit_assignment;
 
+import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import data_access.FileDataAccessInterface;
 import entities.PDFFile;
@@ -12,18 +13,22 @@ import java.util.List;
 public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary {
     private final FileDataAccessInterface fileDataAccessInterface;
     private final SubmitAssignmentOutputBoundary outputBoundary;
-    private final Account account;
+    private final InMemoryUserDataAccessObject userDataAccessObject;
 
     public SubmitAssignmentInteractor(FileDataAccessInterface fileDataAccessInterface,
                                       SubmitAssignmentOutputBoundary outputBoundary,
-                                      Account account) {
+                                      InMemoryUserDataAccessObject userDataAccessObject) {
         this.fileDataAccessInterface = fileDataAccessInterface;
         this.outputBoundary = outputBoundary;
-        this.account = account;
+        this.userDataAccessObject = userDataAccessObject;
     }
 
     @Override
-    public void submitAssignment(File selectedFile, String courseName) {
+    public void submitAssignment(File selectedFile,
+                                 String courseName,
+                                 String email,
+                                 InMemoryUserDataAccessObject userDataAccessObject)
+    {
         try {
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("Only PDF files are allowed.");
@@ -34,6 +39,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             }
 
             byte[] content = Files.readAllBytes(selectedFile.toPath());
+            Account account = userDataAccessObject.getUserByEmail(email);
             String studentEmail = account.getEmail();
 
             // Create a unique path for the file in Dropbox
