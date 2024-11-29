@@ -13,7 +13,7 @@ public class SubmitAssignmentController {
         this.inputBoundary = inputBoundary;
     }
 
-    public void handleSubmitAssignment(File selectedFile, String courseName) {
-        inputBoundary.submitAssignment(selectedFile, courseName);
+    public void handleSubmitAssignment(File selectedFile, String courseName, String email) {
+        inputBoundary.submitAssignment(selectedFile, courseName, email);
     }
 }
