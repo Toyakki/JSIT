@@ -44,8 +44,6 @@ public class Course {
 
     public String getClassCode() {return this.classCode;}
 
-    public String getInstructor() {return this.instructor;}
-
     public void addAssignment(Assignment assignment) {
         this.assignments.add(assignment);
     }

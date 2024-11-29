@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryFileDataAccessObject implements FileDataAccessInterface {
-
-    @Override
-    public boolean fileExistsByPath(String path){
-        return false;
-
     private Map<String, PDFFile> files = new HashMap<>();
 
+    @Override
+    public boolean fileExistsByPath(String path) {
+        return false;
+    }
+
     public void saveFile(PDFFile file){
-        files.put(file.getName(), file);
+        files.put(file.getFileName(), file);
     }
 
     public PDFFile getFile(String path){
