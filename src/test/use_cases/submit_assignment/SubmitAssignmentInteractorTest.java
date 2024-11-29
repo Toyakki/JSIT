@@ -1,11 +1,16 @@
 package use_cases.submit_assignment;
 
+import data_access.FileDataAccessInterface;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.InMemoryFileDataAccessObject;
 import entities.Account;
-import entities.Assignment;
+import entities.PDFFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import java.io.File;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,22 +19,12 @@ public class SubmitAssignmentInteractorTest {
     private InMemoryFileDataAccessObject fileDsGateway;
     private SubmitAssignmentInteractor submitAssignmentInteractor;
 
+
     @BeforeEach
     void create() {
         userDsGateway = new InMemoryUserDataAccessObject();
         fileDsGateway = new InMemoryFileDataAccessObject();
-
-        Assignment finalProject = new Assignment(
-                "Final Project",
-                "December 4th",
-                "25", 
-                "submitted",
-                "false"
-        );
-
         SubmitAssignmentOutputBoundary outputBoundary = new MockSubmitAssignmentPresenter();
-        Account tohya_test_account = userDsGateway.getUserByEmail("henrik-ibsen707@gmail.com");
-
         submitAssignmentInteractor = new SubmitAssignmentInteractor(fileDsGateway, outputBoundary, userDsGateway);
     }
 
@@ -46,6 +41,11 @@ public class SubmitAssignmentInteractorTest {
     }
 
     @Test
+    void testSubmitAssignmentWithNonPDFFile() {
+
+    }
+
+    @Test
     public void testValidFormat() {
         // Implement the test logic
     }
@@ -56,8 +56,20 @@ public class SubmitAssignmentInteractorTest {
     }
 
     @Test
-    public void testValidSubmission() {
-        // Implement the test logic
+    public void testValidSubmission() throws Exception{
+        Account user = userDsGateway.getUserByEmail("");
+        File testFile = Files.createTempFile("test", ".pdf").toFile();
+        Files.write(testFile.toPath(), "Sample".getBytes());
+        submitAssignmentInteractor.submitAssignment(
+                testFile,
+                "CSC207",
+                "test@example.com",
+                userDsGateway
+        );
+        PDFFile savedFile = fileDsGateway.getFile("/CSC207/test@example.com");
+        assertNotNull(savedFile);
+        assertEquals("test.pdf", savedFile.getFileName());
+        assertEquals("/CSC207/test@example.com", savedFile.getFilePath());
     }
 
     @Test
