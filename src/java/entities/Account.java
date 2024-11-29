@@ -74,7 +74,7 @@ public class Account {
         return List.copyOf(this.courseNames);
     }
 
-    public void addCourse(String courseCode) {
-        this.courseNames.add(courseCode);
+    public List<Course> getCourses() {
+        return List.copyOf(this.courses);
     }
 }
