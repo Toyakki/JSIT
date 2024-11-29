@@ -26,6 +26,7 @@ import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
+import interface_adapters.upload_feedback.UploadFeedbackController;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.submit_grade.SubmitGradeInputBoundary;
@@ -39,6 +40,8 @@ import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
 import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
+import use_cases.upload_feedback.UploadFeedbackInputBoundary;
+import use_cases.upload_feedback.UploadFeedbackInteractor;
 import view.*;
 
 import javax.swing.*;
@@ -194,7 +197,8 @@ public class Main extends JFrame {
         SubmitGradeInputBoundary submitGradeInputBoundary = new SubmitGradeInteractor(userDataAccessInterface);
         GradeController gradeController = new GradeController(submitGradeInputBoundary);
 
-        UserDataAccessInterface userDataAccessInterface2 
+        UploadFeedbackInputBoundary uploadFeedbackInputBoundary = new UploadFeedbackInteractor(userDataAccessInterface);
+        UploadFeedbackController uploadFeedbackController = new UploadFeedbackController(uploadFeedbackInputBoundary);
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
