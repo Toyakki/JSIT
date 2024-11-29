@@ -1,6 +1,7 @@
 package data_access;
 
 import com.dropbox.core.v2.files.*;
+import com.dropbox.core.v2.sharing.ListFoldersBuilder;
 import entities.Account;
 import entities.PDFFile;
 
@@ -30,14 +31,14 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     public void saveFile(PDFFile file) {
 //        Input: filePath.
         // Upload the file to Dropbox
-        try (InputStream in = new ByteArrayInputStream(file.getContent())) {
+        try (InputStream in = new ByteArrayInputStream(file.getFileContent())) {
             FileMetadata metadata = client.files()
-                    .uploadBuilder(file.getPath())
+                    .uploadBuilder(file.getFilePath())
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(in);
             System.out.println("File uploaded successfully to:" + metadata.getPathLower());
         } catch (DbxException | IOException e) {
-            throw new RuntimeException("Error uploading file: " + e.getMessage(), e);
+            throw new RuntimeException("Error in uploading file to dropbox", e);
         }
     }
 
@@ -48,11 +49,19 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             DownloadBuilder downloader = client.files().downloadBuilder(path);
             downloader.download(out);
             byte[] content = out.toByteArray();
-
-            // Return the PDFFile entity
             return new PDFFile(new File(path).getName(), path, content);
-        } catch (IOException | DbxException e) {
-            throw new RuntimeException("Error downloading file: " + e.getMessage(), e);
+        } catch (DbxException | IOException e) {
+            throw new RuntimeException("Error in downloading the file from dropbox: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean fileExistsByPath(String path) throws DbxException {
+        try{
+            client.files().listFolderBuilder(path).start();
+            return true;
+        } catch (DbxException e) {
+            throw new RuntimeException("The path does not exist: " + e.getMessage());
         }
     }
 
@@ -77,32 +86,4 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     public boolean userExistsByEmail(String email) {
         return false;
     }
-
-    // Testing
-    public static void main(String[] args) {
-        // Test the DropBoxDataAccessObject functionality
-        DropBoxDataAccessObject dao = new DropBoxDataAccessObject();
-
-        // Test uploading a file
-        String testFilePath = "CSC258_Project_DrMario.pdf";
-        try {
-            // Create a test file
-            String testContent = "This is a test file for Dropbox upload.";
-            byte[] content = testContent.getBytes();
-            PDFFile testFile = new PDFFile(testFilePath, "/" + testFilePath, content);
-
-            System.out.println("Uploading file...");
-            dao.saveFile(testFile);
-
-            // Test downloading the same file
-            System.out.println("Downloading file...");
-            PDFFile downloadedFile = dao.getFile("/" + testFilePath);
-
-            // Print the content of the downloaded file
-            System.out.println("Downloaded File Content: " + new String(downloadedFile.getContent()));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-}
 }

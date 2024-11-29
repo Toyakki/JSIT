@@ -47,5 +47,8 @@ public class Assignment {
         return marksReceivedStatus;
     }
 
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
     public Submission getSubmission(String student) { return submissionMap.get(student); }
 }

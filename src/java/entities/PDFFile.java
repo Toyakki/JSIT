@@ -1,51 +1,31 @@
 package entities;
 
+// Entity to interact with dropbox API.
+
 public class PDFFile {
-    private String name;
-    private String path;
-    private byte[] content;
-    private String courseId;
-    private String grade;
+    private String fileName;
+    private String filePath;
+    private byte[] fileContent;
 
-    public PDFFile(String name, String path, byte[] content) {
-        this.name = name;
-        this.path = path;
-        this.content = content;
-        this.courseId = null;
-        this.grade = null;
+    public PDFFile(String fileName, String filePath, byte[] fileContent) {
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.fileContent = fileContent;
     }
 
-    public String getName() {
-        return name;
+    public String getFileName() {
+        return fileName;
     }
 
-    public String getPath() {
-        return path;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public byte[] getContent() {
-        return content;
+    public byte[] getFileContent() {
+        return fileContent;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
+    public void setFileContent(byte[] newContent) {
+        this.fileContent = newContent;
     }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
-
 }
