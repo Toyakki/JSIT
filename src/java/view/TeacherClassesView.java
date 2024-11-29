@@ -111,6 +111,8 @@ public class TeacherClassesView extends JPanel implements ActionListener, Proper
                 coursesPanel.add(courseLabel);
             }
         }
+        coursesPanel.revalidate();
+        coursesPanel.repaint();
     }
 
     private JLabel createCourseLabel(String courseName){
