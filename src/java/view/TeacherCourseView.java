@@ -30,6 +30,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 //    private UploadController uploadController;
     private File newAssignmentFile;
 
+    JLabel errorLabel = new JLabel();
     JPanel headerPanel;
     JLabel courseLabel;
     JLabel instructorLabel;
@@ -50,6 +51,8 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         this.teacherCourseViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        add(errorLabel);
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
@@ -86,6 +89,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
+            errorLabel.setText(teacherCourseViewModel.getState().getError());
             courseLabel.setText("     " + teacherCourseViewModel.getState().getCourseName() + "      ");
             instructorLabel.setText("  Instructor: " + teacherCourseViewModel.getState().getEmail() + "     ");
             codeLabel.setText("  Code: " + teacherCourseViewModel.getState().getCourseCode());
@@ -254,7 +258,11 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         createButton.setForeground(Color.WHITE);
         createButton.setFont(new Font("Tomaha", Font.BOLD, 14));
         createButton.addActionListener(e -> {
-            if (this.newAssignmentFile.length() == 0) {
+            if (this.newAssignmentFile == null){
+                this.teacherCourseViewModel.getState().setError("No file selected");
+                this.teacherCourseViewModel.firePropertyChanged();
+            }
+            else if (this.newAssignmentFile.length() == 0) {
                 JOptionPane.showMessageDialog(null, "Assignment not Selected");
             }
             else {
