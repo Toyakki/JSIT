@@ -9,8 +9,8 @@ public class JoinCourseController {
         this.interactor = interactor;
     }
 
-    public void joinCourse(String studentEmail, String courseName, String teacherEmail) {
+    public void joinCourse(String studentEmail, String courseName) {
         // call the interactor with the relevant data
-        this.interactor.joinCourse(studentEmail, courseName, teacherEmail);
+        this.interactor.joinCourse(studentEmail, courseName);
     }
 }

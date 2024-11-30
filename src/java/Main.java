@@ -10,6 +10,8 @@ import interface_adapters.create_class.CreateCourseController;
 import interface_adapters.create_class.CreateCoursePresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
+import interface_adapters.join_class.JoinCourseController;
+import interface_adapters.join_class.JoinCoursePresenter;
 import interface_adapters.student_course.StudentCourseBackController;
 import interface_adapters.student_course.StudentCourseViewModel;
 import interface_adapters.teacher_course.TeacherCourseBackController;
@@ -30,6 +32,7 @@ import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.create_class.CreateCourseUseCaseInteractor;
+import use_cases.join_class.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
@@ -85,6 +88,8 @@ public class Main extends JFrame {
         Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
         Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
 
+        System.out.println(matCourse.getCourseCode());
+
         List<Course> joe_courses = new ArrayList<>();
         joe_courses.add(matCourse);
 
@@ -100,7 +105,7 @@ public class Main extends JFrame {
 
         Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account test = new Account("t", "t", "teacher", test_courses);
+        Account test = new Account("t", "t", "student", tohya_courses);
         demo.saveUser(joe);
         demo.saveUser(tohya);
         demo.saveUser(test);
@@ -207,8 +212,13 @@ public class Main extends JFrame {
         CreateCourseUseCaseInteractor createCourseUseCaseInteractor = new CreateCourseUseCaseInteractor(createCoursePresenter, demo);
         CreateCourseController createCourseController = new CreateCourseController(createCourseUseCaseInteractor);
 
+        // join course controller, interactor, presenter
+        JoinCoursePresenter joinCoursePresenter = new JoinCoursePresenter(studentClassesViewModel);
+        JoinUseCaseInteractor joinCourseUseCaseInteractor = new JoinUseCaseInteractor(joinCoursePresenter, demo);
+        JoinCourseController joinCourseController = new JoinCourseController(joinCourseUseCaseInteractor);
+
         // classes view for students
-        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
+        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController, joinCourseController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers

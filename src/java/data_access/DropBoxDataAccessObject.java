@@ -86,4 +86,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     public boolean userExistsByEmail(String email) {
         return false;
     }
+
+    @Override
+    public List<Account> getAllUsers() {
+        return null;
+    }
 }

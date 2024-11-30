@@ -52,6 +52,8 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        errorLabel.setFont(new Font("Tomaha", Font.BOLD, 16));
+        errorLabel.setForeground(Color.RED);
         add(errorLabel);
 
         JPanel headerPanel = new JPanel();
@@ -122,8 +124,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         if (teacherCourseViewModel.getState().getStudentEmails().isEmpty()){
             return;
         }
-
-        System.out.println(teacherCourseViewModel.getState().getAssignmentsNames());
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
 

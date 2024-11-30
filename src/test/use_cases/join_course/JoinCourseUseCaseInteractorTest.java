@@ -31,7 +31,8 @@ public class JoinCourseUseCaseInteractorTest {
             }
         };
         JoinUseCaseInteractor interactor = new JoinUseCaseInteractor(presenter, userDsGateway );
-        interactor.joinCourse("Enze@mail.com", "Analysis I", "Lindsey@mail.com");
+//        interactor.joinCourse("Enze@mail.com", "Analysis I", "Lindsey@mail.com");
+        interactor.joinCourse("Enze@mail.com", "Analysis I");
     }
 
     public void testInvalidInstructor(){
@@ -42,7 +43,8 @@ public class JoinCourseUseCaseInteractorTest {
             }
         };
         JoinUseCaseInteractor interactor = new JoinUseCaseInteractor(presenter, userDsGateway );
-        interactor.joinCourse("Enze@mail.com", "Software Design", "Jonathan@mail.com");
+//        interactor.joinCourse("Enze@mail.com", "Software Design", "Jonathan@mail.com");
+        interactor.joinCourse("Enze@mail.com", "Software Design");
     }
 
     public void testValidEnrollment(){
@@ -53,7 +55,8 @@ public class JoinCourseUseCaseInteractorTest {
             public void prepareSuccessView(UserOutputData account) {assert true;}
         };
         JoinUseCaseInteractor interactor = new JoinUseCaseInteractor(presenter, userDsGateway );
-        interactor.joinCourse("Enze@mail.com", "Software Design", "Lindsey@mail.com");
+//        interactor.joinCourse("Enze@mail.com", "Software Design", "Lindsey@mail.com");
+        interactor.joinCourse("Enze@mail.com", "Software Design");
     }
 
 
