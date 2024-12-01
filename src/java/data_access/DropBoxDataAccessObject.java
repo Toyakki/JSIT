@@ -82,40 +82,24 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     }
 
     @Override
-    public List<PDFFile> getFiles(String path){
+    public List<PDFFile> getFiles(String path) {
         List<PDFFile> files = new ArrayList<>();
         try {
-
-            // List all files and folders in the given Dropbox folder path
+            // List all entries (files and folders) in the specified path
             ListFolderResult result = client.files().listFolder(path);
 
-            // Get the local Downloads folder path
-            String downloadsFolderPath = System.getProperty("user.home") + File.separator + "Downloads";
-
             for (Metadata metadata : result.getEntries()) {
-                // Process only file entries
-                if (metadata instanceof FileMetadata fileMetadata) {
-                    String fileName = fileMetadata.getName();
-
-                    // Create a File object for the target location in Downloads
-                    File localFile = new File(downloadsFolderPath, fileName);
-
-                    // Download the file content to the Downloads folder
-                    try (OutputStream out = new FileOutputStream(localFile)) {
-                        client.files().download(fileMetadata.getPathLower()).download(out);
-                    }
-
-                    System.out.println("File downloaded to: " + localFile.getAbsolutePath());
-
-                    // Add the file to the list of PDFFile objects
-                    files.add(new PDFFile(
-                            fileName,
-                            fileMetadata.getPathLower(),
-                            Files.readAllBytes(localFile.toPath())
-                    ));
+                if (metadata instanceof FileMetadata) {
+                    // If it's a file, download it using getFile
+                    String filePath = metadata.getPathLower();
+                    files.add(getFile(filePath));
+                } else if (metadata instanceof FolderMetadata) {
+                    // If it's a folder, recursively call getFiles
+                    String folderPath = metadata.getPathLower();
+                    files.addAll(getFiles(folderPath));
                 }
             }
-        } catch (DbxException | IOException e) {
+        } catch (DbxException e) {
             throw new RuntimeException("Error obtaining files from Dropbox folder: " + path, e);
         }
         return files;
