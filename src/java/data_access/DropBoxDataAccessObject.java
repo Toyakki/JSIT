@@ -163,13 +163,12 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                     // Append all assignment information
                     for (Assignment assignment : course.getAssignments()) {
                         builder.append("(")
-                                .append(assignment.getClass()).append(" | ")
+                                .append(assignment.getCourseName()).append(" | ")
                                 .append(assignment.getName()).append(" | ")
                                 .append(assignment.getDueDate()).append(" | ")
                                 .append(assignment.getMarks()).append(" | ")
                                 .append(assignment.getStage()).append(" | ")
-                                .append(assignment.getMarksReceivedStatus()).append(" | ")
-                                .append(assignment.getSubmission(account.getEmail())).append(" | ")
+                                .append(assignment.getMarksReceivedStatus())
                                 .append(")");
                     }
                     builder.append("), ");
@@ -195,6 +194,68 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         }
     }
 
+    @Override
+    public Account getUserByEmail(String email) {
+        try {
+            // List all course folders
+            ListFolderResult courseFolders = client.files().listFolderBuilder("").start();
+
+            for (Metadata metadata : courseFolders.getEntries()) {
+                if (metadata instanceof FolderMetadata courseFolder) {
+                    String courseName = courseFolder.getName();
+                    String userInfoFilePath = "/" + courseName + "/" + email + "/info.txt";
+
+                    try {
+                        // Download the user's info.txt file
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        client.files().downloadBuilder(userInfoFilePath).download(out);
+
+                        String userInfoContent = out.toString();
+
+                        // Deserialize user info (using a helper function)
+                        String[] lines = userInfoContent.split("\n");
+                        String password = lines[1].split(": ")[1];
+                        String type = lines[2].split(": ")[1];
+
+                        // Parse courses
+                        List<Course> courses = new ArrayList<>();
+                        if (lines.length > 3 && lines[3].startsWith("Courses: ")) {
+                            String[] courseEntries = lines[3].substring(9).split("\\), ");
+                            for (String courseEntry : courseEntries) {
+                                if (courseEntry.endsWith(")")) {
+                                    courseEntry = courseEntry.substring(0, courseEntry.length() - 1);
+                                }
+                                String[] courseDetails = courseEntry.split(" \\| ");
+                                String instructor = courseDetails[0].trim();
+                                String className = courseDetails[1].trim();
+                                String courseCode = courseDetails[2].trim();
+                                List<String> studentEmails = parseList(courseDetails[3]);
+
+                                // Add the assignment if exists.
+                                if (courseDetails.length > 4) {
+                                    List<Assignment> assignments = parseAssignments(courseDetails[4], email);
+                                    courses.add(new Course(instructor, className, courseCode, studentEmails, assignments));
+                                } else {
+                                    courses.add(new Course(instructor, className, courseCode, studentEmails, null));
+                                }
+
+                            }
+                        }
+
+                        return new Account(email, password, type, courses);
+
+                    } catch (DbxException ignored) {
+                        // Continue searching if the file is not found in this folder
+                    }
+                }
+            }
+
+            throw new IllegalArgumentException("User not found: " + email);
+        } catch (DbxException | IOException e) {
+            throw new RuntimeException("Error retrieving user by email: " + email, e);
+        }
+    }
+
     // Helper method to convert a serialized list back into a Java List.
     private List<String> parseList(String serializedList) {
         serializedList = serializedList.substring(1, serializedList.length() - 1); // Remove surrounding brackets
@@ -202,65 +263,45 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         return new ArrayList<>(List.of(items));
     }
 
-    private List<Assignment> parseAssignments(String serializedAssignments) {
-        // Similar parsing logic as `parseList`, adapted for `Assignment`
-        // Implement based on how `Assignment` is serialized
-        return new ArrayList<>(); // Replace with actual parsing logic
-    }
+    private List<Assignment> parseAssignments(String serializedAssignments, String email) {
+        List<Assignment> assignments = new ArrayList<>();
 
-    @Override
-    public Account getUserByEmail(String email) {
-        try {
+        if (serializedAssignments.startsWith("[") && serializedAssignments.endsWith("]")) {
+            serializedAssignments = serializedAssignments.substring(1, serializedAssignments.length() - 1);
+        }
 
-            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("/");
+        String[] assignmentEntries = serializedAssignments.split("\\), \\(");
 
-            for (Metadata courseMetadata: coursesFolder.start().getEntries()){
-                // How metadata should be stored for each line:
-                // (InstructorName | CourseName | CourseCode | [StudentEmails] | [Assignments])
-                if (courseMetadata instanceof FileMetadata){
-                    String courseName = courseMetadata.getName();
-                    String userInfoFilePath = "/" + courseName + "/" + email;
+        for (String entry : assignmentEntries) {
+            entry = entry.replace("(", "").replace(")", ""); // Remove remaining parentheses
+            String[] fields = entry.split("\\|"); // Split by '|'
 
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    client.files().downloadBuilder(userInfoFilePath).download(out);
+            if (fields.length >= 7) { // Ensure all fields are present
+                try {
+                    String courseName = fields[0].trim();
+                    String studentName = fields[1].trim();
+                    String dueDate = fields[2].trim();
+                    String marks = fields[3].trim();
+                    String stage = fields[4].trim();
+                    String marksReceivedStatus = fields[5].trim();
 
-                    String userInfoContent = out.toString();
+                    Assignment assignment = new Assignment(
+                            courseName,
+                            studentName,
+                            dueDate,
+                            marks,
+                            stage,
+                            marksReceivedStatus
+                    );
 
-                    // Deserialize
-                    String[] lines = userInfoContent.split("\n");
-                    String password = lines[1].split(": ")[1];
-                    String type = lines[2].split(": ")[1];
-
-                    // Parse courses...
-                    List<Course> courses = new ArrayList<>();
-                    if (lines.length > 3 && lines[3].startsWith("Courses: ")) {
-                        String[] courseEntries = lines[3].substring(9).split("\\), ");
-                        for (String courseEntry : courseEntries) {
-                            if (courseEntry.endsWith(")")) {
-                                courseEntry = courseEntry.substring(0, courseEntry.length() - 1);
-                            }
-                            String[] courseDetails = courseEntry.split(" \\| ");
-                            String instructor = courseDetails[0];
-                            String className = courseDetails[1];
-                            String courseCode = courseDetails[2];
-                            List<String> studentEmails = parseList(courseDetails[3]);
-                            List<Assignment> assignments = parseAssignments(courseDetails[4]);
-
-                            courses.add(new Course(instructor, className, courseCode, studentEmails, assignments));
-                        }
-                    }
-                    return new Account(email, password, type, courses);
-
+                    assignments.add(assignment);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error parsing assignment: " + entry, e);
                 }
             }
-        } catch (ListFolderErrorException e) {
-            throw new RuntimeException(e);
-        } catch (DbxException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-        return null;
+
+        return assignments;
     }
 
     @Override
