@@ -3,6 +3,7 @@ package data_access;
 import com.dropbox.core.v2.files.*;
 import com.dropbox.core.v2.sharing.ListFoldersBuilder;
 import entities.Account;
+import entities.Assignment;
 import entities.Course;
 import entities.PDFFile;
 
@@ -18,6 +19,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDataAccessInterface {
     private static final String ACCESS_TOKEN;
@@ -124,9 +126,26 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     public void saveUser(Account account) {
         try {
             for (String courseName : account.getCourseNames()) {
-                // Define the file path for storing the user's info
-                String userInfoFilePath = "/" + courseName + "/" + account.getEmail() + "/info.txt";
+                // Define the folder path and file path
+                System.out.println(courseName);
+                System.out.println(account.getEmail());
+                String userFolderPath = "/" + courseName + "/" + account.getEmail();
+                String userInfoFilePath = userFolderPath + "/info.txt";
 
+                try {
+                    // Try to list the folder
+                    client.files().getMetadata(userFolderPath);
+                } catch (DbxException e) {
+                    try {
+                        // If the folder doesn't exist, create it
+                        client.files().createFolderV2(userFolderPath);
+                        System.out.println("Folder created: " + userFolderPath);
+                    } catch (DbxException ex) {
+                        throw new RuntimeException("Error creating folder: " + userFolderPath, ex);
+                    }
+                }
+
+                // Build user information content
                 StringBuilder builder = new StringBuilder();
                 builder.append("Email: ").append(account.getEmail()).append("\n")
                         .append("Password: ").append(account.getPassword()).append("\n")
@@ -139,9 +158,21 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                             .append(course.getInstructor()).append(" | ")
                             .append(course.getName()).append(" | ")
                             .append(course.getCourseCode()).append(" | ")
-                            .append(course.getStudentEmails()).append(" | ")
-                            .append(course.getAssignments())
-                            .append("), ");
+                            .append(course.getStudentEmails()).append(" | ");
+
+                    // Append all assignment information
+                    for (Assignment assignment : course.getAssignments()) {
+                        builder.append("(")
+                                .append(assignment.getClass()).append(" | ")
+                                .append(assignment.getName()).append(" | ")
+                                .append(assignment.getDueDate()).append(" | ")
+                                .append(assignment.getMarks()).append(" | ")
+                                .append(assignment.getStage()).append(" | ")
+                                .append(assignment.getMarksReceivedStatus()).append(" | ")
+                                .append(assignment.getSubmission(account.getEmail())).append(" | ")
+                                .append(")");
+                    }
+                    builder.append("), ");
                 }
 
                 // Remove trailing comma if present
@@ -164,6 +195,18 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         }
     }
 
+    // Helper method to convert a serialized list back into a Java List.
+    private List<String> parseList(String serializedList) {
+        serializedList = serializedList.substring(1, serializedList.length() - 1); // Remove surrounding brackets
+        String[] items = serializedList.split(", ");
+        return new ArrayList<>(List.of(items));
+    }
+
+    private List<Assignment> parseAssignments(String serializedAssignments) {
+        // Similar parsing logic as `parseList`, adapted for `Assignment`
+        // Implement based on how `Assignment` is serialized
+        return new ArrayList<>(); // Replace with actual parsing logic
+    }
 
     @Override
     public Account getUserByEmail(String email) {
@@ -172,6 +215,8 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("/");
 
             for (Metadata courseMetadata: coursesFolder.start().getEntries()){
+                // How metadata should be stored for each line:
+                // (InstructorName | CourseName | CourseCode | [StudentEmails] | [Assignments])
                 if (courseMetadata instanceof FileMetadata){
                     String courseName = courseMetadata.getName();
                     String userInfoFilePath = "/" + courseName + "/" + email;
@@ -179,21 +224,30 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     client.files().downloadBuilder(userInfoFilePath).download(out);
 
-                    String userInfoContent = new String(out.toByteArray());
+                    String userInfoContent = out.toString();
 
-                    // Deserializing... somehow?
+                    // Deserialize
                     String[] lines = userInfoContent.split("\n");
-                    String email = lines[0].split(": ")[1];
                     String password = lines[1].split(": ")[1];
                     String type = lines[2].split(": ")[1];
-                    List <Course> courses = new ArrayList<>();
 
-                    // TODO: Find the way to store courses.
-                    //  Any methods to retrieve Courses entity from the course names?
+                    // Parse courses...
+                    List<Course> courses = new ArrayList<>();
+                    if (lines.length > 3 && lines[3].startsWith("Courses: ")) {
+                        String[] courseEntries = lines[3].substring(9).split("\\), ");
+                        for (String courseEntry : courseEntries) {
+                            if (courseEntry.endsWith(")")) {
+                                courseEntry = courseEntry.substring(0, courseEntry.length() - 1);
+                            }
+                            String[] courseDetails = courseEntry.split(" \\| ");
+                            String instructor = courseDetails[0];
+                            String className = courseDetails[1];
+                            String courseCode = courseDetails[2];
+                            List<String> studentEmails = parseList(courseDetails[3]);
+                            List<Assignment> assignments = parseAssignments(courseDetails[4]);
 
-                    for (String courseNameEntry : courseNames){
-                        Course course = new Course();
-
+                            courses.add(new Course(instructor, className, courseCode, studentEmails, assignments));
+                        }
                     }
                     return new Account(email, password, type, courses);
 
@@ -211,26 +265,30 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public boolean userExistsByEmail(String email) {
-        // Iterating through all courses to find the student's email.
-
         try {
-            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("");
+            // List all course folders in the root directory
+            ListFolderResult courseFolders = client.files().listFolder("");
 
-            for (Metadata courseMetadata : coursesFolder.start().getEntries()) {
-                if (courseMetadata instanceof FileMetadata) {
-                    String courseName = courseMetadata.getName();
-                    String userInfoFilePath = "/" + courseName + "/" + email;
+            for (Metadata metadata : courseFolders.getEntries()) {
+                // Check if the metadata represents a folder (course folder)
+                if (metadata instanceof FolderMetadata courseFolder) {
+                    String courseName = courseFolder.getName();
+                    String userFolderPath = "/" + courseName + "/" + email;
+
                     try {
-                        client.files().getMetadata(userInfoFilePath);
+                        // Check if the user's folder exists in this course
+                        System.out.println(userFolderPath);
+                        client.files().getMetadata(userFolderPath);
                         return true;
                     } catch (DbxException ignored) {
-                        // Continue searching
+                        // If the folder doesn't exist, continue searching
                     }
                 }
             }
+            // User not found in any course folder
             return false;
         } catch (DbxException e) {
-            throw new RuntimeException("Error obtaining user: " + e.getMessage());
+            throw new RuntimeException("Error checking user existence: " + e.getMessage(), e);
         }
     }
 }
