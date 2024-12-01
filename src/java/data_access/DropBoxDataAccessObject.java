@@ -171,6 +171,24 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public boolean userExistsByEmail(String email) {
-        return false;
+        try {
+            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("/");
+
+            for (Metadata courseMetadata : coursesFolder.start().getEntries()) {
+                if (courseMetadata instanceof FileMetadata) {
+                    String courseName = courseMetadata.getName();
+                    String userInfoFilePath = "/" + courseName + "/" + email;
+                    try {
+                        client.files().getMetadata(userInfoFilePath);
+                        return true;
+                    } catch (DbxException ignored) {
+                        // Continue searching
+                    }
+                }
+            }
+            return false;
+        } catch (DbxException e) {
+            throw new RuntimeException("Error obtaining user: " + e.getMessage());
+        }
     }
 }
