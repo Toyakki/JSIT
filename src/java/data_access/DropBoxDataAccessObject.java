@@ -14,6 +14,7 @@ import com.dropbox.core.DbxDownloader;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDataAccessInterface {
@@ -67,8 +68,31 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public List<PDFFile> getFiles(String path){
-        // need to update somehow
-        return null;
+        List<PDFFile> files = new ArrayList<>();
+        try {
+
+            // List all files and folders in the given Dropbox folder path
+            ListFolderResult result = client.files().listFolder(path);
+
+            for (Metadata metadata : result.getEntries()) {
+                // Process only file entries
+                if (metadata instanceof FileMetadata fileMetadata) {
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    client.files().download(fileMetadata.getPathLower()).download(out);
+
+                    PDFFile pdfFile = new PDFFile(
+                            fileMetadata.getName(),
+                            fileMetadata.getPathLower(),
+                            out.toByteArray()
+                    );
+                    files.add(pdfFile);
+                }
+            }
+        } catch (DbxException | IOException e) {
+            throw new RuntimeException("Error obtaining files from Dropbox folder: " + path, e);
+        }
+        return files;
     }
 
 
