@@ -5,15 +5,14 @@ import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import entities.PDFFile;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 public class TeacherDownoadInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
     private InMemoryFileDataAccessObject fileDsGateway;
     private TeacherDownloadInteractor teacherDownloadInteractor;
 
-    @Before
     void create() {
         userDsGateway = new InMemoryUserDataAccessObject();
         fileDsGateway = new InMemoryFileDataAccessObject();
