@@ -1,4 +1,69 @@
-# JSIT
+## JSIT
+
+Authors: Isaac Clark, Enze Yang, Tohya Tanemura, and Sark Asadourian
+
+## Summery
+JSIT is an open source simple tool for creating, submitting, and grading assignments 
+for teachers and students which allows for the easy expansion of functionality.
+
+Current open source assignments submission and grading solutions are based on 
+complicated code bases and require complex cloud set up. This slows down educational
+technology professionals in creating learning solutions tailored to their institution's
+unique learning need.
+
+To solve the problem of complicated assignments submission and grading solutions 
+we implemented an system with an intuitive architecture utilizing a code architecture
+which allows for expansion which allow for the easy addition of new features. In addition,
+we utilize dropbox creating a simple set up for cloud functionality.
+
+## Table of Contents
+- [Features](#Features_id)
+- [Installation](#Installation_id)
+- [How to Use](#HowTo_id)
+- [Feedback](#Feedback_id)
+- [Contribution](#Contribution_id)
+
+
+<a id="Features_id"></a>
+## Features
+- Creation of courses by teachers to organize courses.
+- Creation of assignments through uploading a PDF, setting total marks, and due date.
+- Submission of assignments by uploading PDF from computer.
+- Grading of assignments by uploading  PDF with feedback from computer and entering grade.
+- Students can view all of their assignments for a course in one place.
+- Teachers have a view of who completed the assignment and who's assignments have been graded.
+
+<a id="Installation_id"></a>
+## Installation
+- Clone repository into an IDE with OpenJDK 23 set as SDK.
+- Apache Maven must be installed and the project in the IDE must be set to a Maven project.
+  TODO Dropbox
+- Mark the "java" folder as source root.
+- Go to the "Main" file and run Main.main().
+- From here you can create an account using the UI.
+
+**Link to download:**
+OpenJDK 23: https://jdk.java.net/23/
+Apache Maven 3.9.9: https://maven.apache.org/
+
+Note: This project has been only tested on MacOS and Windows but not Linux.
+
+<a id="HowTo_id"></a>
+## How to Use
+TODO video
+
+<a id="Feedback_id"></a>
+## Feedback
+Use this Google Form to send feedback:
+https://docs.google.com/forms/d/12HE93oHGp-toP4sJcvSRnPij8snQBpyGElFsXGJ1h1A/prefill
+
+All feedback is appreciated but implementation of feedback will be only for bugs when they
+are able to be reproduced. Ensure bug reports have details on how to be reproduced. Expect at
+most a month for bugs to be fixed.
+
+<a id="Contribution_id"></a>
+## Contribution
+You are free to make forks of this project but no merge request will be excepted at this time.
 
 Team Members:
 - Isaac Clark     - theflickerman
