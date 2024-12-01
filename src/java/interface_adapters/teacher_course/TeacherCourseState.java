@@ -78,6 +78,10 @@ public class TeacherCourseState {
 
     public String getCourseCode(){ return courseCode; }
 
+    public List<Map<String, String>> getAssignmentMarksReceived(){
+        return this.assignmentMarksReceived;
+    }
+
     public void setError(String error){
         this.error = error;
     }

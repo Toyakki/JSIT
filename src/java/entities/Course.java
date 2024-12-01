@@ -22,6 +22,15 @@ public class Course {
         this.assignments = assignments;
     }
 
+    public Assignment getAssignmentByName(String name) {
+        for (Assignment assignment : assignments) {
+            if (assignment.getName().equals(name)) {
+                return assignment;
+            }
+        }
+        throw new RuntimeException("Assignment not found");
+    }
+
     public String getInstructor() {
         return instructor;
     }

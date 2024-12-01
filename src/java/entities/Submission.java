@@ -26,6 +26,7 @@ public class Submission {
 
     public void setSubmittedFile(PDFFile submittedFile) {
         this.submittedFile = submittedFile;
+        this.stage = "submitted";
     }
 
     public PDFFile getFeedbackFile() {
@@ -34,6 +35,7 @@ public class Submission {
 
     public void setFeedbackFile(PDFFile feedbackFile) {
         this.feedbackFile = feedbackFile;
+        this.grade = "graded";
     }
 
     public boolean isGraded(){

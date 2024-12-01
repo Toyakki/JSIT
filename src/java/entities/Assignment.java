@@ -43,8 +43,8 @@ public class Assignment {
         return stage;
     }
 
-    public String getMarksReceivedStatus() {
-        return marksReceivedStatus;
+    public String getMarksReceivedStatus(String studentEmail) {
+        return submissionMap.get(studentEmail).getGrade();
     }
 
     public void setStage(String stage) {
@@ -52,4 +52,8 @@ public class Assignment {
     }
 
     public Submission getSubmission(String student) { return submissionMap.get(student); }
+
+    public void setMarksReceived(String studentEmail) {
+        this.submissionMap.get(studentEmail).setGrade("graded");
+    }
 }
