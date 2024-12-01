@@ -3,6 +3,7 @@ package data_access;
 import com.dropbox.core.v2.files.*;
 import com.dropbox.core.v2.sharing.ListFoldersBuilder;
 import entities.Account;
+import entities.Course;
 import entities.PDFFile;
 
 import com.dropbox.core.DbxException;
@@ -109,7 +110,8 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                 // Add more information if needed.
                 serialized.append("Email: ").append(account.getEmail()).append("\n")
                         .append("Password: ").append(account.getPassword()).append("\n")
-                        .append("Type:").append(account.getType()).append("\n");
+                        .append("Type:").append(account.getType()).append("\n")
+                        .append("Courss: ").append(String.join(", ", account.getCourseNames())).append("\n");
 
 
                 String userInfoContent = serialized.toString();
@@ -128,7 +130,43 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public Account getUserByEmail(String email) {
-        return null;
+        try {
+
+            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("/");
+
+            for (Metadata courseMetadata: coursesFolder.start().getEntries()){
+                if (courseMetadata instanceof FileMetadata){
+                    String courseName = courseMetadata.getName();
+                    String userInfoFilePath = "/" + courseName + "/" + email;
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    client.files().downloadBuilder(userInfoFilePath).download(out);
+
+                    String userInfoContent = new String(out.toByteArray());
+
+                    // Deserializing... somehow?
+                    String[] lines = userInfoContent.split("\n");
+                    String email = lines[0].split(": ")[1];
+                    String password = lines[1].split(": ")[1];
+                    String type = lines[2].split(": ")[1];
+                    List <Course> courses = new ArrayList<>();
+
+                    // TODO: Find the way to store courses. Any methods to retrieve Courses entity from the course names?
+                    for (String courseNameEntry : courseNames){
+                        Course course = new Course();
+
+                    }
+                    return new Account(email, password, type, courses);
+
+                }
+            }
+        } catch (ListFolderErrorException e) {
+            throw new RuntimeException(e);
+        } catch (DbxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
