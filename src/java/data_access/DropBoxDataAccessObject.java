@@ -15,6 +15,7 @@ import com.dropbox.core.DbxDownloader;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +47,25 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public PDFFile getFile(String path) {
-        // Download the file from Dropbox
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            DownloadBuilder downloader = client.files().downloadBuilder(path);
-            downloader.download(out);
-            byte[] content = out.toByteArray();
-            return new PDFFile(new File(path).getName(), path, content);
+        // Get the local Downloads folder path
+        String downloadsFolderPath = System.getProperty("user.home") + File.separator + "Downloads";
+
+        // Extract the file name from the Dropbox path
+        String fileName = new File(path).getName();
+
+        // Create the full local file path in the Downloads folder
+        File localFile = new File(downloadsFolderPath, fileName);
+
+        try (OutputStream out = new FileOutputStream(localFile)) {
+
+            // Download the file content from Dropbox and save it to the Downloads folder
+            client.files().downloadBuilder(path).download(out);
+
+            System.out.println("File downloaded to: " + localFile.getAbsolutePath());
+
+            return new PDFFile(fileName, path, Files.readAllBytes(localFile.toPath()));
         } catch (DbxException | IOException e) {
-            throw new RuntimeException("Error in downloading the file from dropbox: " + e.getMessage());
+            throw new RuntimeException("Error in downloading the file from Dropbox: " + e.getMessage(), e);
         }
     }
 
@@ -75,19 +87,30 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             // List all files and folders in the given Dropbox folder path
             ListFolderResult result = client.files().listFolder(path);
 
+            // Get the local Downloads folder path
+            String downloadsFolderPath = System.getProperty("user.home") + File.separator + "Downloads";
+
             for (Metadata metadata : result.getEntries()) {
                 // Process only file entries
                 if (metadata instanceof FileMetadata fileMetadata) {
+                    String fileName = fileMetadata.getName();
 
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    client.files().download(fileMetadata.getPathLower()).download(out);
+                    // Create a File object for the target location in Downloads
+                    File localFile = new File(downloadsFolderPath, fileName);
 
-                    PDFFile pdfFile = new PDFFile(
-                            fileMetadata.getName(),
+                    // Download the file content to the Downloads folder
+                    try (OutputStream out = new FileOutputStream(localFile)) {
+                        client.files().download(fileMetadata.getPathLower()).download(out);
+                    }
+
+                    System.out.println("File downloaded to: " + localFile.getAbsolutePath());
+
+                    // Add the file to the list of PDFFile objects
+                    files.add(new PDFFile(
+                            fileName,
                             fileMetadata.getPathLower(),
-                            out.toByteArray()
-                    );
-                    files.add(pdfFile);
+                            Files.readAllBytes(localFile.toPath())
+                    ));
                 }
             }
         } catch (DbxException | IOException e) {
@@ -151,7 +174,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                     String type = lines[2].split(": ")[1];
                     List <Course> courses = new ArrayList<>();
 
-                    // TODO: Find the way to store courses. Any methods to retrieve Courses entity from the course names?
+                    // TODO: Find the way to store courses.
+                    //  Any methods to retrieve Courses entity from the course names?
+
                     for (String courseNameEntry : courseNames){
                         Course course = new Course();
 
@@ -167,12 +192,15 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
     public boolean userExistsByEmail(String email) {
+        // Iterating through all courses to find the student's email.
+
         try {
-            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("/");
+            DbxUserListFolderBuilder coursesFolder = client.files().listFolderBuilder("");
 
             for (Metadata courseMetadata : coursesFolder.start().getEntries()) {
                 if (courseMetadata instanceof FileMetadata) {
