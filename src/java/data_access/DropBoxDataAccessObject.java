@@ -122,34 +122,48 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public void saveUser(Account account) {
-        // Storing the student's information in each course folder
         try {
-            for (String courseName: account.getCourseNames()) {
+            for (String courseName : account.getCourseNames()) {
+                // Define the file path for storing the user's info
+                String userInfoFilePath = "/" + courseName + "/" + account.getEmail() + "/info.txt";
 
-                String userInfoFilePath = "/" + courseName + "/" + account.getEmail();
-
-                StringBuilder serialized = new StringBuilder();
-
-                // Add more information if needed.
-                serialized.append("Email: ").append(account.getEmail()).append("\n")
+                StringBuilder builder = new StringBuilder();
+                builder.append("Email: ").append(account.getEmail()).append("\n")
                         .append("Password: ").append(account.getPassword()).append("\n")
-                        .append("Type:").append(account.getType()).append("\n")
-                        .append("Courss: ").append(String.join(", ", account.getCourseNames())).append("\n");
+                        .append("Type: ").append(account.getType()).append("\n")
+                        .append("Courses: ");
 
+                // Append course details
+                for (Course course : account.getCourses()) {
+                    builder.append("(")
+                            .append(course.getInstructor()).append(" | ")
+                            .append(course.getName()).append(" | ")
+                            .append(course.getCourseCode()).append(" | ")
+                            .append(course.getStudentEmails()).append(" | ")
+                            .append(course.getAssignments())
+                            .append("), ");
+                }
 
-                String userInfoContent = serialized.toString();
+                // Remove trailing comma if present
+                if (builder.toString().endsWith(", ")) {
+                    builder.setLength(builder.length() - 2);
+                }
 
-                // Upload or overwrite the file in Dropbox
+                String userInfoContent = builder.toString();
+
+                // Upload the user's info to Dropbox
                 InputStream in = new ByteArrayInputStream(userInfoContent.getBytes());
                 client.files().uploadBuilder(userInfoFilePath)
                         .withMode(WriteMode.OVERWRITE)
                         .uploadAndFinish(in);
-            }
-        } catch(IOException | DbxException e){
-            throw new RuntimeException("Error in saving user: " + e.getMessage());
-        }
 
+                System.out.println("User information saved at: " + userInfoFilePath);
+            }
+        } catch (IOException | DbxException e) {
+            throw new RuntimeException("Error in saving user: " + e.getMessage(), e);
+        }
     }
+
 
     @Override
     public Account getUserByEmail(String email) {
