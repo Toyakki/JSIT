@@ -56,7 +56,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     }
 
     @Override
-    public boolean fileExistsByPath(String path) throws DbxException {
+    public boolean fileExistsByPath(String path) {
         try{
             client.files().listFolderBuilder(path).start();
             return true;
@@ -74,6 +74,31 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public void saveUser(Account account) {
+        // Storing the student's information in each course folder
+        try {
+            for (String courseName: account.getCourseNames()) {
+
+                String userInfoFilePath = "/" + courseName + "/" + account.getEmail();
+
+                StringBuilder serialized = new StringBuilder();
+
+                // Add more information if needed.
+                serialized.append("Email: ").append(account.getEmail()).append("\n")
+                        .append("Password: ").append(account.getPassword()).append("\n")
+                        .append("Type:").append(account.getType()).append("\n");
+
+
+                String userInfoContent = serialized.toString();
+
+                // Upload or overwrite the file in Dropbox
+                InputStream in = new ByteArrayInputStream(userInfoContent.getBytes());
+                client.files().uploadBuilder(userInfoFilePath)
+                        .withMode(WriteMode.OVERWRITE)
+                        .uploadAndFinish(in);
+            }
+        } catch(IOException | DbxException e){
+            throw new RuntimeException("Error in saving user: " + e.getMessage());
+        }
 
     }
 
