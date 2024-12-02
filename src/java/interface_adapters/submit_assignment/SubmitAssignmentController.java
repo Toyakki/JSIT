@@ -14,7 +14,8 @@ public class SubmitAssignmentController {
 
     public void handleSubmitAssignment(File selectedFile,
                                        String courseName,
+                                       String assignmentName,
                                        String email) {
-        inputBoundary.submitAssignment(selectedFile, courseName, email);
+        inputBoundary.submitAssignment(selectedFile, courseName, assignmentName, email);
     }
 }
