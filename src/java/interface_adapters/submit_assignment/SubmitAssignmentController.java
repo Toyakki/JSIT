@@ -7,12 +7,9 @@ import java.io.File;
 
 public class SubmitAssignmentController {
     private final SubmitAssignmentInputBoundary inputBoundary;
-    private final InMemoryUserDataAccessObject dataAccessObject;
     public SubmitAssignmentController(
-            SubmitAssignmentInputBoundary inputBoundary,
-            InMemoryUserDataAccessObject dataAccessObject) {
+            SubmitAssignmentInputBoundary inputBoundary) {
         this.inputBoundary = inputBoundary;
-        this.dataAccessObject  = dataAccessObject;
     }
 
     public void handleSubmitAssignment(File selectedFile,

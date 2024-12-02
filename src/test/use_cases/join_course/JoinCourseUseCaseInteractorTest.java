@@ -10,6 +10,8 @@ import use_cases.UserOutputData;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import static org.junit.Assert.fail;
+
 public class JoinCourseUseCaseInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
 

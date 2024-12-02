@@ -54,4 +54,9 @@ public class Assignment {
     }
 
     public Submission getSubmission(String student) { return submissionMap.get(student); }
+
+    public void setSubmission(String email, Submission submission) {
+        this.submissionMap.remove(email);
+        this.submissionMap.put(email, submission);
+    }
 }
