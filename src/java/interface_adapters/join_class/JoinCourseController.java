@@ -1,6 +1,6 @@
 package interface_adapters.join_class;
 
-import use_cases.join_class.JoinUseCaseInteractor;
+import use_cases.join_course.JoinUseCaseInteractor;
 
 public class JoinCourseController {
     private JoinUseCaseInteractor interactor;

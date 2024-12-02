@@ -30,7 +30,7 @@ import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import interface_adapters.upload_feedback.UploadFeedbackController;
 import use_cases.create_assignment.CreateAssignmentInteractor;
-import use_cases.create_class.CreateCourseUseCaseInteractor;
+import use_cases.create_course.CreateCourseUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.submit_grade.SubmitGradeInputBoundary;
 import use_cases.submit_grade.SubmitGradeInteractor;
