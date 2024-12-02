@@ -1,7 +1,5 @@
 package interface_adapters.grade;
 
-import entities.Assignment;
-import entities.Course;
 import use_cases.submit_grade.SubmitGradeInputBoundary;
 
 import javax.security.auth.Subject;
