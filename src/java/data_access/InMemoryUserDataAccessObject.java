@@ -2,7 +2,9 @@ package data_access;
 
 import entities.Account;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryUserDataAccessObject implements UserDataAccessInterface {
@@ -18,5 +20,9 @@ public class InMemoryUserDataAccessObject implements UserDataAccessInterface {
 
     public void saveUser(Account account) {
         users.put(account.getEmail(), account);
+    }
+
+    public List<Account> getAllUsers(){
+        return List.copyOf(users.values());
     }
 }

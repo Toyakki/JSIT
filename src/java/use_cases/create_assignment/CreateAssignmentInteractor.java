@@ -112,7 +112,8 @@ public class CreateAssignmentInteractor {
             this.presenter.refreshView(state);
 
         } catch (IOException e) {
-            throw new RuntimeException("File could not be read"); // replace with actual error handling
+//            throw new RuntimeException("File could not be read"); // replace with actual error handling
+            this.presenter.prepareErrorView("File is missing or could not be read");
         }
     }
 }

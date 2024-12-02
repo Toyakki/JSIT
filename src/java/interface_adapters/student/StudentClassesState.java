@@ -8,6 +8,7 @@ import java.util.List;
 public class StudentClassesState {
     private String email = "";
     private List<String> courseNames;
+    private String error = "";
 
     public StudentClassesState() {
         this.courseNames = new ArrayList<>();
@@ -24,5 +25,13 @@ public class StudentClassesState {
 
     public List<String> getCourseNames(){
         return new ArrayList<>(this.courseNames);
+    }
+
+    public String getError() {
+        return this.error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

@@ -10,6 +10,11 @@ public class CreateAssignmentPresenter {
         this.viewModel = viewModel;
     }
 
+    public void prepareErrorView(String errorMessage) {
+        this.viewModel.getState().setError(errorMessage);
+        this.viewModel.firePropertyChanged();
+    }
+
     public void refreshView(TeacherCourseState state) {
         this.viewModel.setState(state);
         this.viewModel.firePropertyChanged();
