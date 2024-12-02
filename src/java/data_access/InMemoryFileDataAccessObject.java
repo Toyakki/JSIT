@@ -17,7 +17,7 @@ public class InMemoryFileDataAccessObject implements FileDataAccessInterface {
     }
 
     public void saveFile(PDFFile file){
-        files.put(file.getFileName(), file);
+        files.put(file.getFilePath(), file);
     }
 
     public PDFFile getFile(String path){

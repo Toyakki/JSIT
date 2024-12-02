@@ -34,6 +34,8 @@ import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.create_course.CreateCourseUseCaseInteractor;
+import use_cases.download.DownloadInputBoundary;
+import use_cases.download.DownloadInteractor;
 import use_cases.grade.GradeInputBoundary;
 import use_cases.grade.GradeInteractor;
 import use_cases.grade.GradeOutputBoundary;
@@ -193,7 +195,8 @@ public class Main extends JFrame {
         StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
         TeacherCoursesPresenter teacherCoursesPresenter = new TeacherCoursesPresenter(viewManagerModel, teacherClassesViewModel);
         TeacherCourseBackUseCase teacherCourseBackUseCase = new TeacherCourseBackUseCase(demo, teacherCoursesPresenter);
-        DownloadController downloadController = new DownloadController();
+        DownloadInputBoundary downloadInputBoundary = new DownloadInteractor(fileDataAccessObject, demo);
+        DownloadController downloadController = new DownloadController(downloadInputBoundary);
         StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
 

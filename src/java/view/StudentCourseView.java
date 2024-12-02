@@ -82,17 +82,31 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 
         downloadOriginalButton.addActionListener(e -> {
             if (e.getSource().equals(downloadOriginalButton)){
-                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
+//                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
+                downloadController.handleDownloadOriginal(
+                        studentCourseViewModel.getState().getCourseName(),
+                        studentCourseViewModel.getState().getAssignmentsNames().get(index)
+                );
             }
         });
         downloadSubmittedButton.addActionListener(e -> {
             if (e.getSource().equals(downloadSubmittedButton)){
-                downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", index);
+//                downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", index);
+                downloadController.handleTeacherSubmitted(
+                        studentCourseViewModel.getState().getCourseName(),
+                        studentCourseViewModel.getState().getAssignmentsNames().get(index),
+                        studentCourseViewModel.getState().getEmail()
+                );
             }
         });
         downloadGradedButton.addActionListener(e -> {
             if (e.getSource().equals(downloadGradedButton)){
-                downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", index);
+//                downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", index);
+                downloadController.handleDownloadFeedback(
+                        studentCourseViewModel.getState().getCourseName(),
+                        studentCourseViewModel.getState().getAssignmentsNames().get(index),
+                        studentCourseViewModel.getState().getEmail()
+                );
             }
         });
 
@@ -111,7 +125,11 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 
         downloadButton.addActionListener(e -> {
             if (e.getSource().equals(downloadButton)){
-                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
+//                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
+                downloadController.handleDownloadOriginal(
+                        studentCourseViewModel.getState().getCourseName(),
+                        studentCourseViewModel.getState().getAssignmentsNames().get(index)
+                );
             }
         });
         submitButton.addActionListener(e -> {

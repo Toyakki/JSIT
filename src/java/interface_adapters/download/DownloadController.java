@@ -1,16 +1,28 @@
 package interface_adapters.download;
 
+
+import use_cases.download.DownloadInputBoundary;
+
 public class DownloadController {
-  
-    public void download(String courseName, int index){
+    private final DownloadInputBoundary teacherDownloadInputBoundary;
 
+    public DownloadController(DownloadInputBoundary teacherDownloadInputBoundary) {
+        this.teacherDownloadInputBoundary = teacherDownloadInputBoundary;
     }
 
-    public void download(String courseName, String downloadType, int index){
-
+    public void handleTeacherSubmitted(String courseName, String assignmentName, String studentEmail){
+        teacherDownloadInputBoundary.downloadWrittenAssignment(
+                courseName,
+                assignmentName,
+                studentEmail
+        );
     }
 
-    public void download(String courseName, String email, String downloadType){}
+    public void handleDownloadFeedback(String courseName, String assignmentName, String studentEmail){
+        teacherDownloadInputBoundary.downloadFeedback(courseName, assignmentName, studentEmail);
+    }
 
-    public void download(String courseName, String downloadType, String email, int index){}
+    public void handleDownloadOriginal(String courseName, String assignmentName){
+        teacherDownloadInputBoundary.downloadOriginal(courseName, assignmentName);
+    }
 }

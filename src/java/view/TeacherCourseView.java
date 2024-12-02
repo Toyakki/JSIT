@@ -153,14 +153,20 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
 
             for (int j = 0; j < teacherCourseViewModel.getState().getStudentEmails().size(); j++) {
                 TeacherCourseState state = teacherCourseViewModel.getState();
+                final String assignmentName = state.getAssignmentsNames().get(j);
                 String studentEmail = teacherCourseViewModel.getState().getStudentEmails().get(j);
                 String assignmentStage = state.getAssignmentsStages().get(i).get(studentEmail);
                 int index = j;
                 assignmentData[j][0] = teacherCourseViewModel.getState().getStudentEmails().get(j);
-                if (!assignmentStage.equals("not submitted")){
+                if (assignmentStage.equals("submitted")){
                     JButton downloadButton = new JButton("Download");
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "submitted");
+//                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "submitted");
+                        downloadController.handleTeacherSubmitted(
+                                state.getCourseName(),
+                                assignmentName,
+                                state.getStudentEmails().get(index)
+                        );
                     });
                     actionListeners[j][1] = downloadButton;
                     assignmentData[j][1] = "Download";
@@ -173,7 +179,12 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 if (assignmentStage.equals("graded")){
                     JButton downloadFeedbackButton = new JButton("Feedback");
                     downloadFeedbackButton.addActionListener(e -> {
-                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "graded");
+//                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "graded");
+                        downloadController.handleDownloadFeedback(
+                                state.getCourseName(),
+                                assignmentName,
+                                state.getStudentEmails().get(index)
+                        );
                     });
                     actionListeners[j][2] = downloadFeedbackButton;
                     assignmentData[j][2] = "Feedback";
