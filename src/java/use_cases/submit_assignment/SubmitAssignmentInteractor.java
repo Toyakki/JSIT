@@ -51,11 +51,13 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
                     content);
             
             fileDataAccessInterface.saveFile(newAssignment);
-    
-            outputBoundary.presentSuccess();
+
+            // Call presenter
+            outputBoundary.presentSuccess(courseName, email);
+
             
         } catch (IllegalArgumentException | FileNotFoundException e){
-            outputBoundary.presentError();
+            outputBoundary.presentError(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
