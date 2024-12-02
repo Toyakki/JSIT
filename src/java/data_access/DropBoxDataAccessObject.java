@@ -2,10 +2,7 @@ package data_access;
 
 import com.dropbox.core.v2.files.*;
 import com.dropbox.core.v2.sharing.ListFoldersBuilder;
-import entities.Account;
-import entities.Assignment;
-import entities.Course;
-import entities.PDFFile;
+import entities.*;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
@@ -24,9 +21,28 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     private static final String ACCESS_TOKEN;
     private static final String DATA_FILE_PATH = "/university_data.txt";
 
+    private static final InMemoryUserDataAccessObject inMemoryUserDataAccessObject = new InMemoryUserDataAccessObject();
+    private static final InMemoryFileDataAccessObject inMemoryFileDataAccessObject = new InMemoryFileDataAccessObject();
+    private static final Map<String, Account> users = new HashMap<>();
+    private static final Map<String, Course> courses = new HashMap<>();
+    private static final Map<String, List<Assignment>> courseToAssignments = new HashMap<>();
+    private static final Map<String, Map<String, Map<String, Submission>>> courseToAssignmentToSubmissions = new HashMap<>();
+
     static {
         Dotenv dotenv = Dotenv.load();
         ACCESS_TOKEN = dotenv.get("ACCESS_TOKEN");
+    }
+
+    public DropBoxDataAccessObject(){
+        StringBuilder existingData = new StringBuilder();
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            client.files().downloadBuilder(DATA_FILE_PATH).download(out);
+            existingData.append(out.toString());
+        } catch (IOException | DbxException e) {
+            // File might not exist initially; we'll create it later
+            throw new RuntimeException(e);
+        }
+        parseData(existingData.toString(), users, courses, courseToAssignments, courseToAssignmentToSubmissions);
     }
 
     DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/java-tutorial").build();
@@ -45,6 +61,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
         } catch (DbxException | IOException e) {
             throw new RuntimeException("Error in uploading file to dropbox", e);
         }
+        inMemoryFileDataAccessObject.saveFile(file);
     }
 
     @Override
@@ -109,6 +126,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     @Override
     public void saveUser(Account account) {
         try {
+            inMemoryUserDataAccessObject.saveUser(account);
 
             // Read existing data from Dropbox.
             StringBuilder existingData = new StringBuilder();
@@ -123,7 +141,8 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             Map<String, Account> existingUsers = new HashMap<>();
             Map<String, Course> existingCourses = new HashMap<>();
             Map<String, List<Assignment>> courseAssignments = new HashMap<>();
-            parseData(existingData.toString(), existingUsers, existingCourses, courseAssignments);
+            Map<String, Map<String, Map<String, Submission>>> courseToAssignmentToSubmission = new HashMap<>();
+            parseData(existingData.toString(), existingUsers, existingCourses, courseAssignments, courseToAssignmentToSubmission);
 
             // Add or update the user, courses, and assignments
             existingUsers.put(account.getEmail(), account);
@@ -201,7 +220,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     private void parseData(String data,
                            Map<String, Account> users,
                            Map<String, Course> courses,
-                           Map<String, List<Assignment>> courseAssignments) {
+                           Map<String, List<Assignment>> courseAssignments,
+                           Map<String, Map<String, Map<String, Submission>>> courseToAssignmentToSubmissions
+                           ) {
         String[] sections = data.split("\n\n");
         for (String section : sections) {
             if (section.startsWith("USERS:")) {
@@ -401,6 +422,6 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
 
     @Override
     public List<Account> getAllUsers() {
-        return null;
+        return inMemoryUserDataAccessObject.getAllUsers();
     }
 }
