@@ -3,8 +3,8 @@
 Authors: Isaac Clark, Enze Yang, Tohya Tanemura, and Sark Asadourian
 
 ## Summery
-JSIT is an open source simple tool for creating, submitting, and grading assignments 
-for teachers and students which allows for the easy expansion of functionality.
+JSIT is a simple open source tool for creating, submitting, and grading assignments 
+for teachers and students and allows for the easy expansion of functionality.
 
 Current open source assignments submission and grading solutions are based on 
 complicated code bases and require complex cloud set up. This slows down educational
