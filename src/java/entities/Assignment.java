@@ -39,6 +39,8 @@ public class Assignment {
         return marks;
     }
 
+    public void setMarks(String marks) {this.marks = marks;}
+
     public String getStage() {
         return stage;
     }
@@ -50,5 +52,6 @@ public class Assignment {
     public void setStage(String stage) {
         this.stage = stage;
     }
+
     public Submission getSubmission(String student) { return submissionMap.get(student); }
 }

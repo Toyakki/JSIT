@@ -18,6 +18,8 @@ public class TeacherCourseState {
     private List<String> studentEmails;
     private String courseCode;
 
+    private String error = "";
+
     public TeacherCourseState(String courseName,
                               String email,
                               List<String> assignmentNames,
@@ -75,4 +77,12 @@ public class TeacherCourseState {
     public List<String> getAssignmentBaseMarks(){ return assignmentBaseMarks; }
 
     public String getCourseCode(){ return courseCode; }
+
+    public void setError(String error){
+        this.error = error;
+    }
+
+    public String getError(){
+        return this.error;
+    }
 }

@@ -3,6 +3,7 @@ package data_access;
 import com.dropbox.core.DbxException;
 import entities.PDFFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,17 @@ public class InMemoryFileDataAccessObject implements FileDataAccessInterface {
         return files.get(path);
     }
 
-    public List<PDFFile> getFiles(String path){return null;}
+    public List<PDFFile> getFiles(String path){
+        List<PDFFile> matchingFiles = new ArrayList<>();
+        for (PDFFile file : files.values()) {
+            if(file.getFilePath().contains(path)){
+                matchingFiles.add(file);
+            }
+        }
+        return matchingFiles;
+    }
+
+    public List<PDFFile> getAllFiles(){
+        return List.copyOf(files.values());
+    }
 }

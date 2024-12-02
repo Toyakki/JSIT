@@ -2,8 +2,11 @@ package data_access;
 
 import entities.Account;
 
+import java.util.List;
+
 public interface UserDataAccessInterface {
-    public void saveUser(Account account);
-    public Account getUserByEmail(String email);
-    public boolean userExistsByEmail(String email);
+    void saveUser(Account account);
+    Account getUserByEmail(String email);
+    boolean userExistsByEmail(String email);
+    List<Account> getAllUsers();
 }

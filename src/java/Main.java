@@ -6,8 +6,12 @@ import data_access.UserDataAccessInterface;
 import entities.*;
 import interface_adapters.create_assignment.AssignmentCreaterController;
 import interface_adapters.create_assignment.CreateAssignmentPresenter;
+import interface_adapters.create_class.CreateCourseController;
+import interface_adapters.create_class.CreateCoursePresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
+import interface_adapters.join_class.JoinCourseController;
+import interface_adapters.join_class.JoinCoursePresenter;
 import interface_adapters.student_course.StudentCourseBackController;
 import interface_adapters.student_course.StudentCourseViewModel;
 import interface_adapters.teacher_course.TeacherCourseBackController;
@@ -26,8 +30,13 @@ import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
+import interface_adapters.upload_feedback.UploadFeedbackController;
 import use_cases.create_assignment.CreateAssignmentInteractor;
+import use_cases.create_course.CreateCourseUseCaseInteractor;
+import use_cases.join_course.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
+import use_cases.submit_grade.SubmitGradeInputBoundary;
+import use_cases.submit_grade.SubmitGradeInteractor;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -37,6 +46,8 @@ import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
 import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
+import use_cases.upload_feedback.UploadFeedbackInputBoundary;
+import use_cases.upload_feedback.UploadFeedbackInteractor;
 import view.*;
 
 import javax.swing.*;
@@ -81,6 +92,8 @@ public class Main extends JFrame {
         Course csCourse = CourseFactory.createClass("Johnathon Calver", "CSC207");
         Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
         Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
+
+        System.out.println(matCourse.getCourseCode());
 
         List<Course> joe_courses = new ArrayList<>();
         joe_courses.add(matCourse);
@@ -188,7 +201,12 @@ public class Main extends JFrame {
                 fileDataAccessObject
         );
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
-        GradeController gradeController = new GradeController();
+        UserDataAccessInterface userDataAccessInterface = new InMemoryUserDataAccessObject();
+        SubmitGradeInputBoundary submitGradeInputBoundary = new SubmitGradeInteractor(userDataAccessInterface);
+        GradeController gradeController = new GradeController(submitGradeInputBoundary);
+
+        UploadFeedbackInputBoundary uploadFeedbackInputBoundary = new UploadFeedbackInteractor(userDataAccessInterface);
+        UploadFeedbackController uploadFeedbackController = new UploadFeedbackController(uploadFeedbackInputBoundary);
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
@@ -199,12 +217,22 @@ public class Main extends JFrame {
         );
         TeacherCourseViewController teacherCourseViewController = new TeacherCourseViewController(teacherCourseViewInteractor);
 
+        // create course controller, interactor, presenter
+        CreateCoursePresenter createCoursePresenter = new CreateCoursePresenter(teacherClassesViewModel);
+        CreateCourseUseCaseInteractor createCourseUseCaseInteractor = new CreateCourseUseCaseInteractor(createCoursePresenter, demo);
+        CreateCourseController createCourseController = new CreateCourseController(createCourseUseCaseInteractor);
+
+        // join course controller, interactor, presenter
+        JoinCoursePresenter joinCoursePresenter = new JoinCoursePresenter(studentClassesViewModel);
+        JoinUseCaseInteractor joinCourseUseCaseInteractor = new JoinUseCaseInteractor(joinCoursePresenter, demo);
+        JoinCourseController joinCourseController = new JoinCourseController(joinCourseUseCaseInteractor);
+
         // classes view for students
-        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController);
+        studentClassesView = new StudentClassesView(studentClassesViewModel, studentCourseViewController, joinCourseController);
         mainPanel.add(studentClassesView, studentClassesView.getViewName());
 
         // classes view for teachers
-        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseBackController, teacherCourseViewController);
+        teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseViewController, createCourseController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
         // course view for student

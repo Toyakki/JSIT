@@ -398,4 +398,9 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
             throw new RuntimeException("Error checking user existence: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Account> getAllUsers() {
+        return null;
+    }
 }

@@ -13,7 +13,8 @@ public class JoinCoursePresenter {
     }
     
     public void prepareFailView(String error) {
-
+        this.viewModel.getState().setError(error);
+        this.viewModel.firePropertyChanged();
     }
 
     public void prepareSuccessView(UserOutputData user) {

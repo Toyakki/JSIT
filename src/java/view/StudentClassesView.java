@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapters.join_class.JoinCourseController;
 import interface_adapters.student.StudentClassesState;
 import interface_adapters.student.StudentClassesViewModel;
 import interface_adapters.student.StudentCourseViewController;
@@ -17,8 +18,11 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final String viewName = "student classes";
     private final StudentClassesViewModel classesViewModel;
     private final StudentCourseViewController courseViewController;
+    private final JoinCourseController joinCourseController;
     private final JLabel noCoursesLabel = new JLabel("No courses joined yet.");
     private final JLabel titleLabel = new JLabel(" Classes:");
+
+    private final JLabel errorLabel = new JLabel();
 
     private final Map<String, JLabel> courseLabels = new HashMap<>();
     private final JPanel coursesPanel = new JPanel();
@@ -28,11 +32,17 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
     private final JTextField joinCodeField = new JTextField();
 
     public StudentClassesView(StudentClassesViewModel viewModel,
-                              StudentCourseViewController controller
+                              StudentCourseViewController controller,
+                              JoinCourseController joinCourseController
     ) {
         this.courseViewController = controller;
         this.classesViewModel = viewModel;
+        this.joinCourseController = joinCourseController;
         this.classesViewModel.addPropertyChangeListener(this);
+
+        errorLabel.setFont(new Font("Tomaha", Font.BOLD, 16));
+        errorLabel.setForeground(Color.RED);
+        joinCoursePanel.add(errorLabel);
 
         noCoursesLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
         titleLabel.setFont(new Font("Tomaha", Font.BOLD, 20));
@@ -40,6 +50,17 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
         coursesPanel.setLayout(new BoxLayout(coursesPanel, BoxLayout.Y_AXIS));
         coursesPanel.setPreferredSize(new Dimension(370, 300));
 
+        joinButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        joinCourseController.joinCourse(
+                                viewModel.getState().getEmail(),
+                                joinCodeField.getText()
+                        );
+                    }
+                }
+        );
         joinButton.setPreferredSize(new Dimension(100, 30));
         joinButton.setBackground(Color.BLACK);
         joinButton.setForeground(Color.WHITE);
@@ -71,6 +92,7 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
 
     private void setFields(StudentClassesState state) {
         this.classesViewModel.setState(state);
+        this.errorLabel.setText(this.classesViewModel.getState().getError());
         renderCourses();
     }
 
@@ -93,17 +115,16 @@ public class StudentClassesView extends JPanel implements ActionListener, Proper
             coursesPanel.remove(this.noCoursesLabel);
             courseLabels.remove("no courses");
 
-//            addBlankSpace(coursesPanel);
             coursesPanel.add(titleLabel);
-//            addBlankSpace(coursesPanel, 2);
             List<String> courseNames = this.classesViewModel.getState().getCourseNames();
             for (String courseName : courseNames) {
                 JLabel courseLabel = createCourseLabel(courseName);
                 courseLabels.put(courseName, courseLabel);
                 coursesPanel.add(courseLabel);
-//                addBlankSpace(coursesPanel);
             }
         }
+        coursesPanel.revalidate();
+        coursesPanel.repaint();
     }
 
     public String getViewName(){
