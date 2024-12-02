@@ -46,5 +46,6 @@ public class Submission {
 
     public void setGrade(String grade) {
         this.grade = grade;
+        this.stage = "graded";
     }
 }

@@ -4,12 +4,14 @@ import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
 import entities.*;
+import interface_adapters.ViewModel;
 import interface_adapters.create_assignment.AssignmentCreaterController;
 import interface_adapters.create_assignment.CreateAssignmentPresenter;
 import interface_adapters.create_class.CreateCourseController;
 import interface_adapters.create_class.CreateCoursePresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
+import interface_adapters.grade.GradePresenter;
 import interface_adapters.join_class.JoinCourseController;
 import interface_adapters.join_class.JoinCoursePresenter;
 import interface_adapters.student_course.StudentCourseBackController;
@@ -30,9 +32,11 @@ import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
-import interface_adapters.upload_feedback.UploadFeedbackController;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.create_course.CreateCourseUseCaseInteractor;
+import use_cases.grade.GradeInputBoundary;
+import use_cases.grade.GradeInteractor;
+import use_cases.grade.GradeOutputBoundary;
 import use_cases.join_course.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.submit_grade.SubmitGradeInputBoundary;
@@ -106,7 +110,6 @@ public class Main extends JFrame {
         test_courses.add(statsCourse);
         test_courses.add(csCourse);
         test_courses.add(matCourse);
-
 
         Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
@@ -201,12 +204,9 @@ public class Main extends JFrame {
                 fileDataAccessObject
         );
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
-        UserDataAccessInterface userDataAccessInterface = new InMemoryUserDataAccessObject();
-        SubmitGradeInputBoundary submitGradeInputBoundary = new SubmitGradeInteractor(userDataAccessInterface);
-        GradeController gradeController = new GradeController(submitGradeInputBoundary);
-
-        UploadFeedbackInputBoundary uploadFeedbackInputBoundary = new UploadFeedbackInteractor(userDataAccessInterface);
-        UploadFeedbackController uploadFeedbackController = new UploadFeedbackController(uploadFeedbackInputBoundary);
+        GradeOutputBoundary gradeOutputBoundary = new GradePresenter(teacherCourseViewModel);
+        GradeInputBoundary gradeInputBoundary = new GradeInteractor(fileDataAccessObject, gradeOutputBoundary, demo);
+        GradeController gradeController = new GradeController(gradeInputBoundary);
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
