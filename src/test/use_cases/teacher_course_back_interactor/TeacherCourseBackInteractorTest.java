@@ -30,14 +30,13 @@ public class TeacherCourseBackInteractorTest {
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         TeacherClassesViewModel teacherClassesViewModel = new TeacherClassesViewModel();
         TeacherCourseBackOutputBoundary teacherCourseBackOutputBoundary = new TeacherCoursesPresenter(viewManagerModel, teacherClassesViewModel);
-        // Creates an interactor with a modified output bound to test if the UserOutputData is formated as expected.
-        TeacherCourseBackInputBoundary interactor = getTeacherCourseBackInputBoundary(userDsGateway, teacherCourseBackOutputBoundary);
+        // Creates an anonymous output boundary class with a modified output bound to test if the UserOutputData is formated as expected.
+        TeacherCourseBackInputBoundary interactor = getTeacherCourseBackInputBoundary(userDsGateway);
 
         interactor.back("joerepka@mail.utoronto.ca");
     }
 
-    private static TeacherCourseBackInputBoundary getTeacherCourseBackInputBoundary(UserDataAccessInterface userDsGateway,
-                                                                                    TeacherCourseBackOutputBoundary teacherCourseBackOutputBoundary) {
+    private static TeacherCourseBackInputBoundary getTeacherCourseBackInputBoundary(UserDataAccessInterface userDsGateway) {
             TeacherCourseBackOutputBoundary courseBackOutputBoundary = new TeacherCourseBackOutputBoundary() {
             @Override
             public void prepareTeacherCoursesView(UserOutputData userOutputData) {
