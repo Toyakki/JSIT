@@ -28,5 +28,4 @@ public class PDFFile {
     public void setFileContent(byte[] newContent) {
         this.fileContent = newContent;
     }
-
 }

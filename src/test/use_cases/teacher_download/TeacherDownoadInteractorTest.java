@@ -1,4 +1,4 @@
-package use_cases.teacher_assignment_download;
+package use_cases.teacher_download;
 
 import com.dropbox.core.DbxException;
 import data_access.InMemoryFileDataAccessObject;
@@ -6,30 +6,18 @@ import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import entities.PDFFile;
 import org.junit.jupiter.api.Test;
+import use_cases.download.DownloadInteractor;
 
 
 public class TeacherDownoadInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
     private InMemoryFileDataAccessObject fileDsGateway;
-    private TeacherDownloadInteractor teacherDownloadInteractor;
+    private DownloadInteractor teacherDownloadInteractor;
 
     void create() {
         userDsGateway = new InMemoryUserDataAccessObject();
         fileDsGateway = new InMemoryFileDataAccessObject();
-        TeacherDownloadOutputBoundary outputBoundary = new MockDownloadPresenter();
-        teacherDownloadInteractor = new TeacherDownloadInteractor(fileDsGateway, outputBoundary);
-    }
-
-    private static class MockDownloadPresenter implements TeacherDownloadOutputBoundary {
-        @Override
-        public void presentSuccess(String message, PDFFile pdfFile) {
-            System.out.println("SUCCESS: " + message);
-        }
-
-        @Override
-        public void presentError(String message) {
-            System.err.println("Error: " + message);
-        }
+        teacherDownloadInteractor = new DownloadInteractor(fileDsGateway, userDsGateway);
     }
 
     @Test
@@ -39,6 +27,7 @@ public class TeacherDownoadInteractorTest {
         String csCourseName = tohya_account.getCourseNames().get(1);
         teacherDownloadInteractor.downloadWrittenAssignment(
                 csCourseName,
+                "assignmentName", // need to fix!
                 tohya_account.getEmail()
         );
     }
