@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateAssignmentInteractor {
+public class CreateAssignmentInteractor implements CreateAssignmentInputBoundary {
     private final UserDataAccessInterface userDataAccessInterface;
     private final FileDataAccessInterface fileDataAccessInterface;
     private final CreateAssignmentPresenter presenter;
