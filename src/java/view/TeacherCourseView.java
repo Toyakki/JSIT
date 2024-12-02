@@ -177,12 +177,11 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                     });
                     actionListeners[j][2] = downloadFeedbackButton;
                     assignmentData[j][2] = "Feedback";
+                    assignmentData[j][4] = state.getAssignmentsMarks().get(i).get(studentEmail);
                 } else {
                     assignmentData[j][2] = "   ";
+                    assignmentData[j][4] = "   ";
                 }
-
-                // if graded, put the mark instead
-                assignmentData[j][4] = "   ";
 
                 JButton gradeButton = new JButton("Grade");
                 gradeButton.addActionListener(e -> {
