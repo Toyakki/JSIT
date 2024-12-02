@@ -1,6 +1,5 @@
-package use_cases.join_class;
+package use_cases.join_course;
 
-import data_access.CourseDataAccessInterface;
 import data_access.UserDataAccessInterface;
 import entities.Account;
 import entities.Course;

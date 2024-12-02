@@ -1,4 +1,4 @@
-package use_cases.create_class;
+package use_cases.create_course;
 
 import data_access.UserDataAccessInterface;
 import entities.Account;
@@ -6,8 +6,6 @@ import entities.Course;
 import entities.CourseFactory;
 import interface_adapters.create_class.CreateCoursePresenter;
 import use_cases.UserOutputData;
-
-import java.util.ArrayList;
 
 public class CreateCourseUseCaseInteractor {
     private CreateCoursePresenter presenter;
