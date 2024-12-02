@@ -1,28 +1,23 @@
 package interface_adapters.submit_assignment;
 
+import interface_adapters.student_course.StudentCourseViewModel;
 import use_cases.submit_assignment.SubmitAssignmentOutputBoundary;
 
-public class SubmitAssignmentPresenter {
-    private String message;
-    private boolean isSuccess;
+public class SubmitAssignmentPresenter implements SubmitAssignmentOutputBoundary{
+   private final StudentCourseViewModel viewModel;
 
-    @Override
-    public void presentSuccess() {
-        message = "Assignment submitted successfully";
-        isSuccess = true;
-    }
-    
-    @Override
-    public void presentError() {
-        message = "Error submitting assignment";
-        isSuccess = false;
+    public SubmitAssignmentPresenter(StudentCourseViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
-    public String getMessage() {
-        return message;
-    }
+   @Override
+   public void presentSuccess() {
+       viewModel.setSubmitAssignmentMessage("Assignment submitted successfully", true);
+   }
 
-    public boolean isSuccess() {
-        return isSuccess;
-    }
+   @Override
+   public void presentError() {
+       viewModel.setSubmitAssignmentMessage("Error submitting assignment", false);
+   }
+
 }
