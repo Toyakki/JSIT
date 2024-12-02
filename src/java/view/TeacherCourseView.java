@@ -157,7 +157,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 String assignmentStage = state.getAssignmentsStages().get(i).get(studentEmail);
                 int index = j;
                 assignmentData[j][0] = teacherCourseViewModel.getState().getStudentEmails().get(j);
-                if (!assignmentStage.equals("assigned")){
+                if (!assignmentStage.equals("not submitted")){
                     JButton downloadButton = new JButton("Download");
                     downloadButton.addActionListener(e -> {
                         downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "submitted");
