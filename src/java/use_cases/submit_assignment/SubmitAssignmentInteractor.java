@@ -1,9 +1,9 @@
 package use_cases.submit_assignment;
 
-import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
-import data_access.FileDataAccessInterface;
 import entities.PDFFile;
+import data_access.FileDataAccessInterface;
+import data_access.UserDataAccessInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,11 +13,11 @@ import java.nio.file.Files;
 public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary {
     private final FileDataAccessInterface fileDataAccessInterface;
     private final SubmitAssignmentOutputBoundary outputBoundary;
-    private final InMemoryUserDataAccessObject userDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
 
     public SubmitAssignmentInteractor(FileDataAccessInterface fileDataAccessInterface,
                                       SubmitAssignmentOutputBoundary outputBoundary,
-                                      InMemoryUserDataAccessObject userDataAccessObject) {
+                                      UserDataAccessInterface userDataAccessObject) {
         this.fileDataAccessInterface = fileDataAccessInterface;
         this.outputBoundary = outputBoundary;
         this.userDataAccessObject = userDataAccessObject;
@@ -39,16 +39,17 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             }
     
             byte[] content = Files.readAllBytes(selectedFile.toPath());
+
             Account account = userDataAccessObject.getUserByEmail(email);
             String studentEmail = account.getEmail();
             
-            String dropboxPath = "/" + courseName + "/" + studentEmail;
+            String dropboxPath = "/" + courseName + "/" + studentEmail + "/" + selectedFile.getName();
     
             PDFFile newAssignment = new PDFFile(
                     selectedFile.getName(),
                     dropboxPath,
                     content);
-    
+            
             fileDataAccessInterface.saveFile(newAssignment);
     
             outputBoundary.presentSuccess();
