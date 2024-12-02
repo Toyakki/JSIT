@@ -1,7 +1,6 @@
 package use_cases.submit_assignment;
 
-import entities.Account;
-import entities.PDFFile;
+import entities.*;
 import data_access.FileDataAccessInterface;
 import data_access.UserDataAccessInterface;
 
@@ -26,6 +25,7 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
     @Override
     public void submitAssignment(File selectedFile,
                                  String courseName,
+                                 String assignmentName,
                                  String email){
         try{
             if (!selectedFile.getName().endsWith(".pdf")) {
@@ -37,25 +37,35 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             if (!selectedFile.exists()) {
                 throw new FileNotFoundException("File does not exist");
             }
-    
+
             byte[] content = Files.readAllBytes(selectedFile.toPath());
 
             Account account = userDataAccessObject.getUserByEmail(email);
             String studentEmail = account.getEmail();
-            
+
             String dropboxPath = "/" + courseName + "/" + studentEmail + "/" + selectedFile.getName();
-    
+
             PDFFile newAssignment = new PDFFile(
                     selectedFile.getName(),
                     dropboxPath,
                     content);
-            
+
+            Course course = account.getCourseByName(courseName);
+
+            Assignment assignment = course.getAssignmentByName(assignmentName);
+
+            Submission submission = new Submission(
+                    newAssignment
+            );
+
+            assignment.setSubmission(email, submission);
+
             fileDataAccessInterface.saveFile(newAssignment);
 
             // Call presenter
-            outputBoundary.presentSuccess(courseName, email);
+            outputBoundary.presentSuccess(courseName, email, assignment);
 
-            
+
         } catch (IllegalArgumentException | FileNotFoundException e){
             outputBoundary.presentError(e.getMessage());
         } catch (IOException e) {
