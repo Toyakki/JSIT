@@ -27,7 +27,7 @@ public class InMemoryFileDataAccessObject implements FileDataAccessInterface {
     public List<PDFFile> getFiles(String path){
         List<PDFFile> matchingFiles = new ArrayList<>();
         for (PDFFile file : files.values()) {
-            if(file.getPath().contains(path)){
+            if(file.getFilePath().contains(path)){
                 matchingFiles.add(file);
             }
         }
