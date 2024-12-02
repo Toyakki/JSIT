@@ -39,6 +39,8 @@ public class Assignment {
         return marks;
     }
 
+    public void setMarks(String marks) {this.marks = marks;}
+
     public String getStage() {
         return stage;
     }

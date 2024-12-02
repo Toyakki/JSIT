@@ -21,7 +21,7 @@ public class TeacherCourseBackUseCase implements TeacherCourseBackInputBoundary{
         for (int i = 0; i < userDsGateway.getUserByEmail(email).getCourseNames().size(); i++) {
             courses.add(userDsGateway.getUserByEmail(email).getCourseNames().get(i));
         }
-        UserOutputData userOutputData = new UserOutputData(email,"student", courses);
+        UserOutputData userOutputData = new UserOutputData(email,"teacher", courses);
         this.outputBoundary.prepareTeacherCoursesView(userOutputData);
     }
 

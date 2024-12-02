@@ -8,6 +8,10 @@ import entities.CourseFactory;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 public class CreateCoursesInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
 
@@ -25,8 +29,8 @@ public class CreateCoursesInteractorTest {
         List<Course> courses = teacher.getCourses();
         Course course = courses.getFirst();
         assertTrue(courses.size() == 1);
-        assertEqual("Software Design", course.getName());
-        assertEqual("Lindsey", course.getInstructor());
+        assertEquals("Software Design", course.getName());
+        assertEquals("Lindsey", course.getInstructor());
     }
 
     public void testNewCourse(Course course) {
@@ -36,8 +40,8 @@ public class CreateCoursesInteractorTest {
         List<Course> courses = teacher.getCourses();
         assertTrue(courses.size() == 2);
         Course foundCourse = teacher.getCourseByName("Analysis I");
-        assertEqual(foundCourse.getInstructor(), newCourse.getInstructor());
-        assertEqual(foundCourse.getName(), newCourse.getName());
+        assertEquals(foundCourse.getInstructor(), newCourse.getInstructor());
+        assertEquals(foundCourse.getName(), newCourse.getName());
     }
 }
 
