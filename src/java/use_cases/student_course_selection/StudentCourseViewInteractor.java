@@ -43,7 +43,7 @@ public class StudentCourseViewInteractor {
             assignmentDueDates.add(assignment.getDueDate());
             assignmentMarks.add(assignment.getMarks());
             assignmentStages.add(assignment.getStage());
-            assignmentMarksReceived.add(assignment.getMarksReceivedStatus(email));
+            assignmentMarksReceived.add(assignment.getMarksReceivedStatus());
         }
 
         // should probably add a PDFFile wrapper class to avoid presenter being composed with an entity

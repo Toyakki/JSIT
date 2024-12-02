@@ -9,7 +9,8 @@ import interface_adapters.teacher_course.TeacherCourseViewModel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -21,11 +22,12 @@ import java.util.Map;
 public class TeacherCourseView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "teacher course";
     private final TeacherCourseViewModel teacherCourseViewModel;
-    private final String[] columnNames = {"email", "download", "feedback", "submitted", "marks", "grade"};
+    private final String[] columnNames = {"email", "download", "feedback", "submitted", "grade"};
     private TeacherCourseBackController teacherCourseBackController;
     private AssignmentCreaterController assignmentCreaterController;
     private DownloadController downloadController;
     private GradeController gradeController;
+//    private UploadController uploadController;
     private File newAssignmentFile;
 
     JLabel errorLabel = new JLabel();
@@ -124,7 +126,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         }
 
         for (int i = 0; i < teacherCourseViewModel.getState().getAssignmentsNames().size(); i++) {
-            final int assignmentIndex = i;
 
             JPanel assignmentPanel = new JPanel();
 
@@ -136,19 +137,15 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
             JButton[][] actionListeners = new JButton[teacherCourseViewModel.getState().getStudentEmails().size()][columnNames.length];
 
             for (int j = 0; j < teacherCourseViewModel.getState().getStudentEmails().size(); j++) {
-                final int studentIndex = j;
                 TeacherCourseState state = teacherCourseViewModel.getState();
-                String studentEmail = teacherCourseViewModel.getState().getStudentEmails().get(studentIndex);
-
+                String studentEmail = teacherCourseViewModel.getState().getStudentEmails().get(j);
                 String assignmentStage = state.getAssignmentsStages().get(i).get(studentEmail);
-
-                String graded = state.getAssignmentMarksReceived().get(i).get(studentEmail);
-
-                assignmentData[j][0] = teacherCourseViewModel.getState().getStudentEmails().get(studentIndex);
+                int index = j;
+                assignmentData[j][0] = teacherCourseViewModel.getState().getStudentEmails().get(j);
                 if (!assignmentStage.equals("assigned")){
                     JButton downloadButton = new JButton("Download");
                     downloadButton.addActionListener(e -> {
-                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(studentIndex), "submitted");
+                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "submitted");
                     });
                     actionListeners[j][1] = downloadButton;
                     assignmentData[j][1] = "Download";
@@ -161,16 +158,12 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 if (assignmentStage.equals("graded")){
                     JButton downloadFeedbackButton = new JButton("Feedback");
                     downloadFeedbackButton.addActionListener(e -> {
-                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(studentIndex), "graded");
+                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "graded");
                     });
                     actionListeners[j][2] = downloadFeedbackButton;
                     assignmentData[j][2] = "Feedback";
-
-                    assignmentData[j][4] = state.getAssignmentsMarks().get(i).get(studentEmail);
-
                 } else {
                     assignmentData[j][2] = "   ";
-                    assignmentData[j][4] = "   ";
                 }
 
                 JButton gradeButton = new JButton("Grade");
@@ -181,18 +174,12 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                     fileChooser.addChoosableFileFilter(restrict);
                     int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
                     if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
-                        gradeController.grade(
-                                "90",
-                                fileChooser.getSelectedFile(),
-                                teacherCourseViewModel.getState().getStudentEmails().get(studentIndex),
-                                teacherCourseViewModel.getState().getEmail(),
-                                teacherCourseViewModel.getState().getCourseName(),
-                                teacherCourseViewModel.getState().getAssignmentsNames().get(assignmentIndex)
-                        );
+                        System.out.println("Selected: " + fileChooser.getSelectedFile().getName());
+//                      uploadController.uploadGraded(fileChooser.getSelectedFile(), teacherCourseViewModel.getState().getStudentEmails().get(index), teacherCourseViewModel.getState().getAssignmentsNames());
                     }
                 });
-                actionListeners[j][5] = gradeButton;
-                assignmentData[j][5] = "Grade";
+                actionListeners[j][4] = gradeButton;
+                assignmentData[j][4] = "Grade";
             }
 
             JTable assignmentsTable = new JTable(
@@ -213,12 +200,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 }
             };
 
-            assignmentsTable.setModel(new DefaultTableModel(assignmentData, columnNames){
-                @Override
-                public boolean isCellEditable(int row, int col) {
-                    return col == 4;
-                }
-            });
+            assignmentsTable.setDefaultEditor(Object.class, null);
 
             assignmentsTable.addMouseListener(tableListener);
 

@@ -10,7 +10,6 @@ import interface_adapters.create_class.CreateCourseController;
 import interface_adapters.create_class.CreateCoursePresenter;
 import interface_adapters.download.DownloadController;
 import interface_adapters.grade.GradeController;
-import interface_adapters.grade.GradePresenter;
 import interface_adapters.join_class.JoinCourseController;
 import interface_adapters.join_class.JoinCoursePresenter;
 import interface_adapters.student_course.StudentCourseBackController;
@@ -33,7 +32,6 @@ import interface_adapters.teacher.TeacherCourseViewPresenter;
 import interface_adapters.teacher.TeacherCoursesPresenter;
 import use_cases.create_assignment.CreateAssignmentInteractor;
 import use_cases.create_class.CreateCourseUseCaseInteractor;
-import use_cases.grade.GradeUseCaseInteractor;
 import use_cases.join_class.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
@@ -107,7 +105,7 @@ public class Main extends JFrame {
 
         Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
         Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account test = new Account("t", "t", "teacher", tohya_courses);
+        Account test = new Account("t", "t", "student", tohya_courses);
         demo.saveUser(joe);
         demo.saveUser(tohya);
         demo.saveUser(test);
@@ -119,7 +117,7 @@ public class Main extends JFrame {
         Assignment ps5 = new Assignment(matCourse, "Problem Set 5", "December 15st", "100", "assigned", "false");
         Assignment ps6 = new Assignment(matCourse, "Problem Set 6", "December 15st", "100", "assigned", "false");
         Assignment ps7 = new Assignment(matCourse, "Problem Set 7", "December 15st", "100", "assigned", "false");
-        Assignment finalProject = new Assignment(csCourse, "Final Project", "December 4th", "25", "assigned", "false");
+        Assignment finalProject = new Assignment(csCourse, "Final Project", "December 4th", "25", "submitted", "false");
 
         csCourse.addAssignment(finalProject);
         matCourse.addAssignment(ps1);
@@ -198,10 +196,7 @@ public class Main extends JFrame {
                 fileDataAccessObject
         );
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
-
-        GradePresenter gradePresenter = new GradePresenter(teacherCourseViewModel);
-        GradeUseCaseInteractor gradeUseCaseInteractor = new GradeUseCaseInteractor(gradePresenter, demo, fileDataAccessObject);
-        GradeController gradeController = new GradeController(gradeUseCaseInteractor);
+        GradeController gradeController = new GradeController();
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
