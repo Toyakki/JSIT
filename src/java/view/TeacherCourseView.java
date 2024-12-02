@@ -118,6 +118,14 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
         add(createAssignmentPanel);
     }
 
+    private void updateTableModel(String[][] newData, TableModel tableModel){
+        for (int row = 0; row < newData.length; row++){
+            for (int col = 0; col < newData[row].length; col++){
+                tableModel.setValueAt(newData[row][col], row, col);
+            }
+        }
+    }
+
     public void renderAssignments(){
         clearView();
         setFields();
@@ -212,6 +220,7 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 }
             };
 
+            updateTableModel(assignmentData, tableModel);
             assignmentsTable.setModel(tableModel);
             assignmentsTable.addMouseListener(tableListener);
 
