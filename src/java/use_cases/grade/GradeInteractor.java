@@ -35,7 +35,7 @@ public class GradeInteractor implements GradeInputBoundary{
             byte[] fileBytes = Files.readAllBytes(file.toPath());
             System.out.println(courseName + "/assignments/" + assignmentName + "/" + studentEmail + "/feedback");
             PDFFile pdfFile = new PDFFile(
-                    assignmentName + " feedback",
+                    assignmentName + " feedback.pdf",
                     courseName + "/assignments/" + assignmentName + "/" + studentEmail + "/feedback",
                     fileBytes);
             fileAccess.saveFile(pdfFile);
