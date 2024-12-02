@@ -161,7 +161,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 if (assignmentStage.equals("submitted")){
                     JButton downloadButton = new JButton("Download");
                     downloadButton.addActionListener(e -> {
-//                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "submitted");
                         downloadController.handleTeacherSubmitted(
                                 state.getCourseName(),
                                 assignmentName,
@@ -179,7 +178,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 if (assignmentStage.equals("graded")){
                     JButton downloadFeedbackButton = new JButton("Feedback");
                     downloadFeedbackButton.addActionListener(e -> {
-//                        downloadController.download(state.getCourseName(), state.getStudentEmails().get(index), "graded");
                         downloadController.handleDownloadFeedback(
                                 state.getCourseName(),
                                 assignmentName,
@@ -296,7 +294,6 @@ public class TeacherCourseView extends JPanel implements ActionListener, Propert
                 JOptionPane.showMessageDialog(null, "Assignment not Selected");
             }
             else {
-                String assignmentName = ""; // need to replace with an actual naming scheme
                 assignmentCreaterController.createAssignment(
                         this.teacherCourseViewModel.getState().getEmail(),
                         nameField.getText(),

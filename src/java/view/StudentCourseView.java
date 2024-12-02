@@ -82,7 +82,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 
         downloadOriginalButton.addActionListener(e -> {
             if (e.getSource().equals(downloadOriginalButton)){
-//                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
                 downloadController.handleDownloadOriginal(
                         studentCourseViewModel.getState().getCourseName(),
                         studentCourseViewModel.getState().getAssignmentsNames().get(index)
@@ -91,7 +90,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         });
         downloadSubmittedButton.addActionListener(e -> {
             if (e.getSource().equals(downloadSubmittedButton)){
-//                downloadController.download(studentCourseViewModel.getState().getCourseName(), "submitted", index);
                 downloadController.handleTeacherSubmitted(
                         studentCourseViewModel.getState().getCourseName(),
                         studentCourseViewModel.getState().getAssignmentsNames().get(index),
@@ -101,7 +99,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
         });
         downloadGradedButton.addActionListener(e -> {
             if (e.getSource().equals(downloadGradedButton)){
-//                downloadController.download(studentCourseViewModel.getState().getCourseName(), "graded", index);
                 downloadController.handleDownloadFeedback(
                         studentCourseViewModel.getState().getCourseName(),
                         studentCourseViewModel.getState().getAssignmentsNames().get(index),
@@ -125,7 +122,6 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
 
         downloadButton.addActionListener(e -> {
             if (e.getSource().equals(downloadButton)){
-//                downloadController.download(studentCourseViewModel.getState().getCourseName(), index);
                 downloadController.handleDownloadOriginal(
                         studentCourseViewModel.getState().getCourseName(),
                         studentCourseViewModel.getState().getAssignmentsNames().get(index)
