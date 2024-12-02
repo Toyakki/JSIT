@@ -17,12 +17,12 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDataAccessInterface {
     private static final String ACCESS_TOKEN;
+    private static final String DATA_FILE_PATH = "/university_data.txt";
 
     static {
         Dotenv dotenv = Dotenv.load();
@@ -109,73 +109,155 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
     @Override
     public void saveUser(Account account) {
         try {
-            for (String courseName : account.getCourseNames()) {
-                // Define the folder path and file path
-                System.out.println(courseName);
-                System.out.println(account.getEmail());
-                String userFolderPath = "/" + courseName + "/" + account.getEmail();
-                String userInfoFilePath = userFolderPath + "/info.txt";
 
-                try {
-                    // Try to list the folder
-                    client.files().getMetadata(userFolderPath);
-                } catch (DbxException e) {
-                    try {
-                        // If the folder doesn't exist, create it
-                        client.files().createFolderV2(userFolderPath);
-                        System.out.println("Folder created: " + userFolderPath);
-                    } catch (DbxException ex) {
-                        throw new RuntimeException("Error creating folder: " + userFolderPath, ex);
-                    }
-                }
-
-                // Build user information content
-                StringBuilder builder = new StringBuilder();
-                builder.append("Email: ").append(account.getEmail()).append("\n")
-                        .append("Password: ").append(account.getPassword()).append("\n")
-                        .append("Type: ").append(account.getType()).append("\n")
-                        .append("Courses: ");
-
-                // Append course details
-                for (Course course : account.getCourses()) {
-                    builder.append("(")
-                            .append(course.getInstructor()).append(" | ")
-                            .append(course.getName()).append(" | ")
-                            .append(course.getCourseCode()).append(" | ")
-                            .append(course.getStudentEmails()).append(" | ");
-
-                    // Append all assignment information
-                    for (Assignment assignment : course.getAssignments()) {
-                        builder.append("(")
-                                .append(assignment.getCourseName()).append(" | ")
-                                .append(assignment.getName()).append(" | ")
-                                .append(assignment.getDueDate()).append(" | ")
-                                .append(assignment.getMarks()).append(" | ")
-                                .append(assignment.getStage()).append(" | ")
-                                .append(assignment.getMarksReceivedStatus())
-                                .append(")");
-                    }
-                    builder.append("), ");
-                }
-
-                // Remove trailing comma if present
-                if (builder.toString().endsWith(", ")) {
-                    builder.setLength(builder.length() - 2);
-                }
-
-                String userInfoContent = builder.toString();
-
-                // Upload the user's info to Dropbox
-                InputStream in = new ByteArrayInputStream(userInfoContent.getBytes());
-                client.files().uploadBuilder(userInfoFilePath)
-                        .withMode(WriteMode.OVERWRITE)
-                        .uploadAndFinish(in);
-
-                System.out.println("User information saved at: " + userInfoFilePath);
+            // Read existing data from Dropbox.
+            StringBuilder existingData = new StringBuilder();
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                client.files().downloadBuilder(DATA_FILE_PATH).download(out);
+                existingData.append(out.toString());
+            } catch (DbxException e) {
+                // File might not exist initially; we'll create it later
             }
-        } catch (IOException | DbxException e) {
-            throw new RuntimeException("Error in saving user: " + e.getMessage(), e);
+
+            // Parse existing data into registries
+            Map<String, Account> existingUsers = new HashMap<>();
+            Map<String, Course> existingCourses = new HashMap<>();
+            Map<String, List<Assignment>> courseAssignments = new HashMap<>();
+            parseData(existingData.toString(), existingUsers, existingCourses, courseAssignments);
+
+            // Add or update the user, courses, and assignments
+            existingUsers.put(account.getEmail(), account);
+            for (Course course : account.getCourses()) {
+                existingCourses.putIfAbsent(course.getName(), course);
+
+                // Add or update assignments for this course
+                if (!courseAssignments.containsKey(course.getName())) {
+                    courseAssignments.put(course.getName(), new ArrayList<>());
+                }
+                for (Assignment assignment : course.getAssignments()) {
+                    if (!courseAssignments.get(course.getName()).contains(assignment)) {
+                        courseAssignments.get(course.getName()).add(assignment);
+                    }
+                }
+            }
+
+            // Serialize updated data
+            StringBuilder builder = new StringBuilder();
+
+            // Serialize USERS
+            builder.append("USERS:\n");
+            for (Account user : existingUsers.values()) {
+                builder.append(user.getEmail()).append(" | ")
+                        .append(user.getPassword()).append(" | ")
+                        .append(user.getType()).append(" | ")
+                        .append(user.getCourseNames()).append("\n");
+            }
+
+            // Serialize COURSES
+            builder.append("\nCOURSES:\n");
+            for (Course course : existingCourses.values()) {
+                builder.append(course.getName()).append(" | ")
+                        .append(course.getInstructor()).append(" | ")
+                        .append(course.getStudentEmails()).append(" | \n");
+            }
+
+            // Serialize ASSIGNMENTS
+            builder.append("\nASSIGNMENTS:\n");
+            for (Map.Entry<String, List<Assignment>> entry : courseAssignments.entrySet()) {
+                Course course = existingCourses.get(entry.getKey());
+                List<Assignment> assignments = entry.getValue();
+
+                for (Assignment assignment : assignments) {
+                    builder.append(assignment.getName()).append(" | [")
+                            .append(course.getName()).append(" | ")
+                            .append(course.getInstructor()).append(" | ")
+                            .append(course.getStudentEmails()).append("] | ")
+                            .append(assignment.getDueDate()).append(" | ")
+                            .append(assignment.getMarks()).append(" | ")
+                            .append(assignment.getStage()).append(" | ")
+                            .append(assignment.getMarksReceivedStatus()).append(" | [");
+
+                    if (builder.toString().endsWith(", ")) {
+                        builder.setLength(builder.length() - 2); // Remove trailing comma
+                    }
+                    builder.append("]\n");
+                }
+
+            String updatedContent = builder.toString();
+
+            // Step 5: Write the updated data back to Dropbox
+            InputStream in = new ByteArrayInputStream(updatedContent.getBytes());
+            client.files().uploadBuilder(DATA_FILE_PATH)
+                    .withMode(WriteMode.OVERWRITE)
+                    .uploadAndFinish(in);
+
+            System.out.println("Data successfully updated in Dropbox at: " + DATA_FILE_PATH);
         }
+        } catch (DbxException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void parseData(String data,
+                           Map<String, Account> users,
+                           Map<String, Course> courses,
+                           Map<String, List<Assignment>> courseAssignments) {
+        String[] sections = data.split("\n\n");
+        for (String section : sections) {
+            if (section.startsWith("USERS:")) {
+                String[] lines = section.split("\n");
+                for (int i = 1; i < lines.length; i++) {
+                    String[] parts = lines[i].split(" \\| ");
+                    String email = parts[0];
+                    String password = parts[1];
+                    String type = parts[2];
+                    users.put(email, new Account(email, password, type, new ArrayList<>())); // Empty courses for now
+                }
+            } else if (section.startsWith("COURSES:")) {
+                String[] lines = section.split("\n");
+                for (int i = 1; i < lines.length; i++) {
+                    String[] parts = lines[i].split(" \\| ");
+                    String courseName = parts[0].trim();
+                    String instructor = parts[1].trim();
+                    List<String> studentEmails = parseList(parts[2].trim());
+                    courses.put(courseName, new Course(instructor, courseName, courseName, studentEmails, new ArrayList<>()));
+                }
+            } else if (section.startsWith("ASSIGNMENTS:")) {
+                String[] lines = section.split("\n");
+                for (int i = 1; i < lines.length; i++) { // Skip header
+                    String[] parts = lines[i].split(" \\| ");
+                    String assignmentName = parts[0].trim();
+
+                    // Parse Course details from the serialized string
+                    String courseData = parts[1].trim(); // Remove surrounding brackets
+                    Course course = parseCourse(courseData, courses);
+
+                    // Parse Assignment details
+                    String dueDate = parts[2].trim();
+                    String marks = parts[3].trim();
+                    String stage = parts[4].trim();
+                    String marksReceivedStatus = parts[5].trim();
+
+                    // Create Assignment and associate it with the course
+                    Assignment assignment = new Assignment(course, assignmentName, dueDate, marks, stage, marksReceivedStatus);
+                    courseAssignments.computeIfAbsent(course.getName(), k -> new ArrayList<>()).add(assignment);
+                }
+            }
+        }
+    }
+
+    private Course parseCourse(String courseData, Map<String, Course> courses) {
+        // Format: CSC207 | Jonahan Calver | [student1@example.com, student2@example.com]
+        String[] parts = courseData.split(" \\| ");
+        String courseName = parts[0].trim();
+        String instructor = parts[1].trim();
+        List<String> studentEmails = parseList(parts[2].trim());
+
+        // Check if the course already exists in the registry
+        if (!courses.containsKey(courseName)) {
+            courses.put(courseName, new Course(instructor, courseName, courseName, studentEmails, new ArrayList<>()));
+        }
+        return courses.get(courseName);
     }
 
     @Override
@@ -270,7 +352,7 @@ public class DropBoxDataAccessObject implements UserDataAccessInterface, FileDat
                     String marksReceivedStatus = fields[5].trim();
 
                     Assignment assignment = new Assignment(
-                            courseName,
+                            null,
                             studentName,
                             dueDate,
                             marks,
