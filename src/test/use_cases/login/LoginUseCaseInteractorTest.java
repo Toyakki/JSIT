@@ -3,6 +3,7 @@ package use_cases.login;
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
 import interface_adapters.login.LoginPresenter;
+import org.junit.jupiter.api.Test;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
 
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoginUseCaseInteractorTest {
    private InMemoryUserDataAccessObject userDsGateway;
 
+   @Test
    void create() {
        userDsGateway = new InMemoryUserDataAccessObject();
        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
