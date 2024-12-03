@@ -26,7 +26,15 @@ public class GradeInteractor implements GradeInputBoundary {
         this.gradeOutputBoundary = gradeOutputBoundary;
         this.userAccess = userAccess;
     }
-
+    /**
+     * This sets grade and feedback for given student and assignment.
+     * @param grade = grade
+     * @param file = feedback file
+     * @param studentEmail = studentEmail
+     * @param teacherEmail = teacherEmail
+     * @param courseName = courseName eg. 207
+     * @param assignmentName = assignmentName
+     */
     @Override
     public void gradeAssignment(String grade, File file, String studentEmail,
                                 String teacherEmail, String courseName, String assignmentName) {
