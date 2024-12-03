@@ -43,7 +43,8 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             Account account = userDataAccessObject.getUserByEmail(email);
             String studentEmail = account.getEmail();
 
-            String dropboxPath = "/" + courseName + "/" + studentEmail + "/" + selectedFile.getName();
+            String dropboxPath = "/" + courseName + "/" + assignmentName
+                    + "/" + studentEmail + "/" + selectedFile.getName();
 
             PDFFile newAssignment = new PDFFile(
                     selectedFile.getName(),
