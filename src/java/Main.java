@@ -1,10 +1,5 @@
 import com.formdev.flatlaf.FlatLightLaf;
-import data_access.FileDataAccessInterface;
-import data_access.InMemoryFileDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.UserDataAccessInterface;
-import entities.*;
-import interface_adapters.ViewModel;
+import data_access.*;
 import interface_adapters.create_assignment.AssignmentCreaterController;
 import interface_adapters.create_assignment.CreateAssignmentPresenter;
 import interface_adapters.create_class.CreateCourseController;
@@ -41,8 +36,6 @@ import use_cases.grade.GradeInteractor;
 import use_cases.grade.GradeOutputBoundary;
 import use_cases.join_course.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
-import use_cases.submit_grade.SubmitGradeInputBoundary;
-import use_cases.submit_grade.SubmitGradeInteractor;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -52,14 +45,10 @@ import use_cases.signup.SignupInputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
 import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
-import use_cases.upload_feedback.UploadFeedbackInputBoundary;
-import use_cases.upload_feedback.UploadFeedbackInteractor;
 import view.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends JFrame {
 
@@ -90,53 +79,7 @@ public class Main extends JFrame {
         // import look and feel for JSwing
         FlatLightLaf.setup();
 
-        FileDataAccessInterface fileDataAccessObject = new InMemoryFileDataAccessObject();
-
-        UserDataAccessInterface demo = new InMemoryUserDataAccessObject();
-
-        // load dummy data
-        Course csCourse = CourseFactory.createClass("Johnathon Calver", "CSC207");
-        Course statsCourse = CourseFactory.createClass("Jeff Rosento", "STA257");
-        Course matCourse = CourseFactory.createClass("Joe Repka", "MAT347");
-
-        System.out.println(matCourse.getCourseCode());
-
-        List<Course> joe_courses = new ArrayList<>();
-        joe_courses.add(matCourse);
-
-        List<Course> tohya_courses = new ArrayList<>();
-        tohya_courses.add(statsCourse);
-        tohya_courses.add(csCourse);
-
-        List<Course> test_courses = new ArrayList<>();
-        test_courses.add(statsCourse);
-        test_courses.add(csCourse);
-        test_courses.add(matCourse);
-
-        Account joe = new Account("joerepka@mail.utoronto.ca", "algebra", "teacher", joe_courses);
-        Account tohya = new Account("henrik-ibsen707@gmail.com", "thewildduck", "student", tohya_courses);
-        Account test = new Account("t", "t", "teacher", test_courses);
-        demo.saveUser(joe);
-        demo.saveUser(tohya);
-        demo.saveUser(test);
-
-        Assignment ps1 = new Assignment(matCourse,"Problem Set 1", "December 1st", "100", "graded", "true");
-        Assignment ps2 = new Assignment(matCourse,"Problem Set 2", "December 15st", "100", "assigned", "false");
-        Assignment ps3 = new Assignment(matCourse,"Problem Set 3", "December 15st", "100", "assigned", "false");
-        Assignment ps4 = new Assignment(matCourse, "Problem Set 4", "December 15st", "100", "assigned", "false");
-        Assignment ps5 = new Assignment(matCourse, "Problem Set 5", "December 15st", "100", "assigned", "false");
-        Assignment ps6 = new Assignment(matCourse, "Problem Set 6", "December 15st", "100", "assigned", "false");
-        Assignment ps7 = new Assignment(matCourse, "Problem Set 7", "December 15st", "100", "assigned", "false");
-        Assignment finalProject = new Assignment(csCourse, "Final Project", "December 4th", "25", "submitted", "false");
-
-        csCourse.addAssignment(finalProject);
-        matCourse.addAssignment(ps1);
-        matCourse.addAssignment(ps2);
-        matCourse.addAssignment(ps3);
-        matCourse.addAssignment(ps4);
-        matCourse.addAssignment(ps5);
-        matCourse.addAssignment(ps6);
-        matCourse.addAssignment(ps7);
+        DropBoxDataAccessObject dataAccessObject = new DropBoxDataAccessObject();
 
         // data access layer
         loginUseCaseOutputBoundary = new LoginPresenter(
@@ -147,7 +90,7 @@ public class Main extends JFrame {
         );
 
         loginInteractor = new LoginUseCaseInteractor(
-                demo,
+                dataAccessObject,
                 loginUseCaseOutputBoundary
         );
 
@@ -159,7 +102,7 @@ public class Main extends JFrame {
                 studentClassesViewModel, teacherClassesViewModel, viewManagerModel);
 
         signUpInteractor = new SignupUseCaseInteractor(
-                demo,
+                dataAccessObject,
                 signUpPresenter
         );
 
@@ -183,8 +126,8 @@ public class Main extends JFrame {
         );
         StudentCourseViewInteractor studentCourseViewInteractor = new StudentCourseViewInteractor(
                 studentCourseViewPresenter,
-                fileDataAccessObject,
-                demo
+                dataAccessObject,
+                dataAccessObject
         );
         StudentCourseViewController studentCourseViewController = new StudentCourseViewController(
                 studentCourseViewInteractor
@@ -192,10 +135,10 @@ public class Main extends JFrame {
 
         // download, back, etc. controllers
         StudentCoursesPresenter studentCoursesPresenter = new StudentCoursesPresenter(viewManagerModel, studentClassesViewModel);
-        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(demo, studentCoursesPresenter);
+        StudentCourseBackUseCase studentBackButtonInteractor = new StudentCourseBackUseCase(dataAccessObject, studentCoursesPresenter);
         TeacherCoursesPresenter teacherCoursesPresenter = new TeacherCoursesPresenter(viewManagerModel, teacherClassesViewModel);
-        TeacherCourseBackUseCase teacherCourseBackUseCase = new TeacherCourseBackUseCase(demo, teacherCoursesPresenter);
-        DownloadInputBoundary downloadInputBoundary = new DownloadInteractor(fileDataAccessObject, demo);
+        TeacherCourseBackUseCase teacherCourseBackUseCase = new TeacherCourseBackUseCase(dataAccessObject, teacherCoursesPresenter);
+        DownloadInputBoundary downloadInputBoundary = new DownloadInteractor(dataAccessObject, dataAccessObject);
         DownloadController downloadController = new DownloadController(downloadInputBoundary);
         StudentCourseBackController studentCourseBackController = new StudentCourseBackController(studentBackButtonInteractor);
         TeacherCourseBackController teacherCourseBackController = new TeacherCourseBackController(teacherCourseBackUseCase);
@@ -203,31 +146,31 @@ public class Main extends JFrame {
         CreateAssignmentPresenter createAssignmentPresenter = new CreateAssignmentPresenter(teacherCourseViewModel);
         CreateAssignmentInteractor createAssignmentInteractor = new CreateAssignmentInteractor(
                 createAssignmentPresenter,
-                demo,
-                fileDataAccessObject
+                dataAccessObject,
+                dataAccessObject
         );
         AssignmentCreaterController assignmentCreaterController = new AssignmentCreaterController(createAssignmentInteractor);
         GradeOutputBoundary gradeOutputBoundary = new GradePresenter(teacherCourseViewModel);
-        GradeInputBoundary gradeInputBoundary = new GradeInteractor(fileDataAccessObject, gradeOutputBoundary, demo);
+        GradeInputBoundary gradeInputBoundary = new GradeInteractor(dataAccessObject, gradeOutputBoundary, dataAccessObject);
         GradeController gradeController = new GradeController(gradeInputBoundary);
 
         TeacherCourseViewPresenter teacherCourseViewPresenter = new TeacherCourseViewPresenter(teacherClassesViewModel,
                 teacherCourseViewModel, viewManagerModel
         );
         TeacherCourseViewInteractor teacherCourseViewInteractor = new TeacherCourseViewInteractor(teacherCourseViewPresenter,
-                fileDataAccessObject,
-                demo
+                dataAccessObject,
+                dataAccessObject
         );
         TeacherCourseViewController teacherCourseViewController = new TeacherCourseViewController(teacherCourseViewInteractor);
 
         // create course controller, interactor, presenter
         CreateCoursePresenter createCoursePresenter = new CreateCoursePresenter(teacherClassesViewModel);
-        CreateCourseUseCaseInteractor createCourseUseCaseInteractor = new CreateCourseUseCaseInteractor(createCoursePresenter, demo);
+        CreateCourseUseCaseInteractor createCourseUseCaseInteractor = new CreateCourseUseCaseInteractor(createCoursePresenter, dataAccessObject);
         CreateCourseController createCourseController = new CreateCourseController(createCourseUseCaseInteractor);
 
         // join course controller, interactor, presenter
         JoinCoursePresenter joinCoursePresenter = new JoinCoursePresenter(studentClassesViewModel);
-        JoinUseCaseInteractor joinCourseUseCaseInteractor = new JoinUseCaseInteractor(joinCoursePresenter, demo);
+        JoinUseCaseInteractor joinCourseUseCaseInteractor = new JoinUseCaseInteractor(joinCoursePresenter, dataAccessObject);
         JoinCourseController joinCourseController = new JoinCourseController(joinCourseUseCaseInteractor);
 
         // classes view for students
