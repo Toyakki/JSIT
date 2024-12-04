@@ -31,7 +31,13 @@ we utilize dropbox creating a simple set up for cloud functionality.
 https://github.com/user-attachments/assets/2adb9739-63ce-4aed-84f2-a4beb4dd4dce
 
 - Creation of assignments through uploading a PDF, setting total marks, and due date.
+
+https://github.com/user-attachments/assets/dc7afaa6-d788-4d5d-a98e-8cae50cdff2c
+
 - Submission of assignments by uploading PDF from computer.
+
+<img width="400" alt="Screenshot 2024-12-03 at 11 48 02 PM" src="https://github.com/user-attachments/assets/e6a240d1-cb7f-431d-9918-e9587f8e774e">
+
 - Grading of assignments by uploading  PDF with feedback and entering grade.
 
 https://github.com/user-attachments/assets/c5e3ef9f-1232-4f40-90e6-872d839fdccc
@@ -80,3 +86,5 @@ most a month for bugs to be fixed.
 <a id="Contribution_id"></a>
 ## Contribution
 You are free to make forks of this project but no merge request will be excepted at this time.
+
+(apologies videos cannot be resized on GitHub)
