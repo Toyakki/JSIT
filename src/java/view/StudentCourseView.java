@@ -3,6 +3,7 @@ package view;
 import interface_adapters.download.DownloadController;
 import interface_adapters.student_course.StudentCourseBackController;
 import interface_adapters.student_course.StudentCourseViewModel;
+import interface_adapters.submit_assignment.SubmitAssignmentController;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -16,17 +17,17 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
     private final StudentCourseViewModel studentCourseViewModel;
     private StudentCourseBackController studentCourseBackController;
     private DownloadController downloadController;
-//    private UploadController uploadController;
+    private SubmitAssignmentController uploadController;
 
     private Map<String, JPanel> assignmentNameToPanel = new HashMap<>();
 
     public StudentCourseView(StudentCourseViewModel viewModel, StudentCourseBackController studentCourseBackController,
-                             DownloadController downloadController) {
+                             DownloadController downloadController, SubmitAssignmentController uploadController) {
         this.studentCourseViewModel = viewModel;
         this.studentCourseViewModel.addPropertyChangeListener(this);
         this.studentCourseBackController = studentCourseBackController;
         this.downloadController = downloadController;
-//        this.uploadController = uploadController;
+        this.uploadController = uploadController;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(new JLabel(studentCourseViewModel.getState().getCourseName()));
@@ -136,7 +137,11 @@ public class StudentCourseView extends JPanel implements PropertyChangeListener 
                 fileChooser.addChoosableFileFilter(restrict);
                 int fileSelectionStatus = fileChooser.showDialog(null, "Upload");
                 if (fileSelectionStatus == JFileChooser.APPROVE_OPTION) {
-//                            uploadController.uploadStudent(fileChooser.getSelectedFile(), studentCourseViewModel.getState().getAssignmentsNames().get(index));
+                    uploadController.handleSubmitAssignment(
+                            fileChooser.getSelectedFile(),
+                            studentCourseViewModel.getState().getCourseName(),
+                            studentCourseViewModel.getState().getAssignmentsNames().get(index),
+                            studentCourseViewModel.getState().getEmail());
                 }
             }
         });

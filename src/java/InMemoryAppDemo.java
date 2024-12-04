@@ -28,6 +28,8 @@ import interface_adapters.student.StudentCourseViewPresenter;
 import interface_adapters.student.StudentCoursesPresenter;
 import interface_adapters.student_course.StudentCourseBackController;
 import interface_adapters.student_course.StudentCourseViewModel;
+import interface_adapters.submit_assignment.SubmitAssignmentController;
+import interface_adapters.submit_assignment.SubmitAssignmentPresenter;
 import interface_adapters.teacher.TeacherClassesViewModel;
 import interface_adapters.teacher.TeacherCourseViewController;
 import interface_adapters.teacher.TeacherCourseViewPresenter;
@@ -50,6 +52,7 @@ import use_cases.signup.SignupOutputBoundary;
 import use_cases.signup.SignupUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
 import use_cases.student_course_selection.StudentCourseViewInteractor;
+import use_cases.submit_assignment.SubmitAssignmentInteractor;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.teacher_course_selection.TeacherCourseViewInteractor;
 import view.*;
@@ -189,11 +192,22 @@ public class InMemoryAppDemo extends JFrame {
         teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseViewController, createCourseController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
-        // course view for student
+        SubmitAssignmentPresenter submitAssignmentpresenter = new SubmitAssignmentPresenter(studentCourseViewModel);
+
+        // Add SubmitAssignmentInteractor and Controller
+        SubmitAssignmentInteractor submitAssignmentInteractor = new SubmitAssignmentInteractor(
+                fileDataAccessInterface,
+                submitAssignmentpresenter,
+                userDataAccessInterface
+        );
+        SubmitAssignmentController submitAssignmentController = new SubmitAssignmentController(submitAssignmentInteractor);
+
+        // course view for student with SubmitAssignmentController
         StudentCourseView studentCourseView = new StudentCourseView(
                 studentCourseViewModel,
                 studentCourseBackController,
-                downloadController
+                downloadController,
+                submitAssignmentController
         );
         mainPanel.add(studentCourseView, studentCourseView.getViewName());
 
