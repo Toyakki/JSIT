@@ -1,15 +1,9 @@
 package use_cases.submit_assignment;
 
-import data_access.DropBoxDataAccessObject;
-import data_access.FileDataAccessInterface;
-import data_access.UserDataAccessInterface;
+import data_access.*;
 import entities.*;
-import data_access.InMemoryUserDataAccessObject;
-import interface_adapters.student_course.StudentCourseViewModel;
-import interface_adapters.submit_assignment.SubmitAssignmentPresenter;
-import use_cases.submit_assignment.SubmitAssignmentInteractor;
-import use_cases.submit_assignment.SubmitAssignmentInputBoundary;
-import use_cases.submit_assignment.SubmitAssignmentOutputBoundary;
+import interface_adapters.student_course.StudentCourseState;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,21 +20,62 @@ public class SubmitAssignmentInteractorTest {
     private UserDataAccessInterface userDAO;
     private FileDataAccessInterface fileDAO;
     private SubmitAssignmentInteractor interactor;
-    private StudentCourseViewModel viewModel;
-    private SubmitAssignmentPresenter presenter;
+    private MockSubmitAssignmentPresenter testPresenter;
+
+    public class MockSubmitAssignmentPresenter implements SubmitAssignmentOutputBoundary {
+        private boolean successCalled = false;
+        private boolean errorCalled = false;
+        private String lastErrorMessage = null;
+        private StudentCourseState lastState = null;
+
+        @Override
+        public void presentSuccess(String courseName, String email, Assignment assignment) {
+            successCalled = true;
+
+            // Simulate creating the state as the real presenter would
+            lastState = new StudentCourseState(
+                    email,
+                    courseName,
+                    List.of(assignment.getName()),
+                    List.of(assignment.getDueDate()),
+                    List.of(assignment.getMarks()),
+                    List.of(assignment.getStage()),
+                    List.of(assignment.getMarksReceivedStatus())
+            );
+        }
+
+        @Override
+        public void presentError(String message) {
+            errorCalled = true;
+            lastErrorMessage = message;
+        }
+
+        public boolean isSuccessCalled() {
+            return successCalled;
+        }
+
+        public boolean isErrorCalled() {
+            return errorCalled;
+        }
+
+        public String getLastErrorMessage() {
+            return lastErrorMessage;
+        }
+
+        public StudentCourseState getLastState() {
+            return lastState;
+        }
+    }
 
     @BeforeEach
     void setUp() {
         // Initialize DAOs
         userDAO = new InMemoryUserDataAccessObject();
-        // TODO: Replace this with inMemory.
-        fileDAO = new DropBoxDataAccessObject();
+        fileDAO = new InMemoryFileDataAccessObject();
 
-        // Initialize ViewModel and Presenter
-        viewModel = new StudentCourseViewModel();
-        presenter = new SubmitAssignmentPresenter(viewModel);
+        testPresenter = new MockSubmitAssignmentPresenter();
 
-        interactor = new SubmitAssignmentInteractor(fileDAO, presenter, userDAO);
+        interactor = new SubmitAssignmentInteractor(fileDAO, testPresenter, userDAO);
 
         // Create test data
         Course math101 = CourseFactory.createClass("John Doe", "MAT101");
@@ -67,7 +102,7 @@ public class SubmitAssignmentInteractorTest {
 
         math101.addAssignment(assignment1);
 
-        interactor = new SubmitAssignmentInteractor(fileDAO, presenter, userDAO);
+        interactor = new SubmitAssignmentInteractor(fileDAO, testPresenter, userDAO);
     }
 
     @Test
@@ -79,17 +114,120 @@ public class SubmitAssignmentInteractorTest {
         String courseName = "MAT101";
         String email = "student1@example.com";
         String assignmentName = userDAO.getUserByEmail("student1@example.com")
-                                        .getCourseByName(courseName)
-                                        .getAssignments()
-                                        .getFirst()
-                                        .getName();
+                .getCourseByName(courseName)
+                .getAssignments()
+                .getFirst()
+                .getName();
 
         interactor.submitAssignment(validFile, courseName, assignmentName, email);
 
-        // Assert
-        PDFFile savedFile = fileDAO.getFile("/MAT101/student1@example.com/" + validFile.getName());
-        assertNotNull(savedFile, "The file should be saved in the DAO.");
-        assertEquals(validFile.getName(), savedFile.getFileName(), "The file name should match.");
+
+        assertTrue(testPresenter.isSuccessCalled(), "presentSuccess should be called.");
+        StudentCourseState lastState = testPresenter.getLastState();
+        assertNotNull(lastState, "State should not be null.");
+        assertEquals(courseName, lastState.getCourseName(), "Course name should match.");
+        assertEquals(email, lastState.getEmail(), "Email should match.");
+        assertEquals(1, lastState.getAssignmentsNames().size(), "There should be one assignment.");
+        assertEquals(assignmentName, lastState.getAssignmentsNames().get(0), "Assignment name should match.");
         validFile.deleteOnExit();
     }
+
+    @Test
+    void testSubmitAssignment_InvalidFileInput() {
+        // Arrange: Use a nonexistent file
+        File nonexistentFile = new File("nonexistent_assignment.pdf");
+        String courseName = "MAT101";
+        String email = "student1@example.com";
+        String assignmentName = "Assignment1";
+
+        // Act
+        interactor.submitAssignment(nonexistentFile, courseName, assignmentName, email);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File does not exist", testPresenter.getLastErrorMessage(), "Error message should match.");
+    }
+
+    @Test
+    void testSubmitAssignment_InvalidFileType() {
+        // Arrange
+        File invalidFile = new File("test_assignment.txt");
+        String courseName = "MAT101";
+        String email = "student1@example.com";
+        String assignmentName = "Assignment1";
+
+        // Act
+        interactor.submitAssignment(invalidFile, courseName, assignmentName, email);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File must be a PDF", testPresenter.getLastErrorMessage(), "Error message should match.");
+    }
+
+    @Test
+    void testSubmitAssignment_FileNotReadable() throws IOException {
+        // Arrange
+        File unreadableFile = Files.createTempFile("test_assignment", ".pdf").toFile();
+        unreadableFile.setReadable(false);
+        String courseName = "MAT101";
+        String email = "student1@example.com";
+        String assignmentName = "Assignment1";
+
+        // Act
+        interactor.submitAssignment(unreadableFile, courseName, assignmentName, email);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File cannot be read", testPresenter.getLastErrorMessage(), "Error message should match.");
+        unreadableFile.deleteOnExit();
+    }
+
+    @Test
+    void testSubmitAssignment_NonexistentUser() {
+        // Arrange
+        File validFile = new File("test_assignment.pdf");
+        String courseName = "MAT101";
+        String invalidEmail = "nonexistent_user@example.com";
+        String assignmentName = "Assignment1";
+
+        // Act
+        interactor.submitAssignment(validFile, courseName, assignmentName, invalidEmail);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File does not exist", testPresenter.getLastErrorMessage(), "Error message should match.");
+    }
+
+    @Test
+    void testSubmitAssignment_NonexistentCourse() {
+        // Arrange
+        File validFile = new File("test_assignment.pdf");
+        String invalidCourseName = "UnknownCourse";
+        String email = "student1@example.com";
+        String assignmentName = "Assignment1";
+
+        // Act
+        interactor.submitAssignment(validFile, invalidCourseName, assignmentName, email);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File does not exist", testPresenter.getLastErrorMessage(), "Error message should match.");
+    }
+
+    @Test
+    void testSubmitAssignment_NonexistentAssignment() {
+        // Arrange
+        File validFile = new File("test_assignment.pdf");
+        String courseName = "MAT101";
+        String email = "student1@example.com";
+        String invalidAssignmentName = "NonexistentAssignment";
+
+        // Act
+        interactor.submitAssignment(validFile, courseName, invalidAssignmentName, email);
+
+        // Assert
+        assertTrue(testPresenter.isErrorCalled(), "presentError should be called.");
+        assertEquals("File does not exist", testPresenter.getLastErrorMessage(), "Error message should match.");
+    }
+
 }
