@@ -15,16 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SignupUseCaseInteractorTest {
     private InMemoryUserDataAccessObject userDsGateway;
 
-    @BeforeEach
     void create(){
-
-        userDsGateway = new InMemoryUserDataAccessObject();
+        this.userDsGateway = new InMemoryUserDataAccessObject();
         Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
         userDsGateway.saveUser(existedUser);
     }
 
     @Test
     public void testValidAccount() {
+        create();
         SignupOutputBoundary userPresenter = new SignupOutputBoundary() {
             @Override
             public void prepareErrorView(String error){
@@ -49,6 +48,7 @@ public class SignupUseCaseInteractorTest {
 
     @Test
     public void testInvalidPassword() {
+        create();
         SignupOutputBoundary userPresenter = new SignupOutputBoundary() {
 
             @Override
@@ -69,6 +69,7 @@ public class SignupUseCaseInteractorTest {
 
     @Test
     public void testInvalidEmail() {
+        create();
         SignupOutputBoundary userPresenter = new SignupOutputBoundary() {
             @Override
             public void prepareErrorView(String error){
@@ -87,6 +88,7 @@ public class SignupUseCaseInteractorTest {
 
     @Test
     public void testExistedUser() {
+        create();
         SignupOutputBoundary userPresenter = new SignupOutputBoundary() {
             @Override
             public void prepareErrorView(String error){
