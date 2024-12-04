@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
 
+
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +17,7 @@ public class SignupUseCaseInteractorTest {
 
     @BeforeEach
     void create(){
+
         userDsGateway = new InMemoryUserDataAccessObject();
         Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
         userDsGateway.saveUser(existedUser);
@@ -48,6 +50,7 @@ public class SignupUseCaseInteractorTest {
     @Test
     public void testInvalidPassword() {
         SignupOutputBoundary userPresenter = new SignupOutputBoundary() {
+
             @Override
             public void prepareErrorView(String error){
                 assert true;
@@ -62,6 +65,7 @@ public class SignupUseCaseInteractorTest {
         UserInputData invalidPasswordUser = new UserInputData("@gmail.com", "aa", "student");
         interactor.createUser(invalidPasswordUser);
     }
+
 
     @Test
     public void testInvalidEmail() {

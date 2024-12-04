@@ -31,11 +31,11 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("File must be a PDF");
             }
-            if (!selectedFile.canRead()) {
-                throw new IllegalArgumentException("File cannot be read");
-            }
             if (!selectedFile.exists()) {
                 throw new FileNotFoundException("File does not exist");
+            }
+            if (!selectedFile.canRead()) {
+                throw new IllegalArgumentException("File cannot be read");
             }
 
             byte[] content = Files.readAllBytes(selectedFile.toPath());
@@ -43,7 +43,8 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             Account account = userDataAccessObject.getUserByEmail(email);
             String studentEmail = account.getEmail();
 
-            String dropboxPath = "/" + courseName + "/" + studentEmail + "/" + selectedFile.getName();
+            String dropboxPath = "/" + courseName + "/" + assignmentName
+                    + "/" + studentEmail + "/" + selectedFile.getName();
 
             PDFFile newAssignment = new PDFFile(
                     selectedFile.getName(),
@@ -66,10 +67,8 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             outputBoundary.presentSuccess(courseName, email, assignment);
 
 
-        } catch (IllegalArgumentException | FileNotFoundException e){
+        } catch (IllegalArgumentException | IOException e){
             outputBoundary.presentError(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
         }
     }
 }

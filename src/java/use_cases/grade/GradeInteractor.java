@@ -1,13 +1,5 @@
 package use_cases.grade;
 
-import data_access.FileDataAccessInterface;
-import data_access.UserDataAccessInterface;
-import entities.Assignment;
-import entities.Course;
-import entities.PDFFile;
-import entities.Submission;
-import interface_adapters.teacher_course.TeacherCourseState;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,30 +8,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GradeInteractor implements GradeInputBoundary{
-    FileDataAccessInterface fileAccess;
-    GradeOutputBoundary gradeOutputBoundary;
-    UserDataAccessInterface userAccess;
+import data_access.FileDataAccessInterface;
+import data_access.UserDataAccessInterface;
+import entities.Assignment;
+import entities.Course;
+import entities.PDFFile;
+import entities.Submission;
+import interface_adapters.teacher_course.TeacherCourseState;
+
+public class GradeInteractor implements GradeInputBoundary {
+    private final FileDataAccessInterface fileAccess;
+    private final GradeOutputBoundary gradeOutputBoundary;
+    private final UserDataAccessInterface userAccess;
 
     public GradeInteractor(FileDataAccessInterface fileAccess, GradeOutputBoundary gradeOutputBoundary, UserDataAccessInterface userAccess) {
         this.fileAccess = fileAccess;
         this.gradeOutputBoundary = gradeOutputBoundary;
         this.userAccess = userAccess;
     }
-
+    /**
+     * This sets grade and feedback for given student and assignment.
+     * @param grade = grade
+     * @param file = feedback file
+     * @param studentEmail = studentEmail
+     * @param teacherEmail = teacherEmail
+     * @param courseName = courseName eg. 207
+     * @param assignmentName = assignmentName
+     */
     @Override
     public void gradeAssignment(String grade, File file, String studentEmail,
                                 String teacherEmail, String courseName, String assignmentName) {
-        try{
+        try {
             // Saves file in byte form
             byte[] fileBytes = Files.readAllBytes(file.toPath());
             System.out.println(courseName + "/assignments/" + assignmentName + "/" + studentEmail + "/feedback");
             PDFFile pdfFile = new PDFFile(
-                    assignmentName + " feedback.pdf",
-                    courseName + "/assignments/" + assignmentName + "/" + studentEmail + "/feedback",
+                    assignmentName + " _feedback.pdf",
+                    courseName + "/" + assignmentName + "/" + studentEmail + "/feedback/" + assignmentName + "_feedback.pdf",
                     fileBytes);
             fileAccess.saveFile(pdfFile);
-            // TODO upload dropbox
 
             // Sets Submission with feedback
             Course course = userAccess.getUserByEmail(teacherEmail).getCourseByName(courseName);
@@ -67,9 +74,10 @@ public class GradeInteractor implements GradeInputBoundary{
                 Map<String, String> stageMap = new HashMap<>();
                 Map<String, String> markReceivedMap = new HashMap<>();
                 for (String student : studentEmails) {
-                    if (assignment.getSubmission(studentEmail).isGraded()){
+                    if (assignment.getSubmission(studentEmail).isGraded()) {
                         markMap.put(student, assignment.getSubmission(student).getGrade());
-                    } else {
+                    }
+                    else {
                         markMap.put(student, assignment.getMarks());
                     }
                     stageMap.put(student, assignment.getSubmission(student).getStage());
@@ -95,7 +103,7 @@ public class GradeInteractor implements GradeInputBoundary{
 
             this.gradeOutputBoundary.refreshView(state);
         }
-        catch(IOException e){
+        catch (IOException e) {
             gradeOutputBoundary.prepareFailView("Could not read feedback file");
         }
 
