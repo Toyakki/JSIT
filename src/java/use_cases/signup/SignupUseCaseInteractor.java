@@ -1,12 +1,10 @@
 package use_cases.signup;
 
-import data_access.InMemoryUserDataAccessObject;
 import data_access.UserDataAccessInterface;
 import entities.AccountFactory;
 import entities.Account;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
-
 import java.util.ArrayList;
 
 public class SignupUseCaseInteractor implements SignupInputBoundary  {
@@ -40,7 +38,8 @@ public class SignupUseCaseInteractor implements SignupInputBoundary  {
 
         userDsGateway.saveUser(account);
 
-        UserOutputData userOutputData = new UserOutputData(userInputData.getEmail(), userInputData.getType(), new ArrayList<>());
+        UserOutputData userOutputData = new UserOutputData(userInputData.getEmail(), userInputData.getType(),
+                new ArrayList<>());
         userPresenter.prepareSuccessView(userOutputData);
     }
 }

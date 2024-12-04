@@ -20,10 +20,10 @@ import java.util.Map;
 public class CreateAssignmentInteractor implements CreateAssignmentInputBoundary {
     private final UserDataAccessInterface userDataAccessInterface;
     private final FileDataAccessInterface fileDataAccessInterface;
-    private final CreateAssignmentPresenter presenter;
+    private final CreateAssignmentOutputBoundary presenter;
 
     public CreateAssignmentInteractor(
-            CreateAssignmentPresenter presenter,
+            CreateAssignmentOutputBoundary presenter,
             UserDataAccessInterface userDataAccessInterface,
             FileDataAccessInterface fileDataAccessInterface
     ) {

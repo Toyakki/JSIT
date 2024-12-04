@@ -7,10 +7,10 @@ import interface_adapters.join_class.JoinCoursePresenter;
 import use_cases.UserOutputData;
 
 public class JoinUseCaseInteractor {
-    private final JoinCoursePresenter presenter;
+    private final JoinUseCaseOutputBoundary presenter;
     private final UserDataAccessInterface userdataAccess;
 
-    public JoinUseCaseInteractor(JoinCoursePresenter presenter, UserDataAccessInterface userdataAccess) {
+    public JoinUseCaseInteractor(JoinUseCaseOutputBoundary presenter, UserDataAccessInterface userdataAccess) {
         this.presenter = presenter;
         this.userdataAccess = userdataAccess;
     }
