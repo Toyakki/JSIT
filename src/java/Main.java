@@ -11,6 +11,8 @@ import interface_adapters.join_class.JoinCourseController;
 import interface_adapters.join_class.JoinCoursePresenter;
 import interface_adapters.student_course.StudentCourseBackController;
 import interface_adapters.student_course.StudentCourseViewModel;
+import interface_adapters.submit_assignment.SubmitAssignmentController;
+import interface_adapters.submit_assignment.SubmitAssignmentPresenter;
 import interface_adapters.teacher_course.TeacherCourseBackController;
 import interface_adapters.teacher_course.TeacherCourseViewModel;
 import interface_adapters.ViewManagerModel;
@@ -36,6 +38,9 @@ import use_cases.grade.GradeInteractor;
 import use_cases.grade.GradeOutputBoundary;
 import use_cases.join_course.JoinUseCaseInteractor;
 import use_cases.student_course_back.StudentCourseBackUseCase;
+import use_cases.submit_assignment.SubmitAssignmentInputBoundary;
+import use_cases.submit_assignment.SubmitAssignmentInteractor;
+import use_cases.submit_assignment.SubmitAssignmentOutputBoundary;
 import use_cases.teacher_course_back.TeacherCourseBackUseCase;
 import use_cases.login.LoginUseCaseInputBoundary;
 import use_cases.login.LoginUseCaseInteractor;
@@ -181,11 +186,20 @@ public class Main extends JFrame {
         teacherClassesView = new TeacherClassesView(teacherClassesViewModel, teacherCourseViewController, createCourseController);
         mainPanel.add(teacherClassesView, teacherClassesView.getViewName());
 
+        // submit setup
+        SubmitAssignmentOutputBoundary submitAssignmentOutputBoundary = new SubmitAssignmentPresenter(studentCourseViewModel);
+        SubmitAssignmentInputBoundary submitAssignmentInputBoundary = new SubmitAssignmentInteractor(
+                dataAccessObject,
+                submitAssignmentOutputBoundary,
+                dataAccessObject);
+        SubmitAssignmentController submitAssignmentController = new SubmitAssignmentController(submitAssignmentInputBoundary);
+
         // course view for student
         StudentCourseView studentCourseView = new StudentCourseView(
                 studentCourseViewModel,
                 studentCourseBackController,
-                downloadController
+                downloadController,
+                submitAssignmentController
         );
         mainPanel.add(studentCourseView, studentCourseView.getViewName());
 
