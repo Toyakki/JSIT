@@ -31,11 +31,11 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             if (!selectedFile.getName().endsWith(".pdf")) {
                 throw new IllegalArgumentException("File must be a PDF");
             }
-            if (!selectedFile.canRead()) {
-                throw new IllegalArgumentException("File cannot be read");
-            }
             if (!selectedFile.exists()) {
                 throw new FileNotFoundException("File does not exist");
+            }
+            if (!selectedFile.canRead()) {
+                throw new IllegalArgumentException("File cannot be read");
             }
 
             byte[] content = Files.readAllBytes(selectedFile.toPath());
