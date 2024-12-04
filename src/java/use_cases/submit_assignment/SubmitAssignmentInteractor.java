@@ -67,10 +67,8 @@ public class SubmitAssignmentInteractor implements SubmitAssignmentInputBoundary
             outputBoundary.presentSuccess(courseName, email, assignment);
 
 
-        } catch (IllegalArgumentException | FileNotFoundException e){
+        } catch (IllegalArgumentException | IOException e){
             outputBoundary.presentError(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
         }
     }
 }
