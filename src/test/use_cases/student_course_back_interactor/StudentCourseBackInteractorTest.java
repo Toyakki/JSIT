@@ -25,9 +25,6 @@ public class StudentCourseBackInteractorTest {
         UserDataAccessInterface userDsGateway = new InMemoryUserDataAccessObject();
         LoadDummyData loadDummyData = new LoadDummyData();
         loadDummyData.loadData(userDsGateway);
-        // Create classes needed to run the use case
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
-        StudentClassesViewModel studentClassesViewModel = new StudentClassesViewModel();
         // Creates an anonymous output boundary class with a modified output bound to test if the UserOutputData is formated as expected.
         StudentCourseBackInputBoundary interactor = getStudentCourseBackInputBoundary(userDsGateway);
 
