@@ -4,13 +4,23 @@ import data_access.InMemoryFileDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entities.*;
 import interface_adapters.create_assignment.CreateAssignmentPresenter;
+import interface_adapters.teacher_course.TeacherCourseState;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 
 public class CreateAssignmentUseCaseInteractorTest {
     private InMemoryFileDataAccessObject fileDsGateway;
     private InMemoryUserDataAccessObject userDsGateway;
 
+
+    @BeforeEach
     void create() {
         fileDsGateway = new InMemoryFileDataAccessObject();
         userDsGateway = new InMemoryUserDataAccessObject();
@@ -20,12 +30,16 @@ public class CreateAssignmentUseCaseInteractorTest {
         userDsGateway.saveUser(teacher);
     }
 
+    @Test
     public void testValidFileUpload() {
-        CreateAssignmentPresenter presenter = new CreateAssignmentPresenter(){
-            public void prepareFailView(){
+        CreateAssignmentOutputBoundary presenter = new CreateAssignmentOutputBoundary(){
+            @Override
+            public void prepareErrorView(String error) {
                 fail ("Valid assignment upload, test case failure unexpected.");
             }
-            public void refreshView(){
+
+            @Override
+            public void refreshView(TeacherCourseState state) {
                 assert true;
             }
         };
@@ -36,13 +50,13 @@ public class CreateAssignmentUseCaseInteractorTest {
         Account teacher = userDsGateway.getUserByEmail("lindsey@mail.com");
         Course course = teacher.getCourseByName("Software Design");
         Assignment savedAssignment = course.getAssignments().getFirst();
-        assertEqual(fileDsGateway.getAllFiles().size(), 1);
-        assertEqual(course.getAssignments().size(),1);
-        assertEqual(savedAssignment.getName(), "Assignment 1");
-        assertEqual(savedAssignment.getDueDate(), "12/25");
-        assertEqual(savedAssignment.getMarks(), "100");
-        assertEqual(savedAssignment.getStage(),"assigned");
-        assertEqual(savedAssignment.getMarksReceivedStatus(), "false");
+        assertEquals(fileDsGateway.getAllFiles().size(), 1);
+        assertEquals(course.getAssignments().size(),1);
+        assertEquals("Assignment 1", savedAssignment.getName());
+        assertEquals("12/25", savedAssignment.getDueDate());
+        assertEquals("100", savedAssignment.getMarks());
+        assertEquals("assigned", savedAssignment.getStage());
+        assertEquals("false", savedAssignment.getMarksReceivedStatus());
     }
 }
 

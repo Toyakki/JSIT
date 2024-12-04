@@ -2,7 +2,8 @@ package use_cases.login;
 
 import data_access.InMemoryUserDataAccessObject;
 import entities.Account;
-import interface_adapters.login.LoginPresenter;
+import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import use_cases.UserInputData;
 import use_cases.UserOutputData;
 
@@ -10,17 +11,19 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginUseCaseInteractorTest {
+public class LoginUseCaseInteractorTest {
    private InMemoryUserDataAccessObject userDsGateway;
 
+   @BeforeEach
    void create() {
        userDsGateway = new InMemoryUserDataAccessObject();
        Account existedUser = new Account("enze@gmail.com", "Abc123456!", "student", new ArrayList<>());
        userDsGateway.saveUser(existedUser);
    }
 
-   public void testValidLogin(UserOutputData account) {
-       LoginUseCaseOutputBoundary userPresenter = new LoginPresenter() {
+   @Test
+   public void testValidLogin() {
+       LoginUseCaseOutputBoundary userPresenter = new LoginUseCaseOutputBoundary() {
            @Override
            public void prepareFailView(String error){
                fail("Login should be successful, use case failure is unexpected.");
@@ -37,8 +40,9 @@ class LoginUseCaseInteractorTest {
        interactor.login(validLogin);
    }
 
-   public void testLoginWithWrongPassword(UserOutputData account) {
-       LoginUseCaseOutputBoundary userPresenter = new LoginPresenter() {
+   @Test
+   public void testLoginWithWrongPassword() {
+       LoginUseCaseOutputBoundary userPresenter = new LoginUseCaseOutputBoundary() {
            @Override
            public void prepareFailView(String error){
                assert true;
@@ -55,8 +59,9 @@ class LoginUseCaseInteractorTest {
        interactor.login(wrongPasswordLogin);
    }
 
-   public void testLoginWithWrongEmail(UserOutputData account) {
-       LoginUseCaseOutputBoundary userPresenter = new LoginPresenter() {
+   @Test
+   public void testLoginWithWrongEmail() {
+       LoginUseCaseOutputBoundary userPresenter = new LoginUseCaseOutputBoundary() {
            @Override
            public void prepareFailView(String error){
                assert true;
